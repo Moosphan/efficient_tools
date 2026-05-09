@@ -140,7 +140,7 @@ export const tools: ToolMeta[] = [
     path: '/jwt',
     component: () => import('./features/jwt-decoder'),
     keywords: ['jwt', 'token', 'json web token', '解析'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'cron',
@@ -152,7 +152,7 @@ export const tools: ToolMeta[] = [
     path: '/cron',
     component: () => import('./features/cron-parser'),
     keywords: ['cron', 'schedule', '定时', '计划任务'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'markdown',
@@ -164,7 +164,7 @@ export const tools: ToolMeta[] = [
     path: '/markdown',
     component: () => import('./features/markdown-preview'),
     keywords: ['markdown', 'md', 'preview', '预览'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'logs',
@@ -176,7 +176,7 @@ export const tools: ToolMeta[] = [
     path: '/logs',
     component: () => import('./features/log-analyzer'),
     keywords: ['log', 'analyze', '日志', '分析', '筛选'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'translate',
@@ -188,7 +188,7 @@ export const tools: ToolMeta[] = [
     path: '/translate',
     component: () => import('./features/translator'),
     keywords: ['translate', '翻译', 'i18n'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'uuid',
@@ -200,7 +200,7 @@ export const tools: ToolMeta[] = [
     path: '/uuid',
     component: () => import('./features/uuid-generator'),
     keywords: ['uuid', 'guid', 'unique', '生成'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'adb',
@@ -212,7 +212,7 @@ export const tools: ToolMeta[] = [
     path: '/adb',
     component: () => import('./features/adb-tools'),
     keywords: ['adb', 'android', '设备', '自动化'],
-    status: '开发中',
+    status: '可用',
   },
 ];
 
