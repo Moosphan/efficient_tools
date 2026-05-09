@@ -4,20 +4,23 @@ import {
   useState,
   useEffect,
   useCallback,
-  useRef,
   type ReactNode,
 } from 'react';
 
+const STORAGE_KEY = '2fa_privacy_mode';
+
 interface PrivacyContextValue {
   isBlurred: boolean;
+  privacyMode: boolean;
+  togglePrivacyMode: () => void;
   unblur: () => void;
-  manualBlur: () => void;
 }
 
 const PrivacyContext = createContext<PrivacyContextValue>({
   isBlurred: false,
+  privacyMode: false,
+  togglePrivacyMode: () => {},
   unblur: () => {},
-  manualBlur: () => {},
 });
 
 export function usePrivacy() {
@@ -26,31 +29,41 @@ export function usePrivacy() {
 
 export function PrivacyProvider({ children }: { children: ReactNode }) {
   const [isBlurred, setIsBlurred] = useState(false);
-  const manualBlurRef = useRef(false);
+  const [privacyMode, setPrivacyMode] = useState(() => {
+    return localStorage.getItem(STORAGE_KEY) === 'true';
+  });
 
   useEffect(() => {
+    if (!privacyMode) {
+      setIsBlurred(false);
+      return;
+    }
+
     const handleVisibility = () => {
-      if (document.hidden && !manualBlurRef.current) {
+      if (document.hidden) {
         setIsBlurred(true);
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibility);
     return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [privacyMode]);
+
+  const togglePrivacyMode = useCallback(() => {
+    setPrivacyMode((prev) => {
+      const next = !prev;
+      localStorage.setItem(STORAGE_KEY, String(next));
+      if (!next) setIsBlurred(false);
+      return next;
+    });
   }, []);
 
   const unblur = useCallback(() => {
     setIsBlurred(false);
-    manualBlurRef.current = false;
-  }, []);
-
-  const manualBlur = useCallback(() => {
-    manualBlurRef.current = true;
-    setIsBlurred(true);
   }, []);
 
   return (
-    <PrivacyContext.Provider value={{ isBlurred, unblur, manualBlur }}>
+    <PrivacyContext.Provider value={{ isBlurred, privacyMode, togglePrivacyMode, unblur }}>
       {children}
     </PrivacyContext.Provider>
   );
