@@ -116,7 +116,7 @@ export const tools: ToolMeta[] = [
     path: '/hash',
     component: () => import('./features/hash-generator'),
     keywords: ['hash', 'md5', 'sha', '哈希', '摘要'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'color',
@@ -128,7 +128,7 @@ export const tools: ToolMeta[] = [
     path: '/color',
     component: () => import('./features/color-converter'),
     keywords: ['color', 'hex', 'rgb', 'hsl', '颜色'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'jwt',

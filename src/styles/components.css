@@ -544,6 +544,221 @@
 .diff-line-remove .diff-line-content { background: var(--red-bg); }
 .diff-line-empty { background: var(--surface-2); }
 
+/* ── Hash Generator ── */
+.hash-results {
+  flex: 1;
+  overflow: auto;
+}
+
+.hash-result-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hash-algo {
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--accent);
+  min-width: 60px;
+  flex-shrink: 0;
+}
+
+.hash-value {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--fg);
+  word-break: break-all;
+  line-height: 1.5;
+}
+
+.hash-copy {
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-family: var(--font-body);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.hash-copy:hover { border-color: var(--accent); color: var(--accent); }
+
+.hash-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ── Color Converter ── */
+.color-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.color-preview {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.color-preview-sm {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.color-rgb-row {
+  gap: 12px;
+}
+
+.color-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.color-field label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.color-field input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--fg);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.color-field input:focus { border-color: var(--accent); }
+
+.color-css-output {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.color-css-output code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--fg);
+}
+
+.color-preview-checker {
+  border-bottom: 1px solid var(--border);
+  background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+    linear-gradient(-45deg, #ccc 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #ccc 75%),
+    linear-gradient(-45deg, transparent 75%, #ccc 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+}
+
+.color-preview-large {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 700;
+  transition: background 0.15s;
+}
+
+.color-contrast {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.color-contrast-bg {
+  margin-bottom: 12px;
+}
+
+.color-contrast-bg label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.color-contrast-result {
+  text-align: center;
+}
+
+.color-contrast-ratio {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--fg);
+}
+
+.color-contrast-badges {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.contrast-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+.contrast-badge.pass { background: var(--green-bg); color: var(--green); }
+.contrast-badge.fail { background: var(--red-bg); color: var(--red); }
+
+.color-contrast-preview {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+}
+
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.color-palette-swatch {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: transform 0.1s;
+}
+
+.color-palette-swatch:hover { transform: scale(1.15); }
+
 /* ── Timer Ring ── */
 .code-timer {
   margin-top: 16px;
