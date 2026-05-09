@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>(function(){
+  function makeStore(){
+    var data = {};
+    var api = {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+      setItem: function(k, v){ data[k] = String(v); },
+      removeItem: function(k){ delete data[k]; },
+      clear: function(){ data = {}; },
+      key: function(i){ return Object.keys(data)[i] || null; }
+    };
+    Object.defineProperty(api, 'length', { get: function(){ return Object.keys(data).length; } });
+    return api;
+  }
+  function tryShim(name){
+    var works = false;
+    try { works = !!window[name] && typeof window[name].getItem === 'function'; void window[name].length; }
+    catch (_) { works = false; }
+    if (works) return;
+    try { Object.defineProperty(window, name, { configurable: true, value: makeStore() }); }
+    catch (_) { try { window[name] = makeStore(); } catch (__) {} }
+  }
+  tryShim('localStorage');
+  tryShim('sessionStorage');
+})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevKit — Glass</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(12% 0.02 260);
+  --surface: rgba(255,255,255,0.04);
+  --surface-solid: oklch(16% 0.02 260);
+  --fg: oklch(92% 0.01 260);
+  --muted: oklch(55% 0.02 260);
+  --border: rgba(255,255,255,0.08);
+  --border-solid: oklch(28% 0.02 260);
+  --accent: oklch(72% 0.15 195);
+  --accent-dim: oklch(28% 0.06 195);
+  --danger: oklch(62% 0.2 25);
+  --success: oklch(65% 0.16 145);
+  --amber: oklch(75% 0.14 70);
+  --violet: oklch(65% 0.18 290);
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --blur: 24px;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);line-height:1.6;min-height:100vh;overflow-x:hidden}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+/* --- Animated BG --- */
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:.12}
+.blob-1{width:600px;height:600px;background:oklch(50% 0.22 250);top:-200px;left:-150px;animation:b1 28s ease-in-out infinite}
+.blob-2{width:500px;height:500px;background:oklch(50% 0.18 195);bottom:-150px;right:-100px;animation:b2 32s ease-in-out infinite}
+.blob-3{width:350px;height:350px;background:oklch(55% 0.15 300);top:35%;left:45%;animation:b3 22s ease-in-out infinite}
+@keyframes b1{0%,100%{transform:translate(0,0)}50%{transform:translate(100px,80px)}}
+@keyframes b2{0%,100%{transform:translate(0,0)}50%{transform:translate(-80px,-100px)}}
+@keyframes b3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-30%,-35%)}}
+
+/* --- Glass --- */
+.glass{background:var(--surface);backdrop-filter:blur(var(--blur));-webkit-backdrop-filter:blur(var(--blur));border:1px solid var(--border)}
+.glass-solid{background:var(--surface-solid);border:1px solid var(--border)}
+
+/* --- Layout --- */
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
+.navbar{
+  position:sticky;top:0;z-index:100;
+  padding:0 28px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
+  background:rgba(10,10,26,0.5);
+}
+.nav-brand{font-size:17px;font-weight:700;letter-spacing:-0.03em;display:flex;align-items:center;gap:8px}
+.nav-brand .dot{color:var(--accent)}
+.nav-links{display:flex;gap:2px}
+.nav-link{padding:6px 14px;border-radius:8px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s}
+.nav-link:hover{color:var(--fg);background:rgba(255,255,255,0.05);text-decoration:none}
+.nav-link.active{color:var(--accent);background:var(--accent-dim)}
+.main{flex:1;padding:28px;max-width:1200px;width:100%;margin:0 auto}
+
+/* --- Hero --- */
+.hero{padding:56px 0 40px;max-width:600px}
+.hero h1{font-size:clamp(30px,5vw,46px);font-weight:700;letter-spacing:-0.035em;line-height:1.12;margin-bottom:14px}
+.hero h1 .accent{color:var(--accent)}
+.hero p{font-size:15px;color:var(--muted);line-height:1.7;max-width:440px}
+.hero-actions{margin-top:28px;display:flex;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;font-size:13px;font-weight:500;font-family:var(--font-body);cursor:pointer;border:1px solid transparent;transition:all .15s;text-decoration:none}
+.btn-solid{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.btn-solid:hover{opacity:.85;text-decoration:none}
+.btn-glass{background:var(--surface);color:var(--fg);border-color:var(--border);backdrop-filter:blur(12px)}
+.btn-glass:hover{border-color:var(--accent);text-decoration:none}
+
+/* --- Stats --- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:36px 0}
+.stat{padding:20px;border-radius:var(--radius-sm);text-align:center}
+.stat-val{font-size:26px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* --- Search --- */
+.search-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;margin-bottom:28px;max-width:480px}
+.search-bar .icon{color:var(--muted);font-size:15px}
+.search-bar input{border:none;outline:none;background:transparent;font-size:14px;font-family:var(--font-body);color:var(--fg);width:100%}
+.search-bar input::placeholder{color:var(--muted)}
+
+/* --- Tool Cards --- */
+.section-title{font-size:16px;font-weight:600;margin-bottom:16px;letter-spacing:-0.02em}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.tool-card{
+  border-radius:var(--radius);padding:22px;cursor:pointer;
+  transition:border-color .2s,transform .15s,box-shadow .2s;
+  position:relative;overflow:hidden;text-decoration:none;color:var(--fg);display:block
+}
+.tool-card:hover{border-color:rgba(255,255,255,0.15);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.3);text-decoration:none}
+.tool-card .accent-bar{position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .2s}
+.tool-card:hover .accent-bar{opacity:1}
+.tool-card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:14px;font-family:var(--font-mono)}
+.tool-card h3{font-size:14px;font-weight:600;margin-bottom:4px}
+.tool-card p{font-size:12px;color:var(--muted);line-height:1.5}
+.tool-card-tag{display:inline-block;margin-top:10px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:0.05em}
+
+/* Featured cards — larger */
+.tool-card.featured{grid-column:span 2;padding:28px}
+.tool-card.featured .tool-card-preview{
+  margin-top:16px;padding:12px;border-radius:8px;
+  font-family:var(--font-mono);font-size:12px;line-height:1.6;
+  background:rgba(0,0,0,0.25);color:var(--muted);overflow:hidden
+}
+@media(max-width:700px){.tool-card.featured{grid-column:span 1}}
+
+/* --- Tool Pages --- */
+.tool-hdr{margin-bottom:28px}
+.tool-hdr h1{font-size:22px;font-weight:700;letter-spacing:-0.02em}
+.tool-hdr p{font-size:13px;color:var(--muted);margin-top:4px}
+.tool-back{font-size:13px;color:var(--muted);cursor:pointer;margin-bottom:16px;display:inline-block}
+.tool-back:hover{color:var(--accent)}
+.tool-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.tool-layout{grid-template-columns:1fr}}
+.panel{border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--muted)}
+.panel-acts{display:flex;gap:5px}
+.pbtn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:500;font-family:var(--font-body);background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s}
+.pbtn:hover{border-color:var(--fg);color:var(--fg)}
+.pbtn.accent{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.pbtn.accent:hover{background:var(--accent);color:var(--bg)}
+textarea,.code-out{width:100%;border:none;outline:none;resize:vertical;font-family:var(--font-mono);font-size:13px;line-height:1.6;padding:14px;background:rgba(0,0,0,0.2);color:var(--fg);min-height:280px;tab-size:2}
+textarea::placeholder{color:var(--muted)}
+.code-out{white-space:pre-wrap;word-break:break-all;overflow:auto}
+.err{color:var(--danger);font-size:12px;padding:6px 14px;background:oklch(20% 0.04 25);border-left:2px solid var(--danger)}
+
+/* Regex */
+.regex-row{display:flex;gap:6px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.15)}
+.regex-row .d{color:var(--accent);font-size:14px}
+.regex-row input{flex:1;border:none;outline:none;font-family:var(--font-mono);font-size:14px;background:transparent;color:var(--fg)}
+.flag{padding:2px 7px;border-radius:4px;font-size:11px;font-family:var(--font-mono);background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s}
+.flag.on{background:var(--accent-dim);color:var(--accent);border-color:var(--accent)}
+.match-hl{background:var(--accent-dim);border-bottom:2px solid var(--accent);color:var(--accent);padding:0 1px}
+.match-item{padding:6px 14px;border-bottom:1px solid var(--border);font-size:12px;display:flex;align-items:center;gap:10px}
+.match-idx{color:var(--accent);font-weight:600;min-width:20px;font-family:var(--font-mono)}
+.match-grp{color:var(--muted);font-size:11px}
+
+/* Log */
+.log-ctrls{display:flex;gap:6px;padding:8px 14px;border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;background:rgba(0,0,0,0.15)}
+.log-ctrls input,.log-ctrls select{border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;font-family:var(--font-body);background:var(--surface-solid);color:var(--fg);outline:none}
+.log-ctrls input:focus,.log-ctrls select:focus{border-color:var(--accent)}
+.log-line{padding:3px 14px;font-size:12px;font-family:var(--font-mono);line-height:1.5;border-bottom:1px solid rgba(255,255,255,0.03)}
+.log-line:hover{background:var(--accent-dim)}
+.log-ts{color:var(--muted)}
+.log-ERROR{color:var(--danger);font-weight:600}
+.log-WARN{color:var(--amber);font-weight:500}
+.log-INFO{color:var(--accent)}
+.log-DEBUG{color:var(--muted)}
+.log-stats{display:flex;gap:16px;padding:8px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted)}
+.log-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}
+
+/* About / Changelog */
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.about-card{border-radius:var(--radius);padding:22px}
+.about-card h3{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--accent)}
+.about-card p{font-size:13px;color:var(--muted);line-height:1.6}
+.about-card ul{list-style:none;padding:0;margin-top:10px}
+.about-card li{font-size:13px;color:var(--muted);padding:3px 0;display:flex;align-items:center;gap:8px}
+.about-card li::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.cl-hdr{margin-bottom:32px}.cl-hdr h1{font-size:22px;font-weight:700}
+.cl-entry{margin-bottom:28px}
+.cl-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.cl-ver{font-family:var(--font-mono);font-size:13px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--accent-dim);color:var(--accent)}
+.cl-date{font-size:12px;color:var(--muted)}
+.cl-list{list-style:none;padding:0}
+.cl-list li{font-size:13px;padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.cl-tag{font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;margin-top:3px}
+.tag-n{background:oklch(25% 0.06 145);color:var(--success)}
+.tag-f{background:oklch(25% 0.04 25);color:var(--danger)}
+.tag-i{background:var(--accent-dim);color:var(--accent)}
+
+/* Responsive */
+@media(max-width:768px){
+  .main{padding:16px}
+  .hero{padding:32px 0}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .tool-grid{grid-template-columns:1fr}
+  .navbar{padding:0 16px}
+}
+</style>
+</head>
+<body>
+<div class="bg"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+<div class="app">
+  <nav class="navbar">
+    <div class="nav-brand"><span class="dot">&lt;/&gt;</span> DevKit</div>
+    <div class="nav-links">
+      <a class="nav-link" href="#/" data-p="home">首页</a>
+      <a class="nav-link" href="#/about" data-p="about">关于</a>
+      <a class="nav-link" href="#/changelog" data-p="changelog">更新日志</a>
+    </div>
+  </nav>
+  <div class="main" id="app"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),app=$('app'),links=document.querySelectorAll('.nav-link');
+function nav(){
+  const h=location.hash.slice(2)||'home';
+  links.forEach(l=>l.classList.toggle('active',l.dataset.p===h));
+  const r=pages[h];if(r){app.innerHTML=r();after(h)}
+}
+window.addEventListener('hashchange',nav);
+const pages={};
+
+/* --- Home --- */
+pages.home=()=>`
+<div class="hero">
+  <h1>开发者的<span class="accent">效率工具箱</span></h1>
+  <p>一站式汇集日常开发中最常用的小工具 — JSON 格式化、正则验证、日志分析，纯前端运行，数据不出浏览器。</p>
+  <div class="hero-actions">
+    <a href="#/json" class="btn btn-solid">开始使用 →</a>
+    <a href="#/about" class="btn btn-glass">了解更多</a>
+  </div>
+</div>
+<div class="stats">
+  <div class="stat glass"><div class="stat-val">6</div><div class="stat-lbl">内置工具</div></div>
+  <div class="stat glass"><div class="stat-val">0</div><div class="stat-lbl">外部依赖</div></div>
+  <div class="stat glass"><div class="stat-val">100%</div><div class="stat-lbl">客户端运行</div></div>
+  <div class="stat glass"><div class="stat-val">&lt;1s</div><div class="stat-lbl">启动时间</div></div>
+</div>
+<div class="search-bar glass">
+  <span class="icon">⌕</span>
+  <input type="text" id="home-search" placeholder="搜索工具…" oninput="homeSearch()">
+</div>
+<div class="section-title">常用工具</div>
+<div class="tool-grid" id="home-grid">${toolCards()}</div>
+`;
+
+const TD=[
+  {id:'json',name:'JSON 格式化',desc:'格式化、压缩、验证 JSON 数据，支持错误定位',cat:'format',icon:'{ }',st:'可用',href:'#/json',accent:'var(--accent)',feat:true,
+   preview:'{\\n  "name": "devkit",\\n  "version": "0.1.0",\\n  "tools": [...]\\n}'},
+  {id:'regex',name:'正则验证器',desc:'实时测试正则表达式，高亮匹配，查看捕获组',cat:'validate',icon:'.*',st:'可用',href:'#/regex',accent:'var(--violet)',feat:true,
+   preview:'/\\\\b\\\\d{3}-\\\\d{4}\\\\b/g → 匹配 3 处'},
+  {id:'logs',name:'日志分析器',desc:'粘贴日志后按级别、关键词筛选，快速定位问题',cat:'analyze',icon:'≡',st:'可用',href:'#/logs',accent:'var(--success)',feat:false},
+  {id:'2fa',name:'2FA 验证码',desc:'基于 TOTP 协议生成二步验证码',cat:'validate',icon:'⊛',st:'开发中',href:null,accent:'var(--amber)',feat:false},
+  {id:'translate',name:'翻译工具',desc:'快速翻译代码注释、文档片段',cat:'format',icon:'文',st:'开发中',href:null,accent:'var(--violet)',feat:false},
+  {id:'adb',name:'ADB 自动化',desc:'常用 ADB 命令封装，设备管理',cat:'auto',icon:'⌘',st:'开发中',href:null,accent:'var(--amber)',feat:false},
+];
+
+function toolCards(filter='all',q=''){
+  return TD.filter(t=>(filter==='all'||t.cat===filter)&&(!q||t.name.includes(q)||t.desc.includes(q)))
+    .map(t=>{
+      const cls=t.feat?'tool-card featured glass':'tool-card glass';
+      const click=t.href?`onclick="location.href='${t.href}'"`:'';
+      const style=!t.href?'opacity:.5;cursor:default':'';
+      return`<div class="${cls}" ${click} style="${style}">
+        <div class="accent-bar" style="background:${t.accent}"></div>
+        <div class="tool-card-icon" style="background:${t.accent}22;color:${t.accent}">${t.icon}</div>
+        <h3>${t.name}</h3><p>${t.desc}</p>
+        <span class="tool-card-tag" style="background:${t.accent}18;color:${t.accent}">${t.st}</span>
+        ${t.feat?`<div class="tool-card-preview">${esc(t.preview||'')}</div>`:''}
+      </div>`;
+    }).join('');
+}
+function homeSearch(){const q=$('home-search')?.value||'';$('home-grid').innerHTML=toolCards('all',q)}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* --- Tools list --- */
+pages.tools=()=>`
+<div class="tool-hdr"><h1>工具箱</h1><p>全部可用和即将上线的开发工具</p></div>
+<div class="search-bar glass" style="margin-bottom:20px"><span class="icon">⌕</span><input type="text" id="ts" placeholder="搜索…" oninput="tf()"></div>
+<div style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap" id="ft">
+  <button class="pbtn accent" data-c="all" onclick="sf('all')">全部</button>
+  <button class="pbtn" data-c="format" onclick="sf('format')">格式化</button>
+  <button class="pbtn" data-c="validate" onclick="sf('validate')">验证</button>
+  <button class="pbtn" data-c="analyze" onclick="sf('analyze')">分析</button>
+  <button class="pbtn" data-c="auto" onclick="sf('auto')">自动化</button>
+</div>
+<div class="tool-grid" id="tl"></div>`;
+let cf='all';
+function sf(c){cf=c;document.querySelectorAll('#ft .pbtn').forEach(b=>b.classList.toggle('accent',b.dataset.c===c));$('tl').innerHTML=toolCards(c,$('ts')?.value||'')}
+function tf(){$('tl').innerHTML=toolCards(cf,$('ts')?.value||'')}
+
+/* --- JSON --- */
+pages.json=()=>`
+<a class="tool-back" href="#/">← 返回首页</a>
+<div class="tool-hdr"><h1>JSON 格式化</h1><p>格式化、压缩、验证 JSON 数据</p></div>
+<div class="tool-layout">
+  <div class="panel glass"><div class="panel-hdr">输入 <div class="panel-acts">
+    <button class="pbtn" onclick="js()">示例</button>
+    <button class="pbtn" onclick="$('ji').value=''">清空</button>
+  </div></div><textarea id="ji" placeholder='粘贴 JSON…\n{"key":"value"}'></textarea></div>
+  <div class="panel glass"><div class="panel-hdr">输出 <div class="panel-acts">
+    <button class="pbtn accent" onclick="jf()">格式化</button>
+    <button class="pbtn" onclick="jm()">压缩</button>
+    <button class="pbtn" onclick="jc()">复制</button>
+  </div></div><div class="code-out" id="jo">等待输入…</div><div id="je"></div></div>
+</div>`;
+function jf(){const v=$('ji').value.trim(),e=$('je'),o=$('jo');if(!v){o.textContent='等待输入…';e.innerHTML='';return}try{o.textContent=JSON.stringify(JSON.parse(v),null,2);e.innerHTML=''}catch(x){e.innerHTML=`<div class="err">JSON 解析错误: ${x.message}</div>`}}
+function jm(){const v=$('ji').value.trim(),e=$('je'),o=$('jo');if(!v){o.textContent='等待输入…';e.innerHTML='';return}try{o.textContent=JSON.stringify(JSON.parse(v));e.innerHTML=''}catch(x){e.innerHTML=`<div class="err">JSON 解析错误: ${x.message}</div>`}}
+function jc(){const t=$('jo').textContent;if(t&&t!=='等待输入…')navigator.clipboard.writeText(t)}
+function js(){$('ji').value=JSON.stringify({name:"DevKit",version:"0.1.0",tools:[{id:"json",name:"JSON 格式化",status:"可用"},{id:"regex",name:"正则验证器",status:"可用"},{id:"logs",name:"日志分析器",status:"可用"}],config:{theme:"glass",lang:"zh-CN",autoSave:true}},null,2)}
+
+/* --- Regex --- */
+pages.regex=()=>`
+<a class="tool-back" href="#/">← 返回首页</a>
+<div class="tool-hdr"><h1>正则验证器</h1><p>输入正则表达式和测试字符串，实时查看匹配</p></div>
+<div class="tool-layout">
+  <div class="panel glass"><div class="panel-hdr">正则表达式 <div class="panel-acts">
+    <button class="flag" id="fg" onclick="tf2('g')">g</button>
+    <button class="flag on" id="fi" onclick="tf2('i')">i</button>
+    <button class="flag" id="fm" onclick="tf2('m')">m</button>
+    <button class="flag" id="fs" onclick="tf2('s')">s</button>
+  </div></div>
+  <div class="regex-row"><span class="d">/</span><input type="text" id="rp" placeholder="正则表达式…" oninput="rr()"><span class="d">/</span><span id="rfd" style="color:var(--accent);font-family:var(--font-mono);font-size:14px">i</span></div>
+  <div class="panel-hdr">测试字符串</div>
+  <textarea id="rt" placeholder="输入测试文本…" oninput="rr()" style="min-height:200px"></textarea></div>
+  <div class="panel glass"><div class="panel-hdr">匹配结果 <span id="rc" style="font-size:11px;color:var(--muted)">0 个匹配</span></div>
+  <div class="code-out" id="ro" style="min-height:200px"><span style="color:var(--muted)">输入正则和文本后自动匹配…</span></div>
+  <div class="panel-hdr">匹配列表</div>
+  <div id="rm" style="max-height:220px;overflow:auto"><div style="padding:14px;color:var(--muted);font-size:12px">暂无匹配</div></div></div>
+</div>`;
+const rf={g:false,i:true,m:false,s:false};
+function tf2(f){rf[f]=!rf[f];$('f'+f).classList.toggle('on',rf[f]);$('rfd').textContent=Object.entries(rf).filter(([,v])=>v).map(([k])=>k).join('');rr()}
+function rr(){const p=$('rp').value,t=$('rt').value,o=$('ro'),m=$('rm'),c=$('rc');
+if(!p||!t){o.innerHTML='<span style="color:var(--muted)">输入正则和文本后自动匹配…</span>';m.innerHTML='<div style="padding:14px;color:var(--muted);font-size:12px">暂无匹配</div>';c.textContent='0 个匹配';return}
+try{const flags=Object.entries(rf).filter(([,v])=>v).map(([k])=>k).join(''),re=new RegExp(p,flags),ms=[];let x;
+if(flags.includes('g')){while((x=re.exec(t))!==null){ms.push({i:x.index,m:x[0],g:x.slice(1)});if(!x[0].length)re.lastIndex++}}else{x=re.exec(t);if(x)ms.push({i:x.index,m:x[0],g:x.slice(1)})}
+c.textContent=`${ms.length} 个匹配`;
+let h='',l=0;ms.forEach(x=>{h+=esc(t.slice(l,x.i));h+=`<span class="match-hl">${esc(x.m)}</span>`;l=x.i+x.m.length});h+=esc(t.slice(l));
+o.innerHTML=h||'<span style="color:var(--muted)">无匹配</span>';
+m.innerHTML=ms.length?ms.map((x,i)=>`<div class="match-item"><span class="match-idx">#${i+1}</span><span>${esc(x.m)}</span>${x.g.length?`<span class="match-grp">groups: ${x.g.map(g=>esc(g||'—')).join(', ')}</span>`:''}</div>`).join(''):'<div style="padding:14px;color:var(--muted);font-size:12px">暂无匹配</div>';
+}catch(e){o.innerHTML=`<div class="err">正则语法错误: ${e.message}</div>`;m.innerHTML='';c.textContent='错误'}}
+
+/* --- Logs --- */
+pages.logs=()=>`
+<a class="tool-back" href="#/">← 返回首页</a>
+<div class="tool-hdr"><h1>日志分析器</h1><p>粘贴日志内容，按级别和关键词筛选</p></div>
+<div style="display:grid;grid-template-columns:1fr;gap:12px">
+  <div class="panel glass"><div class="panel-hdr">日志输入 <div class="panel-acts">
+    <button class="pbtn" onclick="ls()">示例日志</button>
+    <button class="pbtn accent" onclick="lp()">分析</button>
+  </div></div><textarea id="li" placeholder="粘贴日志…" style="min-height:140px"></textarea></div>
+  <div class="panel glass" id="lpanel" style="display:none">
+    <div class="log-ctrls"><input type="text" id="lf" placeholder="关键词搜索…" oninput="lfilter()">
+    <select id="ll" onchange="lfilter()"><option value="all">所有级别</option><option value="ERROR">ERROR</option><option value="WARN">WARN</option><option value="INFO">INFO</option><option value="DEBUG">DEBUG</option></select>
+    <span style="font-size:11px;color:var(--muted);margin-left:auto" id="lc"></span></div>
+    <div id="lo" style="max-height:400px;overflow:auto"></div>
+    <div class="log-stats" id="lst"></div>
+  </div>
+</div>`;
+let logs=[];
+function lp(){const r=$('li').value.trim();if(!r)return;logs=r.split('\n').map((l,i)=>{const lv=l.match(/\b(ERROR|WARN|INFO|DEBUG)\b/i),ts=l.match(/(\d{4}[-/]\d{2}[-/]\d{2}[\sT]\d{2}:\d{2}(?::\d{2})?)/);return{n:i+1,r:l,l:lv?lv[1].toUpperCase():'INFO',t:ts?ts[1]:''}});$('lpanel').style.display='';lfilter()}
+function lfilter(){const tx=$('lf').value.toLowerCase(),lv=$('ll').value,f=logs.filter(l=>(lv==='all'||l.l===lv)&&(!tx||l.r.toLowerCase().includes(tx)));
+$('lc').textContent=`${f.length}/${logs.length} 行`;
+$('lo').innerHTML=f.map(l=>{const c=l.r.replace(/(ERROR)/i,'<span class="log-ERROR">$1</span>').replace(/(WARN)/i,'<span class="log-WARN">$1</span>').replace(/(INFO)/i,'<span class="log-INFO">$1</span>').replace(/(DEBUG)/i,'<span class="log-DEBUG">$1</span>');return`<div class="log-line">${l.t?`<span class="log-ts">${esc(l.t)}</span> `:''}${c}</div>`}).join('')||'<div style="padding:14px;color:var(--muted);font-size:12px">无匹配</div>';
+const cnt={};logs.forEach(l=>{cnt[l.l]=(cnt[l.l]||0)+1});const cl={ERROR:'var(--danger)',WARN:'var(--amber)',INFO:'var(--accent)',DEBUG:'var(--muted)'};
+$('lst').innerHTML=Object.entries(cnt).map(([k,v])=>`<div style="display:flex;align-items:center;gap:4px"><span class="log-dot" style="background:${cl[k]||'var(--muted)'}"></span>${k}: ${v}</div>`).join('')}
+function ls(){$('li').value=`2024-01-15 10:23:45 [INFO] Application started on port 3000
+2024-01-15 10:23:46 [DEBUG] Loading config from /etc/app/config.yaml
+2024-01-15 10:23:46 [INFO] Database connected (pool: 10)
+2024-01-15 10:23:47 [WARN] Cache miss: user_session_abc123
+2024-01-15 10:23:48 [INFO] GET /api/users 200 12ms
+2024-01-15 10:23:49 [ERROR] Redis connection refused: 127.0.0.1:6379
+2024-01-15 10:23:49 [WARN] Falling back to in-memory cache
+2024-01-15 10:23:50 [INFO] GET /api/products 200 45ms
+2024-01-15 10:23:51 [ERROR] NullPointerException at OrderService.java:142
+2024-01-15 10:23:51 [DEBUG] Retrying payment gateway (1/3)
+2024-01-15 10:23:52 [INFO] POST /api/orders 201 230ms
+2024-01-15 10:23:53 [WARN] Memory usage: 85% (threshold: 80%)
+2024-01-15 10:23:54 [INFO] Job done: sync_inventory (1.2s)
+2024-01-15 10:23:55 [ERROR] External API timeout (30000ms)
+2024-01-15 10:23:56 [DEBUG] GC: 45ms, heap 512/1024MB`}
+
+/* --- About --- */
+pages.about=()=>`
+<div class="tool-hdr" style="margin-bottom:36px"><h1 style="font-size:28px">关于 DevKit</h1><p style="font-size:15px;max-width:520px;line-height:1.7">面向开发者的一站式效率工具集。纯前端运行，数据不出浏览器。</p></div>
+<div class="about-grid">
+  <div class="about-card glass"><h3>设计原则</h3><ul>
+    <li>极简界面，零学习成本</li><li>客户端运行，数据不出浏览器</li><li>键盘优先，支持快捷键</li><li>即用即走，无需注册</li></ul></div>
+  <div class="about-card glass"><h3>技术栈</h3><ul>
+    <li>HTML / CSS / JavaScript</li><li>零外部依赖，单文件部署</li><li>CSS OKLch 色彩系统</li><li>响应式布局</li></ul></div>
+  <div class="about-card glass"><h3>工具列表</h3><ul>
+    <li>JSON 格式化 — 格式化 / 压缩 / 验证</li><li>正则验证器 — 实时匹配 / 捕获组</li><li>日志分析器 — 筛选 / 过滤 / 统计</li><li>2FA 验证码 — TOTP 生成 (开发中)</li><li>翻译工具 — 多语言互译 (开发中)</li><li>ADB 自动化 — 设备管理 (开发中)</li></ul></div>
+  <div class="about-card glass"><h3>隐私声明</h3>
+    <p>所有数据处理均在浏览器本地完成，不上传任何用户输入至服务器。</p></div>
+</div>`;
+
+/* --- Changelog --- */
+pages.changelog=()=>`
+<div class="cl-hdr"><h1>更新日志</h1></div>
+<div class="cl-entry glass" style="padding:20px;border-radius:var(--radius)">
+  <div class="cl-head"><span class="cl-ver">v0.1.0</span><span class="cl-date">2024-01-15</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-n">新功能</span> JSON 格式化 — 格式化、压缩、验证</li>
+    <li><span class="cl-tag tag-n">新功能</span> 正则验证器 — 实时匹配、捕获组</li>
+    <li><span class="cl-tag tag-n">新功能</span> 日志分析器 — 级别筛选、关键词搜索</li>
+    <li><span class="cl-tag tag-n">新功能</span> 首页 + 工具箱 + 关于页面</li>
+  </ul>
+</div>
+<div class="cl-entry glass" style="padding:20px;border-radius:var(--radius)">
+  <div class="cl-head"><span class="cl-ver">v0.0.1</span><span class="cl-date">2024-01-10</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-n">init</span> 项目初始化，搭建基础框架</li>
+    <li><span class="cl-tag tag-i">改进</span> 确定 Glass 设计方向</li>
+  </ul>
+</div>`;
+
+function after(p){
+  if(p==='tools')$('tl').innerHTML=toolCards();
+}
+nav();
+</script>
+</body>
+</html>

@@ -1,15 +1,24 @@
 :root {
-  --bg: oklch(98% 0.005 250);
+  --bg: oklch(97% 0.012 70);
   --surface: oklch(100% 0 0);
-  --fg: oklch(18% 0.012 250);
-  --muted: oklch(54% 0.012 250);
-  --border: oklch(92% 0.005 250);
-  --accent: oklch(58% 0.18 255);
-  --accent-dim: oklch(58% 0.18 255 / 0.1);
-  --danger: oklch(55% 0.2 25);
-  --danger-dim: oklch(55% 0.2 25 / 0.08);
-  --font-display: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --surface-2: oklch(96% 0.01 70);
+  --surface-3: oklch(93% 0.012 65);
+  --fg: oklch(18% 0.015 50);
+  --muted: oklch(50% 0.015 50);
+  --border: oklch(90% 0.012 60);
+  --accent: oklch(55% 0.18 30);
+  --accent-bg: oklch(94% 0.02 30);
+  --green: oklch(50% 0.14 150);
+  --green-bg: oklch(94% 0.02 150);
+  --amber: oklch(55% 0.14 70);
+  --amber-bg: oklch(94% 0.02 70);
+  --red: oklch(52% 0.18 25);
+  --red-bg: oklch(94% 0.02 25);
+  --blue: oklch(55% 0.16 255);
+  --blue-bg: oklch(94% 0.02 255);
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, Menlo, monospace;
-  --radius: 10px;
+  --radius: 12px;
+  --radius-sm: 8px;
 }

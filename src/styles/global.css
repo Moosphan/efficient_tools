@@ -1,31 +1,22 @@
 @import './variables.css';
 @import './reset.css';
 
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--bg);
   color: var(--fg);
+  line-height: 1.6;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48px 24px 32px;
 }
 
 #root {
-  width: 100%;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-button {
-  font-family: var(--font-body);
-}
-
-input, select, textarea {
-  font-family: var(--font-body);
+  min-height: 100vh;
 }
 
 a {
@@ -35,10 +26,4 @@ a {
 
 a:hover {
   text-decoration: underline;
-}
-
-@media (max-width: 560px) {
-  body {
-    padding: 32px 16px 24px;
-  }
 }

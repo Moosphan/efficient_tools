@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>(function(){
+  function makeStore(){
+    var data = {};
+    var api = {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+      setItem: function(k, v){ data[k] = String(v); },
+      removeItem: function(k){ delete data[k]; },
+      clear: function(){ data = {}; },
+      key: function(i){ return Object.keys(data)[i] || null; }
+    };
+    Object.defineProperty(api, 'length', { get: function(){ return Object.keys(data).length; } });
+    return api;
+  }
+  function tryShim(name){
+    var works = false;
+    try { works = !!window[name] && typeof window[name].getItem === 'function'; void window[name].length; }
+    catch (_) { works = false; }
+    if (works) return;
+    try { Object.defineProperty(window, name, { configurable: true, value: makeStore() }); }
+    catch (_) { try { window[name] = makeStore(); } catch (__) {} }
+  }
+  tryShim('localStorage');
+  tryShim('sessionStorage');
+})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevKit — Pill Rail</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(97% 0.012 70);
+  --surface: oklch(100% 0 0);
+  --fg: oklch(18% 0.015 50);
+  --muted: oklch(50% 0.015 50);
+  --border: oklch(90% 0.012 60);
+  --accent: oklch(55% 0.18 30);
+  --accent-bg: oklch(94% 0.02 30);
+  --green: oklch(50% 0.14 150);
+  --amber: oklch(55% 0.14 70);
+  --red: oklch(52% 0.18 25);
+  --font: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 8px;
+  --radius-pill: 100px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* --- Pill Rail --- */
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.rail-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  gap: 12px;
+}
+.rail-logo {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+.rail-logo span { color: var(--accent); }
+.pill-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  flex: 1;
+  min-width: 0;
+  scrollbar-width: none;
+  padding: 4px 0;
+}
+.pill-scroll::-webkit-scrollbar { display: none; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  text-decoration: none;
+  flex-shrink: 0;
+  font-family: var(--font);
+}
+.pill:hover { background: var(--surface); border-color: var(--border); color: var(--fg); text-decoration: none; }
+.pill.active {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.rail-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.rail-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.rail-search:hover { border-color: var(--fg); }
+.rail-search kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 1px 5px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+}
+
+/* --- Main --- */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* --- Landing --- */
+.hero {
+  text-align: center;
+  padding: 48px 0 40px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.hero h1 {
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.hero p {
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.hero-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.btn-primary { background: var(--fg); color: var(--bg); }
+.btn-primary:hover { opacity: 0.85; text-decoration: none; }
+.btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+.btn-ghost:hover { border-color: var(--fg); text-decoration: none; }
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 40px 0;
+}
+@media (max-width: 600px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+.stat-value { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+/* Tool cards — horizontal strip */
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.tool-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.tool-strip::-webkit-scrollbar { height: 4px; }
+.tool-strip::-webkit-scrollbar-thumb { background: var(--border); }
+.tool-card {
+  flex-shrink: 0;
+  width: 220px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  text-decoration: none;
+  color: var(--fg);
+}
+.tool-card:hover { border-color: var(--accent); box-shadow: 0 2px 12px oklch(50% 0.05 30 / 0.08); text-decoration: none; }
+.tool-card-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+.tool-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.tool-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.tool-card-tag {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+/* Recent */
+.recent { margin-top: 36px; }
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-decoration: none;
+  color: var(--fg);
+}
+.recent-item:hover { border-color: var(--accent); text-decoration: none; }
+.recent-icon { font-size: 14px; color: var(--accent); }
+.recent-name { font-weight: 500; }
+.recent-time { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+/* --- Tool Pages --- */
+.tool-header { margin-bottom: 28px; }
+.tool-header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+.tool-header p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+.tool-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+}
+.panel-actions { display: flex; gap: 6px; }
+.p-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.p-btn:hover { border-color: var(--fg); }
+.p-btn.accent { background: var(--accent); color: white; border-color: var(--accent); }
+
+textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 16px;
+  background: var(--surface);
+  color: var(--fg);
+  min-height: 280px;
+  tab-size: 2;
+}
+textarea::placeholder { color: var(--muted); }
+.output-area {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 16px;
+  min-height: 280px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+}
+.error-msg { color: var(--red); font-size: 12px; padding: 8px 16px; background: oklch(95% 0.02 25); border-radius: 6px; margin: 8px 0; }
+
+/* Regex */
+.regex-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.regex-row .delim { color: var(--muted); font-family: var(--font-mono); font-size: 15px; }
+.regex-row input {
+  flex: 1; border: none; outline: none;
+  font-family: var(--font-mono); font-size: 14px;
+  background: transparent; color: var(--fg);
+}
+.flag-btn {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+}
+.flag-btn.on { background: var(--accent-bg); color: var(--accent); border-color: var(--accent); }
+.match-hl { background: var(--accent-bg); border-bottom: 2px solid var(--accent); padding: 0 1px; }
+.match-row {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.match-idx { color: var(--accent); font-weight: 600; min-width: 24px; font-size: 12px; }
+.match-txt { color: var(--fg); }
+.match-grp { color: var(--muted); font-size: 12px; }
+
+/* Log analyzer */
+.log-ctrls {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.log-ctrls input, .log-ctrls select {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--fg);
+  outline: none;
+}
+.log-ctrls input:focus, .log-ctrls select:focus { border-color: var(--accent); }
+.log-line {
+  padding: 4px 16px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  border-bottom: 1px solid oklch(96% 0.008 60);
+}
+.log-line:hover { background: var(--accent-bg); }
+.log-ts { color: var(--muted); }
+.log-level-ERROR { color: var(--red); font-weight: 600; }
+.log-level-WARN { color: var(--amber); font-weight: 500; }
+.log-level-INFO { color: var(--accent); }
+.log-level-DEBUG { color: var(--muted); }
+.log-stats {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.log-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+
+/* --- About --- */
+.about-hero {
+  text-align: center;
+  padding: 32px 0 40px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.about-hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+.about-hero p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+.about-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.about-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.about-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.about-card ul { list-style: none; padding: 0; margin-top: 10px; }
+.about-card li { font-size: 14px; color: var(--muted); padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+.about-card li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+/* --- Changelog --- */
+.cl-entry { margin-bottom: 28px; }
+.cl-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.cl-ver {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.cl-date { font-size: 13px; color: var(--muted); }
+.cl-list { list-style: none; padding: 0; }
+.cl-list li { font-size: 14px; padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+.cl-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tag-new { background: oklch(92% 0.05 150); color: oklch(40% 0.1 150); }
+.tag-fix { background: oklch(92% 0.03 25); color: oklch(45% 0.12 25); }
+.tag-imp { background: var(--accent-bg); color: var(--accent); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .rail-inner { height: 48px; }
+  .rail-right { display: none; }
+  .main { padding: 20px 16px; }
+  .hero { padding: 24px 0; }
+  .tool-card { width: 180px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Pill Rail -->
+<div class="rail">
+  <div class="rail-inner">
+    <div class="rail-logo"><span>DK</span> / tools</div>
+    <div class="pill-scroll">
+      <a class="pill active" href="#/" data-page="home">
+        <span class="pill-dot" style="background:var(--fg);"></span> 首页
+      </a>
+      <a class="pill" href="#/json" data-page="json">
+        <span class="pill-dot" style="background:oklch(60% 0.18 255);"></span> json-fmt
+      </a>
+      <a class="pill" href="#/regex" data-page="regex">
+        <span class="pill-dot" style="background:oklch(60% 0.16 150);"></span> regex-test
+      </a>
+      <a class="pill" href="#/logs" data-page="logs">
+        <span class="pill-dot" style="background:oklch(60% 0.16 70);"></span> log-analyzer
+      </a>
+      <a class="pill" href="#/about" data-page="about">
+        <span class="pill-dot" style="background:var(--muted);"></span> 关于
+      </a>
+      <a class="pill" href="#/changelog" data-page="changelog">
+        <span class="pill-dot" style="background:var(--muted);"></span> 更新日志
+      </a>
+    </div>
+    <div class="rail-right">
+      <div class="rail-search">⌕ 搜索工具… <kbd>⌘K</kbd></div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main" id="app"></div>
+
+<script>
+const app = document.getElementById('app');
+const pillItems = document.querySelectorAll('.pill');
+
+function navigate() {
+  const hash = location.hash.slice(2) || 'home';
+  pillItems.forEach(p => p.classList.toggle('active', p.dataset.page === hash));
+  const activePill = document.querySelector('.pill.active');
+  if (activePill) activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  const renderer = pages[hash];
+  if (renderer) { app.innerHTML = renderer(); afterRender(hash); }
+}
+window.addEventListener('hashchange', navigate);
+
+const pages = {};
+
+pages.home = () => `
+<div class="hero">
+  <div class="hero-badge"><span class="hero-badge-dot"></span> 6 个工具可用</div>
+  <h1>开发者的效率工具箱</h1>
+  <p>一站式汇集日常开发中最常用的小工具 — JSON 格式化、正则验证、日志分析。纯前端运行，数据不出浏览器。</p>
+  <div class="hero-actions">
+    <a href="#/json" class="btn btn-primary">开始使用 →</a>
+    <a href="#/about" class="btn btn-ghost">了解更多</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-value">6</div><div class="stat-label">内置工具</div></div>
+  <div class="stat"><div class="stat-value">0</div><div class="stat-label">外部依赖</div></div>
+  <div class="stat"><div class="stat-value">100%</div><div class="stat-label">客户端运行</div></div>
+  <div class="stat"><div class="stat-value">&lt;1s</div><div class="stat-label">启动时间</div></div>
+</div>
+
+<div class="section-label">可用工具</div>
+<div class="tool-strip">
+  <a class="tool-card" href="#/json">
+    <div class="tool-card-icon" style="background:oklch(94% 0.03 255);color:oklch(55% 0.18 255);">{ }</div>
+    <h3>json-fmt</h3>
+    <p>格式化、压缩、验证 JSON 数据</p>
+    <span class="tool-card-tag" style="background:oklch(92% 0.05 150);color:oklch(40% 0.1 150);">可用</span>
+  </a>
+  <a class="tool-card" href="#/regex">
+    <div class="tool-card-icon" style="background:oklch(94% 0.03 150);color:oklch(50% 0.16 150);">.*</div>
+    <h3>regex-test</h3>
+    <p>实时匹配高亮、捕获组查看</p>
+    <span class="tool-card-tag" style="background:oklch(92% 0.05 150);color:oklch(40% 0.1 150);">可用</span>
+  </a>
+  <a class="tool-card" href="#/logs">
+    <div class="tool-card-icon" style="background:oklch(94% 0.03 70);color:oklch(55% 0.14 70);">≡</div>
+    <h3>log-analyzer</h3>
+    <p>级别筛选、关键词搜索、统计</p>
+    <span class="tool-card-tag" style="background:oklch(92% 0.05 150);color:oklch(40% 0.1 150);">可用</span>
+  </a>
+  <a class="tool-card" style="opacity:0.5;cursor:default;">
+    <div class="tool-card-icon" style="background:oklch(94% 0.02 60);color:oklch(50% 0.1 60);">⊛</div>
+    <h3>totp-gen</h3>
+    <p>基于 TOTP 的二步验证码</p>
+    <span class="tool-card-tag" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);">开发中</span>
+  </a>
+  <a class="tool-card" style="opacity:0.5;cursor:default;">
+    <div class="tool-card-icon" style="background:oklch(94% 0.02 60);color:oklch(50% 0.1 60);">文</div>
+    <h3>translator</h3>
+    <p>多语言翻译</p>
+    <span class="tool-card-tag" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);">开发中</span>
+  </a>
+  <a class="tool-card" style="opacity:0.5;cursor:default;">
+    <div class="tool-card-icon" style="background:oklch(94% 0.02 60);color:oklch(50% 0.1 60);">⌘</div>
+    <h3>adb-shell</h3>
+    <p>ADB 设备管理</p>
+    <span class="tool-card-tag" style="background:var(--bg);color:var(--muted);border:1px solid var(--border);">开发中</span>
+  </a>
+</div>
+
+<div class="recent">
+  <div class="section-label">最近使用</div>
+  <div class="recent-grid">
+    <a class="recent-item" href="#/json">
+      <span class="recent-icon">{ }</span>
+      <span class="recent-name">json-fmt</span>
+      <span class="recent-time">2 分钟前</span>
+    </a>
+    <a class="recent-item" href="#/regex">
+      <span class="recent-icon">.*</span>
+      <span class="recent-name">regex-test</span>
+      <span class="recent-time">15 分钟前</span>
+    </a>
+    <a class="recent-item" href="#/logs">
+      <span class="recent-icon">≡</span>
+      <span class="recent-name">log-analyzer</span>
+      <span class="recent-time">1 小时前</span>
+    </a>
+  </div>
+</div>
+`;
+
+// --- JSON ---
+pages.json = () => `
+<div class="tool-header">
+  <h1>json-fmt</h1>
+  <p>格式化、压缩、验证 JSON 数据。粘贴内容后执行操作。</p>
+</div>
+<div class="tool-layout">
+  <div class="panel">
+    <div class="panel-head"><span>输入</span>
+      <div class="panel-actions">
+        <button class="p-btn" onclick="jsonSample()">示例</button>
+        <button class="p-btn" onclick="document.getElementById('json-input').value=''">清空</button>
+      </div>
+    </div>
+    <textarea id="json-input" placeholder='粘贴 JSON 数据...\n例如: {"name":"devkit","version":"0.1.0"}'></textarea>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><span>输出</span>
+      <div class="panel-actions">
+        <button class="p-btn accent" onclick="jsonFormat()">格式化</button>
+        <button class="p-btn" onclick="jsonMinify()">压缩</button>
+        <button class="p-btn" onclick="jsonCopy()">复制</button>
+      </div>
+    </div>
+    <div class="output-area" id="json-output">等待输入…</div>
+    <div id="json-error"></div>
+  </div>
+</div>
+`;
+
+function jsonFormat() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '等待输入…'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input), null, 2); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">JSON 解析错误: ${e.message}</div>`; }
+}
+function jsonMinify() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '等待输入…'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input)); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">JSON 解析错误: ${e.message}</div>`; }
+}
+function jsonCopy() {
+  const text = document.getElementById('json-output').textContent;
+  if (text && text !== '等待输入…') navigator.clipboard.writeText(text);
+}
+function jsonSample() {
+  document.getElementById('json-input').value = JSON.stringify({
+    name: "DevKit", version: "0.1.0", tools: [
+      { id: "json", name: "json-fmt", status: "可用" },
+      { id: "regex", name: "regex-test", status: "可用" },
+      { id: "logs", name: "log-analyzer", status: "可用" }
+    ], config: { theme: "pills", language: "zh-CN", autoSave: true }
+  }, null, 2);
+}
+
+// --- Regex ---
+pages.regex = () => `
+<div class="tool-header">
+  <h1>regex-test</h1>
+  <p>输入正则表达式和测试文本，实时查看匹配结果。</p>
+</div>
+<div class="tool-layout">
+  <div class="panel">
+    <div class="panel-head"><span>正则表达式</span>
+      <div class="panel-actions">
+        <button class="flag-btn" id="flag-g" onclick="toggleFlag('g')">g</button>
+        <button class="flag-btn on" id="flag-i" onclick="toggleFlag('i')">i</button>
+        <button class="flag-btn" id="flag-m" onclick="toggleFlag('m')">m</button>
+        <button class="flag-btn" id="flag-s" onclick="toggleFlag('s')">s</button>
+      </div>
+    </div>
+    <div class="regex-row">
+      <span class="delim">/</span>
+      <input type="text" id="regex-pattern" placeholder="输入正则表达式…" oninput="runRegex()">
+      <span class="delim">/</span>
+      <span id="regex-flags-display" style="color:var(--accent);font-family:var(--font-mono);font-size:14px;">i</span>
+    </div>
+    <div class="panel-head"><span>测试字符串</span></div>
+    <textarea id="regex-test" placeholder="输入要测试的文本…" oninput="runRegex()" style="min-height:200px;"></textarea>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><span>匹配结果</span> <span id="regex-count" style="font-size:12px;color:var(--muted);">0 个匹配</span></div>
+    <div id="regex-output" class="output-area" style="min-height:200px;">
+      <span style="color:var(--muted);">输入正则和文本后自动匹配…</span>
+    </div>
+    <div class="panel-head"><span>匹配列表</span></div>
+    <div id="regex-matches" style="max-height:200px;overflow:auto;">
+      <div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div>
+    </div>
+  </div>
+</div>
+`;
+
+const regexFlags = { g: false, i: true, m: false, s: false };
+function toggleFlag(f) {
+  regexFlags[f] = !regexFlags[f];
+  document.getElementById('flag-' + f).classList.toggle('on', regexFlags[f]);
+  document.getElementById('regex-flags-display').textContent = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+  runRegex();
+}
+function runRegex() {
+  const pattern = document.getElementById('regex-pattern').value;
+  const testStr = document.getElementById('regex-test').value;
+  const outEl = document.getElementById('regex-output');
+  const matchEl = document.getElementById('regex-matches');
+  const countEl = document.getElementById('regex-count');
+  if (!pattern || !testStr) {
+    outEl.innerHTML = '<span style="color:var(--muted);">输入正则和文本后自动匹配…</span>';
+    matchEl.innerHTML = '<div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div>';
+    countEl.textContent = '0 个匹配';
+    return;
+  }
+  try {
+    const flags = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+    const re = new RegExp(pattern, flags);
+    const matches = [];
+    let m;
+    if (flags.includes('g')) {
+      while ((m = re.exec(testStr)) !== null) {
+        matches.push({ index: m.index, match: m[0], groups: m.slice(1) });
+        if (m[0].length === 0) re.lastIndex++;
+      }
+    } else {
+      m = re.exec(testStr);
+      if (m) matches.push({ index: m.index, match: m[0], groups: m.slice(1) });
+    }
+    countEl.textContent = `${matches.length} 个匹配`;
+    let highlighted = '', last = 0;
+    matches.forEach(m => {
+      highlighted += escHtml(testStr.slice(last, m.index));
+      highlighted += `<span class="match-hl">${escHtml(m.match)}</span>`;
+      last = m.index + m.match.length;
+    });
+    highlighted += escHtml(testStr.slice(last));
+    outEl.innerHTML = highlighted || '<span style="color:var(--muted);">无匹配</span>';
+    matchEl.innerHTML = matches.length ? matches.map((m, i) => `
+      <div class="match-row">
+        <span class="match-idx">#${i+1}</span>
+        <span class="match-txt">${escHtml(m.match)}</span>
+        ${m.groups.length ? `<span class="match-grp">groups: ${m.groups.map(g => escHtml(g||'—')).join(', ')}</span>` : ''}
+      </div>
+    `).join('') : '<div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div>';
+  } catch (e) {
+    outEl.innerHTML = `<div class="error-msg">正则语法错误: ${e.message}</div>`;
+    matchEl.innerHTML = '';
+    countEl.textContent = '错误';
+  }
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// --- Logs ---
+pages.logs = () => `
+<div class="tool-header">
+  <h1>log-analyzer</h1>
+  <p>粘贴日志内容，按级别和关键词筛选，快速定位问题。</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr;gap:16px;">
+  <div class="panel">
+    <div class="panel-head"><span>日志输入</span>
+      <div class="panel-actions">
+        <button class="p-btn" onclick="logSample()">示例日志</button>
+        <button class="p-btn accent" onclick="parseLogs()">分析</button>
+      </div>
+    </div>
+    <textarea id="log-input" placeholder="粘贴日志内容…" style="min-height:150px;"></textarea>
+  </div>
+  <div class="panel" id="log-panel" style="display:none;">
+    <div class="log-ctrls">
+      <input type="text" id="log-filter-text" placeholder="关键词搜索…" oninput="filterLogs()">
+      <select id="log-filter-level" onchange="filterLogs()">
+        <option value="all">所有级别</option>
+        <option value="ERROR">ERROR</option>
+        <option value="WARN">WARN</option>
+        <option value="INFO">INFO</option>
+        <option value="DEBUG">DEBUG</option>
+      </select>
+      <span style="font-size:12px;color:var(--muted);margin-left:auto;" id="log-filter-count"></span>
+    </div>
+    <div id="log-output" style="max-height:400px;overflow:auto;"></div>
+    <div class="log-stats" id="log-stats"></div>
+  </div>
+</div>
+`;
+
+let parsedLogs = [];
+function parseLogs() {
+  const raw = document.getElementById('log-input').value.trim();
+  if (!raw) return;
+  parsedLogs = raw.split('\n').map((line, i) => {
+    const levelMatch = line.match(/\b(ERROR|WARN|INFO|DEBUG)\b/i);
+    const tsMatch = line.match(/(\d{4}[-/]\d{2}[-/]\d{2}[\sT]\d{2}:\d{2}(?::\d{2})?)/);
+    return { line: i+1, raw: line, level: levelMatch ? levelMatch[1].toUpperCase() : 'INFO', timestamp: tsMatch ? tsMatch[1] : '' };
+  });
+  document.getElementById('log-panel').style.display = '';
+  filterLogs();
+}
+function filterLogs() {
+  const text = document.getElementById('log-filter-text').value.toLowerCase();
+  const level = document.getElementById('log-filter-level').value;
+  const filtered = parsedLogs.filter(l =>
+    (level === 'all' || l.level === level) && (!text || l.raw.toLowerCase().includes(text))
+  );
+  document.getElementById('log-filter-count').textContent = `${filtered.length} / ${parsedLogs.length} 行`;
+  document.getElementById('log-output').innerHTML = filtered.map(l => {
+    const colored = l.raw
+      .replace(/(ERROR)/i, '<span class="log-level-ERROR">$1</span>')
+      .replace(/(WARN)/i, '<span class="log-level-WARN">$1</span>')
+      .replace(/(INFO)/i, '<span class="log-level-INFO">$1</span>')
+      .replace(/(DEBUG)/i, '<span class="log-level-DEBUG">$1</span>');
+    return `<div class="log-line">${l.timestamp ? `<span class="log-ts">${escHtml(l.timestamp)}</span> ` : ''}${colored}</div>`;
+  }).join('') || '<div style="padding:16px;color:var(--muted);font-size:13px;">无匹配日志</div>';
+  const counts = {};
+  parsedLogs.forEach(l => { counts[l.level] = (counts[l.level]||0)+1; });
+  const colors = { ERROR:'var(--red)', WARN:'var(--amber)', INFO:'var(--accent)', DEBUG:'var(--muted)' };
+  document.getElementById('log-stats').innerHTML = Object.entries(counts).map(([k,v]) =>
+    `<div style="display:flex;align-items:center;gap:4px;"><span class="log-dot" style="background:${colors[k]||'var(--muted)'}"></span>${k}: ${v}</div>`
+  ).join('');
+}
+function logSample() {
+  document.getElementById('log-input').value = `2024-01-15 10:23:45 [INFO] Application started on port 3000
+2024-01-15 10:23:46 [DEBUG] Loading configuration from /etc/app/config.yaml
+2024-01-15 10:23:46 [INFO] Database connection established (pool size: 10)
+2024-01-15 10:23:47 [WARN] Cache miss for key: user_session_abc123
+2024-01-15 10:23:48 [INFO] GET /api/users 200 12ms
+2024-01-15 10:23:49 [ERROR] Failed to connect to Redis: ECONNREFUSED 127.0.0.1:6379
+2024-01-15 10:23:49 [WARN] Falling back to in-memory cache
+2024-01-15 10:23:50 [INFO] GET /api/products 200 45ms
+2024-01-15 10:23:51 [ERROR] NullPointerException at com.app.service.OrderService.process(OrderService.java:142)
+2024-01-15 10:23:51 [DEBUG] Retrying request to payment gateway (attempt 1/3)
+2024-01-15 10:23:52 [INFO] POST /api/orders 201 230ms
+2024-01-15 10:23:53 [WARN] High memory usage detected: 85% (threshold: 80%)
+2024-01-15 10:23:54 [INFO] Background job completed: sync_inventory (duration: 1.2s)
+2024-01-15 10:23:55 [ERROR] Timeout waiting for response from external API (30000ms)
+2024-01-15 10:23:56 [DEBUG] GC pause: 45ms, heap: 512MB/1024MB`;
+}
+
+// --- About ---
+pages.about = () => `
+<div class="about-hero">
+  <h1>关于 DevKit</h1>
+  <p>面向开发者的一站式效率工具集合，所有工具均在浏览器端运行，无需后端服务，数据不离开本地。</p>
+</div>
+<div class="about-grid">
+  <div class="about-card">
+    <h3>设计原则</h3>
+    <ul>
+      <li>极简界面，零学习成本</li>
+      <li>客户端运行，数据不出浏览器</li>
+      <li>键盘优先，支持快捷键操作</li>
+      <li>开箱即用，无需注册或配置</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>技术栈</h3>
+    <ul>
+      <li>纯 HTML / CSS / JavaScript</li>
+      <li>零外部依赖，单文件部署</li>
+      <li>CSS OKLch 色彩系统</li>
+      <li>响应式布局，桌面/平板/手机</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>工具列表</h3>
+    <ul>
+      <li>json-fmt — 格式化 / 压缩 / 验证</li>
+      <li>regex-test — 实时匹配 / 捕获组</li>
+      <li>log-analyzer — 筛选 / 过滤 / 统计</li>
+      <li>totp-gen — TOTP 生成 (开发中)</li>
+      <li>translator — 多语言互译 (开发中)</li>
+      <li>adb-shell — 设备管理 (开发中)</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>隐私声明</h3>
+    <p>所有数据处理均在浏览器本地完成，不上传任何用户输入至服务器。工具运行时不需要网络连接（除页面首次加载）。</p>
+  </div>
+</div>
+`;
+
+// --- Changelog ---
+pages.changelog = () => `
+<div class="tool-header"><h1>更新日志</h1></div>
+<div class="cl-entry">
+  <div class="cl-head"><span class="cl-ver">v0.1.0</span><span class="cl-date">2024-01-15</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-new">新功能</span> json-fmt — 格式化、压缩、验证</li>
+    <li><span class="cl-tag tag-new">新功能</span> regex-test — 实时匹配高亮、捕获组查看</li>
+    <li><span class="cl-tag tag-new">新功能</span> log-analyzer — 按级别筛选、关键词搜索、统计</li>
+    <li><span class="cl-tag tag-new">新功能</span> Pill Rail 导航，工具名即导航项</li>
+  </ul>
+</div>
+<div class="cl-entry">
+  <div class="cl-head"><span class="cl-ver">v0.0.1</span><span class="cl-date">2024-01-10</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-new">新功能</span> 项目初始化，搭建基础框架</li>
+    <li><span class="cl-tag tag-imp">改进</span> 确定 Pill Rail 设计方向</li>
+  </ul>
+</div>
+`;
+
+function afterRender(page) {}
+navigate();
+</script>
+</body>
+</html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>(function(){
+  function makeStore(){
+    var data = {};
+    var api = {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+      setItem: function(k, v){ data[k] = String(v); },
+      removeItem: function(k){ delete data[k]; },
+      clear: function(){ data = {}; },
+      key: function(i){ return Object.keys(data)[i] || null; }
+    };
+    Object.defineProperty(api, 'length', { get: function(){ return Object.keys(data).length; } });
+    return api;
+  }
+  function tryShim(name){
+    var works = false;
+    try { works = !!window[name] && typeof window[name].getItem === 'function'; void window[name].length; }
+    catch (_) { works = false; }
+    if (works) return;
+    try { Object.defineProperty(window, name, { configurable: true, value: makeStore() }); }
+    catch (_) { try { window[name] = makeStore(); } catch (__) {} }
+  }
+  tryShim('localStorage');
+  tryShim('sessionStorage');
+})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevKit — Tab Bar</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(13% 0.012 250);
+  --bg-tab: oklch(17% 0.014 250);
+  --bg-active: oklch(20% 0.016 250);
+  --surface: oklch(20% 0.016 250);
+  --fg: oklch(88% 0.01 250);
+  --muted: oklch(50% 0.014 250);
+  --border: oklch(26% 0.014 250);
+  --accent: oklch(68% 0.16 255);
+  --accent-dim: oklch(28% 0.04 255);
+  --green: oklch(70% 0.16 150);
+  --amber: oklch(75% 0.14 70);
+  --red: oklch(62% 0.2 25);
+  --font: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --radius: 0px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Tab Bar --- */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  background: var(--bg-tab);
+  border-bottom: 1px solid var(--border);
+  height: 40px;
+  flex-shrink: 0;
+  position: relative;
+}
+.tab-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  height: 100%;
+}
+.tab-bar-logo {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.tab-scroll {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  flex: 1;
+  height: 100%;
+  scrollbar-width: none;
+}
+.tab-scroll::-webkit-scrollbar { display: none; }
+.tab-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 100%;
+  font-size: 12px;
+  color: var(--muted);
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+  user-select: none;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.tab-item:hover { background: var(--bg-active); color: var(--fg); text-decoration: none; }
+.tab-item.active {
+  background: var(--bg);
+  color: var(--fg);
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: -1px;
+}
+.tab-icon { font-size: 11px; opacity: 0.6; }
+.tab-close {
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.1s;
+  padding: 2px;
+}
+.tab-item:hover .tab-close { opacity: 0.5; }
+.tab-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 12px;
+  flex-shrink: 0;
+  height: 100%;
+}
+.tab-bar-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.tab-bar-btn:hover { border-color: var(--fg); color: var(--fg); }
+
+/* Fade edges for scroll */
+.tab-scroll-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+.tab-scroll-wrap::before,
+.tab-scroll-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 24px;
+  z-index: 2;
+  pointer-events: none;
+}
+.tab-scroll-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg-tab), transparent); }
+.tab-scroll-wrap::after { right: 0; background: linear-gradient(-90deg, var(--bg-tab), transparent); }
+
+/* --- Main Content --- */
+.main-content {
+  flex: 1;
+  padding: 32px;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+/* --- Landing --- */
+.hero { margin-bottom: 40px; }
+.hero-cmd {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-cmd .prompt { color: var(--green); }
+.hero h1 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 13px; color: var(--muted); max-width: 480px; line-height: 1.7; }
+.hero-actions { margin-top: 20px; display: flex; gap: 8px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+.btn-accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.btn-accent:hover { background: var(--accent); color: var(--bg); }
+
+/* Stats row */
+.stats-row {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin: 32px 0;
+}
+.stat-item {
+  flex: 1;
+  background: var(--surface);
+  padding: 16px 20px;
+  text-align: center;
+}
+.stat-value { font-size: 20px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* Tool strip — horizontal scroll of tool cards */
+.tool-strip-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.tool-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.tool-strip::-webkit-scrollbar { height: 4px; }
+.tool-strip::-webkit-scrollbar-track { background: transparent; }
+.tool-strip::-webkit-scrollbar-thumb { background: var(--border); }
+.tool-strip-card {
+  flex-shrink: 0;
+  width: 200px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  text-decoration: none;
+  color: var(--fg);
+}
+.tool-strip-card:hover { border-color: var(--accent); text-decoration: none; }
+.tool-strip-card-icon {
+  width: 28px; height: 28px;
+  background: var(--accent-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.tool-strip-card h3 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.tool-strip-card p { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.tool-strip-card-tag {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 10px;
+  padding: 1px 6px;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+/* Recent section */
+.recent { margin-top: 32px; }
+.recent h2 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+.recent-list { list-style: none; }
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  margin-bottom: -1px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-decoration: none;
+  color: var(--fg);
+}
+.recent-item:hover { background: var(--accent-dim); text-decoration: none; }
+.recent-item-icon { font-size: 11px; color: var(--accent); width: 16px; text-align: center; }
+.recent-item-name { font-weight: 500; }
+.recent-item-desc { color: var(--muted); margin-left: auto; font-size: 11px; }
+
+/* --- Tool Pages --- */
+.tool-header { margin-bottom: 24px; }
+.tool-header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
+.tool-header p { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.tool-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg-tab);
+}
+.panel-head-label::before { content: '// '; color: var(--border); }
+.panel-actions { display: flex; gap: 4px; }
+.p-btn {
+  padding: 3px 8px;
+  font-size: 11px;
+  font-family: var(--font);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.1s;
+}
+.p-btn:hover { border-color: var(--fg); color: var(--fg); }
+.p-btn.accent { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 12px;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 280px;
+  tab-size: 2;
+}
+textarea::placeholder { color: var(--muted); }
+.output-area {
+  font-family: var(--font);
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 12px;
+  min-height: 280px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+  background: var(--bg);
+}
+.error-msg { color: var(--red); font-size: 11px; padding: 6px 12px; background: oklch(18% 0.03 25); border-left: 2px solid var(--red); }
+
+/* Regex */
+.regex-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.regex-row .delim { color: var(--accent); font-size: 13px; }
+.regex-row input {
+  flex: 1; border: none; outline: none;
+  font-family: var(--font); font-size: 13px;
+  background: transparent; color: var(--fg);
+}
+.flag-btn {
+  padding: 2px 6px;
+  font-size: 11px;
+  font-family: var(--font);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+}
+.flag-btn.on { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.match-hl { background: var(--accent-dim); border-bottom: 2px solid var(--accent); color: var(--accent); padding: 0 1px; }
+.match-row {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.match-idx { color: var(--accent); font-weight: 600; min-width: 20px; font-size: 11px; }
+.match-txt { color: var(--fg); }
+.match-grp { color: var(--muted); font-size: 11px; }
+
+/* Log analyzer */
+.log-ctrls {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--bg);
+}
+.log-ctrls input, .log-ctrls select {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: var(--font);
+  background: var(--surface);
+  color: var(--fg);
+  outline: none;
+}
+.log-ctrls input:focus, .log-ctrls select:focus { border-color: var(--accent); }
+.log-line {
+  padding: 3px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-bottom: 1px solid oklch(22% 0.014 250);
+}
+.log-line:hover { background: var(--accent-dim); }
+.log-ts { color: var(--muted); }
+.log-level-ERROR { color: var(--red); font-weight: 600; }
+.log-level-WARN { color: var(--amber); font-weight: 500; }
+.log-level-INFO { color: var(--accent); }
+.log-level-DEBUG { color: var(--muted); }
+.log-stats {
+  display: flex;
+  gap: 16px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg-tab);
+}
+.log-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+
+/* --- About --- */
+.about-section { margin-bottom: 32px; }
+.about-section h2 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+.about-section p { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 560px; }
+.about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+.about-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+.about-card h3 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.about-card ul { list-style: none; padding: 0; }
+.about-card li { font-size: 12px; color: var(--muted); padding: 3px 0; }
+.about-card li::before { content: '› '; color: var(--accent); }
+
+/* --- Changelog --- */
+.cl-entry { margin-bottom: 24px; }
+.cl-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.cl-ver {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.cl-date { font-size: 11px; color: var(--muted); }
+.cl-list { list-style: none; padding: 0; }
+.cl-list li { font-size: 12px; padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+.cl-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.tag-new { background: oklch(22% 0.05 150); color: var(--green); }
+.tag-fix { background: oklch(22% 0.04 25); color: var(--red); }
+.tag-imp { background: var(--accent-dim); color: var(--accent); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .main-content { padding: 16px; }
+  .stats-row { flex-wrap: wrap; }
+  .stat-item { flex: 1 1 45%; }
+  .tool-strip-card { width: 160px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-bar-left">
+    <span class="tab-bar-logo">DK://</span>
+  </div>
+  <div class="tab-scroll-wrap">
+    <div class="tab-scroll" id="tab-scroll">
+      <a class="tab-item active" href="#/" data-page="home">
+        <span class="tab-icon">◈</span> home
+      </a>
+      <a class="tab-item" href="#/json" data-page="json">
+        <span class="tab-icon">{}</span> json-fmt
+      </a>
+      <a class="tab-item" href="#/regex" data-page="regex">
+        <span class="tab-icon">.*</span> regex-test
+      </a>
+      <a class="tab-item" href="#/logs" data-page="logs">
+        <span class="tab-icon">≡</span> log-analyzer
+      </a>
+      <a class="tab-item" href="#/about" data-page="about">
+        <span class="tab-icon">?</span> about
+      </a>
+      <a class="tab-item" href="#/changelog" data-page="changelog">
+        <span class="tab-icon">↻</span> changelog
+      </a>
+    </div>
+  </div>
+  <div class="tab-bar-right">
+    <button class="tab-bar-btn" onclick="location.hash='#/about'">⌘K</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="app"></div>
+
+<script>
+const app = document.getElementById('app');
+const tabItems = document.querySelectorAll('.tab-item');
+
+function navigate() {
+  const hash = location.hash.slice(2) || 'home';
+  tabItems.forEach(t => t.classList.toggle('active', t.dataset.page === hash));
+  // Scroll active tab into view
+  const activeTab = document.querySelector('.tab-item.active');
+  if (activeTab) activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  const renderer = pages[hash];
+  if (renderer) { app.innerHTML = renderer(); afterRender(hash); }
+}
+window.addEventListener('hashchange', navigate);
+
+const pages = {};
+
+pages.home = () => `
+<div class="hero">
+  <div class="hero-cmd"><span class="prompt">$</span> devkit --version</div>
+  <h1>开发者的<span>效率终端</span></h1>
+  <p>汇集日常开发中最常用的小工具 — JSON 格式化、正则验证、日志分析。纯前端运行，数据不出浏览器。</p>
+  <div class="hero-actions">
+    <a href="#/json" class="btn btn-accent">打开 json-fmt →</a>
+    <a href="#/about" class="btn">cat about.md</a>
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-value">6</div><div class="stat-label">tools</div></div>
+  <div class="stat-item"><div class="stat-value">0</div><div class="stat-label">deps</div></div>
+  <div class="stat-item"><div class="stat-value">100%</div><div class="stat-label">client</div></div>
+  <div class="stat-item"><div class="stat-value">&lt;1s</div><div class="stat-label">boot</div></div>
+</div>
+
+<div class="tool-strip-label">可用工具</div>
+<div class="tool-strip">
+  <a class="tool-strip-card" href="#/json">
+    <div class="tool-strip-card-icon">{}</div>
+    <h3>json-fmt</h3>
+    <p>格式化、压缩、验证 JSON</p>
+    <span class="tool-strip-card-tag">active</span>
+  </a>
+  <a class="tool-strip-card" href="#/regex">
+    <div class="tool-strip-card-icon">.*</div>
+    <h3>regex-test</h3>
+    <p>实时匹配高亮、捕获组</p>
+    <span class="tool-strip-card-tag">active</span>
+  </a>
+  <a class="tool-strip-card" href="#/logs">
+    <div class="tool-strip-card-icon">≡</div>
+    <h3>log-analyzer</h3>
+    <p>级别筛选、关键词搜索</p>
+    <span class="tool-strip-card-tag">active</span>
+  </a>
+  <a class="tool-strip-card" href="#/tools" style="opacity:0.5;cursor:default;">
+    <div class="tool-strip-card-icon">⊛</div>
+    <h3>totp-gen</h3>
+    <p>二步验证码生成</p>
+    <span class="tool-strip-card-tag">pending</span>
+  </a>
+  <a class="tool-strip-card" href="#/tools" style="opacity:0.5;cursor:default;">
+    <div class="tool-strip-card-icon">文</div>
+    <h3>translator</h3>
+    <p>多语言翻译</p>
+    <span class="tool-strip-card-tag">pending</span>
+  </a>
+  <a class="tool-strip-card" href="#/tools" style="opacity:0.5;cursor:default;">
+    <div class="tool-strip-card-icon">⌘</div>
+    <h3>adb-shell</h3>
+    <p>ADB 设备管理</p>
+    <span class="tool-strip-card-tag">pending</span>
+  </a>
+</div>
+
+<div class="recent">
+  <h2>最近使用</h2>
+  <div class="recent-list">
+    <a class="recent-item" href="#/json">
+      <span class="recent-item-icon">{}</span>
+      <span class="recent-item-name">json-fmt</span>
+      <span class="recent-item-desc">2 分钟前</span>
+    </a>
+    <a class="recent-item" href="#/regex">
+      <span class="recent-item-icon">.*</span>
+      <span class="recent-item-name">regex-test</span>
+      <span class="recent-item-desc">15 分钟前</span>
+    </a>
+    <a class="recent-item" href="#/logs">
+      <span class="recent-item-icon">≡</span>
+      <span class="recent-item-name">log-analyzer</span>
+      <span class="recent-item-desc">1 小时前</span>
+    </a>
+  </div>
+</div>
+`;
+
+// --- JSON ---
+pages.json = () => `
+<div class="tool-header">
+  <h1>json-fmt</h1>
+  <p>格式化、压缩、验证 JSON 数据。粘贴内容后执行操作。</p>
+</div>
+<div class="tool-layout">
+  <div class="panel">
+    <div class="panel-head"><span class="panel-head-label">stdin</span>
+      <div class="panel-actions">
+        <button class="p-btn" onclick="jsonSample()">sample</button>
+        <button class="p-btn" onclick="document.getElementById('json-input').value=''">clear</button>
+      </div>
+    </div>
+    <textarea id="json-input" placeholder='粘贴 JSON...\n{"key":"value"}'></textarea>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><span class="panel-head-label">stdout</span>
+      <div class="panel-actions">
+        <button class="p-btn accent" onclick="jsonFormat()">fmt</button>
+        <button class="p-btn" onclick="jsonMinify()">min</button>
+        <button class="p-btn" onclick="jsonCopy()">cp</button>
+      </div>
+    </div>
+    <div class="output-area" id="json-output">// waiting for input...</div>
+    <div id="json-error"></div>
+  </div>
+</div>
+`;
+
+function jsonFormat() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '// waiting for input...'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input), null, 2); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">ERR: ${e.message}</div>`; }
+}
+function jsonMinify() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '// waiting for input...'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input)); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">ERR: ${e.message}</div>`; }
+}
+function jsonCopy() {
+  const text = document.getElementById('json-output').textContent;
+  if (text && !text.startsWith('//')) navigator.clipboard.writeText(text);
+}
+function jsonSample() {
+  document.getElementById('json-input').value = JSON.stringify({
+    app: "devkit", version: "0.1.0", tools: [
+      { id: "json", name: "json-fmt", status: "active" },
+      { id: "regex", name: "regex-test", status: "active" },
+      { id: "logs", name: "log-analyzer", status: "active" }
+    ], config: { theme: "tabs", lang: "zh-CN", autosave: true }
+  }, null, 2);
+}
+
+// --- Regex ---
+pages.regex = () => `
+<div class="tool-header">
+  <h1>regex-test</h1>
+  <p>输入正则表达式和测试文本，实时查看匹配。</p>
+</div>
+<div class="tool-layout">
+  <div class="panel">
+    <div class="panel-head"><span class="panel-head-label">pattern</span>
+      <div class="panel-actions">
+        <button class="flag-btn" id="flag-g" onclick="toggleFlag('g')">g</button>
+        <button class="flag-btn on" id="flag-i" onclick="toggleFlag('i')">i</button>
+        <button class="flag-btn" id="flag-m" onclick="toggleFlag('m')">m</button>
+        <button class="flag-btn" id="flag-s" onclick="toggleFlag('s')">s</button>
+      </div>
+    </div>
+    <div class="regex-row">
+      <span class="delim">/</span>
+      <input type="text" id="regex-pattern" placeholder="正则表达式..." oninput="runRegex()">
+      <span class="delim">/</span>
+      <span id="regex-flags-display" style="color:var(--accent);font-size:13px;">i</span>
+    </div>
+    <div class="panel-head"><span class="panel-head-label">test string</span></div>
+    <textarea id="regex-test" placeholder="输入测试文本..." oninput="runRegex()" style="min-height:200px;"></textarea>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><span class="panel-head-label">matches</span> <span id="regex-count" style="font-size:11px;color:var(--muted);">0 found</span></div>
+    <div id="regex-output" class="output-area" style="min-height:200px;">
+      <span style="color:var(--muted);">// enter pattern + text</span>
+    </div>
+    <div class="panel-head"><span class="panel-head-label">match list</span></div>
+    <div id="regex-matches" style="max-height:200px;overflow:auto;">
+      <div style="padding:12px;color:var(--muted);font-size:11px;">// no matches</div>
+    </div>
+  </div>
+</div>
+`;
+
+const regexFlags = { g: false, i: true, m: false, s: false };
+function toggleFlag(f) {
+  regexFlags[f] = !regexFlags[f];
+  document.getElementById('flag-' + f).classList.toggle('on', regexFlags[f]);
+  document.getElementById('regex-flags-display').textContent = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+  runRegex();
+}
+function runRegex() {
+  const pattern = document.getElementById('regex-pattern').value;
+  const testStr = document.getElementById('regex-test').value;
+  const outEl = document.getElementById('regex-output');
+  const matchEl = document.getElementById('regex-matches');
+  const countEl = document.getElementById('regex-count');
+  if (!pattern || !testStr) {
+    outEl.innerHTML = '<span style="color:var(--muted);">// enter pattern + text</span>';
+    matchEl.innerHTML = '<div style="padding:12px;color:var(--muted);font-size:11px;">// no matches</div>';
+    countEl.textContent = '0 found';
+    return;
+  }
+  try {
+    const flags = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+    const re = new RegExp(pattern, flags);
+    const matches = [];
+    let m;
+    if (flags.includes('g')) {
+      while ((m = re.exec(testStr)) !== null) {
+        matches.push({ index: m.index, match: m[0], groups: m.slice(1) });
+        if (m[0].length === 0) re.lastIndex++;
+      }
+    } else {
+      m = re.exec(testStr);
+      if (m) matches.push({ index: m.index, match: m[0], groups: m.slice(1) });
+    }
+    countEl.textContent = `${matches.length} found`;
+    let highlighted = '', last = 0;
+    matches.forEach(m => {
+      highlighted += escHtml(testStr.slice(last, m.index));
+      highlighted += `<span class="match-hl">${escHtml(m.match)}</span>`;
+      last = m.index + m.match.length;
+    });
+    highlighted += escHtml(testStr.slice(last));
+    outEl.innerHTML = highlighted || '<span style="color:var(--muted);">// no matches</span>';
+    matchEl.innerHTML = matches.length ? matches.map((m, i) => `
+      <div class="match-row">
+        <span class="match-idx">#${i+1}</span>
+        <span class="match-txt">${escHtml(m.match)}</span>
+        ${m.groups.length ? `<span class="match-grp">groups(${m.groups.map(g => escHtml(g||'—')).join(',')})</span>` : ''}
+      </div>
+    `).join('') : '<div style="padding:12px;color:var(--muted);font-size:11px;">// no matches</div>';
+  } catch (e) {
+    outEl.innerHTML = `<div class="error-msg">ERR: ${e.message}</div>`;
+    matchEl.innerHTML = '';
+    countEl.textContent = 'ERR';
+  }
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// --- Logs ---
+pages.logs = () => `
+<div class="tool-header">
+  <h1>log-analyzer</h1>
+  <p>粘贴日志，按级别和关键词筛选。</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr;gap:12px;">
+  <div class="panel">
+    <div class="panel-head"><span class="panel-head-label">input</span>
+      <div class="panel-actions">
+        <button class="p-btn" onclick="logSample()">sample</button>
+        <button class="p-btn accent" onclick="parseLogs()">analyze</button>
+      </div>
+    </div>
+    <textarea id="log-input" placeholder="粘贴日志..." style="min-height:140px;"></textarea>
+  </div>
+  <div class="panel" id="log-panel" style="display:none;">
+    <div class="log-ctrls">
+      <input type="text" id="log-filter-text" placeholder="grep..." oninput="filterLogs()">
+      <select id="log-filter-level" onchange="filterLogs()">
+        <option value="all">--all</option>
+        <option value="ERROR">ERROR</option>
+        <option value="WARN">WARN</option>
+        <option value="INFO">INFO</option>
+        <option value="DEBUG">DEBUG</option>
+      </select>
+      <span style="font-size:11px;color:var(--muted);margin-left:auto;" id="log-filter-count"></span>
+    </div>
+    <div id="log-output" style="max-height:400px;overflow:auto;"></div>
+    <div class="log-stats" id="log-stats"></div>
+  </div>
+</div>
+`;
+
+let parsedLogs = [];
+function parseLogs() {
+  const raw = document.getElementById('log-input').value.trim();
+  if (!raw) return;
+  parsedLogs = raw.split('\n').map((line, i) => {
+    const levelMatch = line.match(/\b(ERROR|WARN|INFO|DEBUG)\b/i);
+    const tsMatch = line.match(/(\d{4}[-/]\d{2}[-/]\d{2}[\sT]\d{2}:\d{2}(?::\d{2})?)/);
+    return { line: i+1, raw: line, level: levelMatch ? levelMatch[1].toUpperCase() : 'INFO', timestamp: tsMatch ? tsMatch[1] : '' };
+  });
+  document.getElementById('log-panel').style.display = '';
+  filterLogs();
+}
+function filterLogs() {
+  const text = document.getElementById('log-filter-text').value.toLowerCase();
+  const level = document.getElementById('log-filter-level').value;
+  const filtered = parsedLogs.filter(l =>
+    (level === 'all' || l.level === level) && (!text || l.raw.toLowerCase().includes(text))
+  );
+  document.getElementById('log-filter-count').textContent = `${filtered.length}/${parsedLogs.length}`;
+  document.getElementById('log-output').innerHTML = filtered.map(l => {
+    const colored = l.raw
+      .replace(/(ERROR)/i, '<span class="log-level-ERROR">$1</span>')
+      .replace(/(WARN)/i, '<span class="log-level-WARN">$1</span>')
+      .replace(/(INFO)/i, '<span class="log-level-INFO">$1</span>')
+      .replace(/(DEBUG)/i, '<span class="log-level-DEBUG">$1</span>');
+    return `<div class="log-line">${l.timestamp ? `<span class="log-ts">${escHtml(l.timestamp)}</span> ` : ''}${colored}</div>`;
+  }).join('') || '<div style="padding:12px;color:var(--muted);font-size:11px;">// no matching lines</div>';
+  const counts = {};
+  parsedLogs.forEach(l => { counts[l.level] = (counts[l.level]||0)+1; });
+  const colors = { ERROR:'var(--red)', WARN:'var(--amber)', INFO:'var(--accent)', DEBUG:'var(--muted)' };
+  document.getElementById('log-stats').innerHTML = Object.entries(counts).map(([k,v]) =>
+    `<div style="display:flex;align-items:center;gap:4px;"><span class="log-dot" style="background:${colors[k]||'var(--muted)'}"></span>${k}: ${v}</div>`
+  ).join('');
+}
+function logSample() {
+  document.getElementById('log-input').value = `2024-01-15 10:23:45 [INFO] Application started on port 3000
+2024-01-15 10:23:46 [DEBUG] Loading config from /etc/app/config.yaml
+2024-01-15 10:23:46 [INFO] Database connected (pool: 10)
+2024-01-15 10:23:47 [WARN] Cache miss: user_session_abc123
+2024-01-15 10:23:48 [INFO] GET /api/users 200 12ms
+2024-01-15 10:23:49 [ERROR] Redis connection refused: 127.0.0.1:6379
+2024-01-15 10:23:49 [WARN] Falling back to in-memory cache
+2024-01-15 10:23:50 [INFO] GET /api/products 200 45ms
+2024-01-15 10:23:51 [ERROR] NullPointerException at OrderService.java:142
+2024-01-15 10:23:51 [DEBUG] Retrying payment gateway (1/3)
+2024-01-15 10:23:52 [INFO] POST /api/orders 201 230ms
+2024-01-15 10:23:53 [WARN] Memory usage: 85% (threshold: 80%)
+2024-01-15 10:23:54 [INFO] Job done: sync_inventory (1.2s)
+2024-01-15 10:23:55 [ERROR] External API timeout (30000ms)
+2024-01-15 10:23:56 [DEBUG] GC: 45ms, heap 512/1024MB`;
+}
+
+// --- About ---
+pages.about = () => `
+<div class="about-section">
+  <h2>关于 DevKit</h2>
+  <p>面向开发者的一站式效率工具集。纯前端运行，数据不出浏览器。</p>
+</div>
+<div class="about-grid">
+  <div class="about-card">
+    <h3>设计原则</h3>
+    <ul>
+      <li>终端界面，零学习成本</li>
+      <li>客户端运行，数据不出浏览器</li>
+      <li>键盘优先，支持快捷键</li>
+      <li>即用即走，无需注册</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>技术栈</h3>
+    <ul>
+      <li>HTML / CSS / Vanilla JS</li>
+      <li>零依赖，单文件部署</li>
+      <li>OKLch 色彩系统</li>
+      <li>响应式布局</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>工具清单</h3>
+    <ul>
+      <li>json-fmt — 格式化 / 压缩 / 验证</li>
+      <li>regex-test — 实时匹配 / 捕获组</li>
+      <li>log-analyzer — 筛选 / 过滤 / 统计</li>
+      <li>totp-gen — TOTP 生成 [pending]</li>
+      <li>translator — 多语言翻译 [pending]</li>
+      <li>adb-shell — 设备管理 [pending]</li>
+    </ul>
+  </div>
+  <div class="about-card">
+    <h3>隐私</h3>
+    <p>所有数据处理在浏览器本地完成，不上传任何输入至服务器。</p>
+  </div>
+</div>
+`;
+
+// --- Changelog ---
+pages.changelog = () => `
+<div class="tool-header"><h1>changelog</h1></div>
+<div class="cl-entry">
+  <div class="cl-head"><span class="cl-ver">v0.1.0</span><span class="cl-date">2024-01-15</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-new">feat</span> json-fmt: 格式化、压缩、验证</li>
+    <li><span class="cl-tag tag-new">feat</span> regex-test: 实时匹配、捕获组</li>
+    <li><span class="cl-tag tag-new">feat</span> log-analyzer: 级别筛选、关键词搜索</li>
+    <li><span class="cl-tag tag-new">feat</span> tab bar 导航，工具名即 tab</li>
+  </ul>
+</div>
+<div class="cl-entry">
+  <div class="cl-head"><span class="cl-ver">v0.0.1</span><span class="cl-date">2024-01-10</span></div>
+  <ul class="cl-list">
+    <li><span class="cl-tag tag-new">init</span> 项目初始化</li>
+    <li><span class="cl-tag tag-imp">style</span> 确定 Tab Bar 设计方向</li>
+  </ul>
+</div>
+`;
+
+function afterRender(page) {}
+navigate();
+</script>
+</body>
+</html>

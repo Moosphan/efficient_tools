@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><script>(function(){
+  function makeStore(){
+    var data = {};
+    var api = {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+      setItem: function(k, v){ data[k] = String(v); },
+      removeItem: function(k){ delete data[k]; },
+      clear: function(){ data = {}; },
+      key: function(i){ return Object.keys(data)[i] || null; }
+    };
+    Object.defineProperty(api, 'length', { get: function(){ return Object.keys(data).length; } });
+    return api;
+  }
+  function tryShim(name){
+    var works = false;
+    try { works = !!window[name] && typeof window[name].getItem === 'function'; void window[name].length; }
+    catch (_) { works = false; }
+    if (works) return;
+    try { Object.defineProperty(window, name, { configurable: true, value: makeStore() }); }
+    catch (_) { try { window[name] = makeStore(); } catch (__) {} }
+  }
+  tryShim('localStorage');
+  tryShim('sessionStorage');
+})();</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevKit — Flow Grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(13% 0.012 260);
+  --surface: oklch(17% 0.014 260);
+  --surface-2: oklch(21% 0.016 260);
+  --surface-3: oklch(25% 0.018 260);
+  --fg: oklch(90% 0.008 260);
+  --muted: oklch(55% 0.015 260);
+  --border: oklch(28% 0.014 260);
+  --accent: oklch(70% 0.15 50);
+  --accent-dim: oklch(25% 0.04 50);
+  --violet: oklch(68% 0.18 300);
+  --cyan: oklch(75% 0.12 200);
+  --green: oklch(70% 0.16 155);
+  --red: oklch(65% 0.18 25);
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* --- Floating Header --- */
+.header {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 1400px;
+  height: 52px;
+  background: oklch(17% 0.014 260 / 0.85);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 1000;
+}
+.header-brand {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-brand .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px oklch(70% 0.16 155 / 0.5);
+}
+.header-nav { display: flex; gap: 4px; }
+.header-link {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.header-link:hover { color: var(--fg); background: var(--surface-2); text-decoration: none; }
+.header-link.active { color: var(--fg); background: var(--surface-3); }
+
+/* --- Main Content --- */
+.main {
+  padding: 96px 24px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* --- Home Hero --- */
+.hero {
+  text-align: center;
+  padding: 48px 0 32px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.hero h1 {
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+.hero h1 .accent { color: var(--accent); }
+.hero p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* --- Quick Stats Row --- */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 24px 0 40px;
+  flex-wrap: wrap;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg);
+}
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* --- Search Bar --- */
+.search-bar {
+  max-width: 480px;
+  margin: 0 auto 40px;
+  position: relative;
+}
+.search-bar input {
+  width: 100%;
+  padding: 14px 20px 14px 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 15px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.search-bar input:focus { border-color: var(--accent); }
+.search-bar input::placeholder { color: var(--muted); }
+.search-bar .search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+/* --- Category Filter --- */
+.cat-filter {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.cat-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cat-btn:hover { border-color: var(--fg); color: var(--fg); }
+.cat-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* --- Flow Grid --- */
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.flow-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: var(--fg);
+}
+.flow-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px oklch(0% 0 0 / 0.3);
+  text-decoration: none;
+}
+.flow-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.flow-card-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+.flow-card h3 { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+.flow-card p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.flow-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.flow-card-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.flow-card-action {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+}
+.flow-card:hover .flow-card-action { color: var(--accent); }
+
+/* Icon colors */
+.icon-amber { background: oklch(28% 0.06 50); color: var(--accent); }
+.icon-violet { background: oklch(25% 0.06 300); color: var(--violet); }
+.icon-cyan { background: oklch(25% 0.04 200); color: var(--cyan); }
+.icon-green { background: oklch(25% 0.05 155); color: var(--green); }
+.icon-red { background: oklch(25% 0.05 25); color: var(--red); }
+
+/* --- Large Feature Card (spans 2 cols) --- */
+.flow-card.featured {
+  grid-column: span 2;
+}
+@media (max-width: 700px) {
+  .flow-card.featured { grid-column: span 1; }
+}
+.flow-card.featured .flow-card-head { margin-bottom: 16px; }
+.flow-card.featured h3 { font-size: 18px; }
+.flow-card-preview {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-height: 80px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+/* --- Tool Page --- */
+.tool-page-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.back-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tool-page-header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.tool-page-header p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+
+.tool-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .tool-layout { grid-template-columns: 1fr; } }
+
+.tool-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.panel-actions { display: flex; gap: 6px; }
+.panel-btn {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.panel-btn:hover { border-color: var(--fg); }
+.panel-btn.accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.panel-btn.accent:hover { background: var(--accent); color: var(--bg); }
+
+textarea {
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 300px;
+  tab-size: 2;
+}
+textarea::placeholder { color: var(--muted); }
+.output-area {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 16px;
+  min-height: 300px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow: auto;
+  background: var(--bg);
+}
+.error-msg { color: var(--red); font-size: 12px; padding: 8px 16px; background: oklch(18% 0.03 25); }
+
+/* Regex */
+.regex-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.regex-input-row .delim { color: var(--accent); font-size: 16px; font-weight: 700; }
+.regex-input-row input {
+  flex: 1; border: none; outline: none;
+  font-family: var(--font-mono); font-size: 14px;
+  background: transparent; color: var(--fg);
+}
+.flag-btn {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.flag-btn.on { background: var(--accent-dim); color: var(--accent); border-color: var(--accent); }
+.match-highlight { background: var(--accent-dim); border-bottom: 2px solid var(--accent); color: var(--accent); padding: 0 2px; }
+.match-item {
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.match-idx { color: var(--accent); font-weight: 600; font-size: 12px; min-width: 24px; }
+.match-group { color: var(--muted); font-size: 12px; }
+
+/* Log analyzer */
+.log-controls {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  align-items: center;
+  background: var(--bg);
+}
+.log-controls input, .log-controls select {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--fg);
+  outline: none;
+}
+.log-controls input:focus, .log-controls select:focus { border-color: var(--accent); }
+.log-line {
+  padding: 3px 16px;
+  font-size: 13px;
+  font-family: var(--font-mono);
+  line-height: 1.5;
+  border-bottom: 1px solid oklch(20% 0.01 260);
+}
+.log-line:hover { background: oklch(20% 0.015 260); }
+.log-ts { color: var(--muted); }
+.log-level-ERROR { color: var(--red); font-weight: 600; }
+.log-level-WARN { color: var(--accent); font-weight: 500; }
+.log-level-INFO { color: var(--cyan); }
+.log-level-DEBUG { color: var(--muted); }
+.log-stats {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.log-stat-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; }
+
+/* --- About Page --- */
+.about-header { margin-bottom: 40px; }
+.about-header h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; }
+.about-header p { font-size: 16px; color: var(--muted); margin-top: 8px; max-width: 520px; line-height: 1.7; }
+.about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.about-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.about-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.about-card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.about-card ul { list-style: none; padding: 0; margin-top: 10px; }
+.about-card li { font-size: 14px; color: var(--muted); padding: 4px 0; }
+.about-card li::before { content: '→ '; color: var(--accent); }
+
+/* --- Changelog --- */
+.changelog-header { margin-bottom: 32px; }
+.changelog-header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+.changelog-entry { margin-bottom: 28px; }
+.changelog-entry-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+.changelog-version {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.changelog-date { font-size: 13px; color: var(--muted); }
+.changelog-list { list-style: none; padding: 0; }
+.changelog-list li {
+  font-size: 14px;
+  padding: 5px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+.changelog-tag {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tag-new { background: oklch(25% 0.05 155); color: var(--green); }
+.tag-fix { background: oklch(25% 0.05 25); color: var(--red); }
+.tag-improve { background: var(--accent-dim); color: var(--cyan); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .header { top: 8px; width: calc(100% - 16px); padding: 0 16px; height: 48px; }
+  .main { padding: 80px 16px 32px; }
+  .flow-grid { grid-template-columns: 1fr; }
+  .flow-card.featured { grid-column: span 1; }
+  .stats-row { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Floating Header -->
+<header class="header">
+  <div class="header-brand">
+    <span class="dot"></span>
+    DevKit
+  </div>
+  <nav class="header-nav">
+    <a class="header-link" href="#/" data-page="home">首页</a>
+    <a class="header-link" href="#/about" data-page="about">关于</a>
+    <a class="header-link" href="#/changelog" data-page="changelog">更新日志</a>
+  </nav>
+</header>
+
+<main class="main" id="app"></main>
+
+<script>
+const app = document.getElementById('app');
+const navLinks = document.querySelectorAll('.header-link');
+
+function navigate() {
+  const hash = location.hash.slice(2) || 'home';
+  navLinks.forEach(l => l.classList.toggle('active', l.dataset.page === hash));
+  const renderer = pages[hash];
+  if (renderer) { app.innerHTML = renderer(); afterRender(hash); }
+}
+window.addEventListener('hashchange', navigate);
+
+const pages = {};
+
+const toolsData = [
+  { id: 'json', name: 'JSON 格式化', desc: '格式化、压缩、验证 JSON 数据，支持语法高亮和错误定位', cat: 'format', icon: '{ }', iconClass: 'icon-amber', status: '可用', href: '#/json', featured: true,
+    preview: '{\n  "name": "devkit",\n  "version": "0.1.0",\n  "tools": ["json", "regex", "logs"]\n}' },
+  { id: 'regex', name: '正则验证器', desc: '实时测试正则表达式，高亮匹配结果，支持捕获组查看', cat: 'validate', icon: '.*', iconClass: 'icon-violet', status: '可用', href: '#/regex', featured: true,
+    preview: '/\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\b/gi\n→ 3 matches found' },
+  { id: 'logs', name: '日志分析器', desc: '粘贴日志后按级别、关键词筛选，快速定位问题', cat: 'analyze', icon: '≡', iconClass: 'icon-cyan', status: '可用', href: '#/logs', featured: false },
+  { id: '2fa', name: '2FA 验证码', desc: '基于 TOTP 协议生成二步验证码，支持多账号管理', cat: 'validate', icon: '⊛', iconClass: 'icon-green', status: '开发中', href: null, featured: false },
+  { id: 'translate', name: '翻译工具', desc: '快速翻译代码注释、文档片段，支持多语言互译', cat: 'format', icon: '文', iconClass: 'icon-red', status: '开发中', href: null, featured: false },
+  { id: 'adb', name: 'ADB 自动化', desc: '常用 ADB 命令封装，设备管理、应用安装、日志抓取', cat: 'auto', icon: '⌘', iconClass: 'icon-amber', status: '开发中', href: null, featured: false },
+];
+
+pages.home = () => `
+<div class="hero">
+  <h1>开发者的<span class="accent">效率工具箱</span></h1>
+  <p>一站式汇集日常开发中最常用的小工具，纯前端运行，数据不出浏览器。</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">内置工具</div></div>
+  <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">外部依赖</div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">客户端运行</div></div>
+</div>
+
+<div class="search-bar">
+  <span class="search-icon">⌕</span>
+  <input type="text" id="home-search" placeholder="搜索工具…" oninput="filterHomeGrid()">
+</div>
+
+<div class="cat-filter" id="cat-filter">
+  <button class="cat-btn active" data-cat="all" onclick="setCatFilter('all')">全部</button>
+  <button class="cat-btn" data-cat="format" onclick="setCatFilter('format')">格式化</button>
+  <button class="cat-btn" data-cat="validate" onclick="setCatFilter('validate')">验证</button>
+  <button class="cat-btn" data-cat="analyze" onclick="setCatFilter('analyze')">分析</button>
+  <button class="cat-btn" data-cat="auto" onclick="setCatFilter('auto')">自动化</button>
+</div>
+
+<div class="flow-grid" id="home-grid"></div>
+`;
+
+let currentCat = 'all';
+function setCatFilter(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  renderHomeGrid();
+}
+function filterHomeGrid() { renderHomeGrid(); }
+function renderHomeGrid() {
+  const search = document.getElementById('home-search')?.value?.toLowerCase() || '';
+  const filtered = toolsData.filter(t =>
+    (currentCat === 'all' || t.cat === currentCat) &&
+    (!search || t.name.toLowerCase().includes(search) || t.desc.toLowerCase().includes(search))
+  );
+  document.getElementById('home-grid').innerHTML = filtered.map(t => `
+    <${t.href ? 'a' : 'div'} class="flow-card ${t.featured ? 'featured' : ''}" ${t.href ? `href="${t.href}"` : ''} ${!t.href ? 'style="opacity:0.6;cursor:default;"' : ''}>
+      <div class="flow-card-head">
+        <div class="flow-card-icon ${t.iconClass}">${t.icon}</div>
+        <div>
+          <h3>${t.name}</h3>
+        </div>
+      </div>
+      <p>${t.desc}</p>
+      ${t.preview ? `<div class="flow-card-preview">${escHtml(t.preview)}</div>` : ''}
+      <div class="flow-card-footer">
+        <span class="flow-card-tag" style="background:${t.status === '可用' ? 'oklch(25% 0.05 155)' : 'var(--surface-2)'};color:${t.status === '可用' ? 'var(--green)' : 'var(--muted)'}">${t.status}</span>
+        ${t.href ? '<span class="flow-card-action">打开 →</span>' : ''}
+      </div>
+    </${t.href ? 'a' : 'div'}>
+  `).join('');
+}
+
+function afterRender(page) {
+  if (page === 'home') renderHomeGrid();
+}
+
+// --- JSON ---
+pages.json = () => `
+<div class="tool-page-header">
+  <a href="#/" class="back-btn">←</a>
+  <div>
+    <h1>JSON 格式化</h1>
+    <p>格式化、压缩、验证 JSON 数据</p>
+  </div>
+</div>
+<div class="tool-layout">
+  <div class="tool-panel">
+    <div class="panel-header">输入 <div class="panel-actions">
+      <button class="panel-btn" onclick="jsonSample()">示例</button>
+      <button class="panel-btn" onclick="document.getElementById('json-input').value=''">清空</button>
+    </div></div>
+    <textarea id="json-input" placeholder='粘贴 JSON...\n{"key":"value"}'></textarea>
+  </div>
+  <div class="tool-panel">
+    <div class="panel-header">输出 <div class="panel-actions">
+      <button class="panel-btn accent" onclick="jsonFormat()">格式化</button>
+      <button class="panel-btn" onclick="jsonMinify()">压缩</button>
+      <button class="panel-btn" onclick="jsonCopy()">复制</button>
+    </div></div>
+    <div class="output-area" id="json-output">等待输入…</div>
+    <div id="json-error"></div>
+  </div>
+</div>
+`;
+function jsonFormat() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '等待输入…'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input), null, 2); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">JSON 解析错误: ${e.message}</div>`; }
+}
+function jsonMinify() {
+  const input = document.getElementById('json-input').value.trim();
+  const errEl = document.getElementById('json-error');
+  const outEl = document.getElementById('json-output');
+  if (!input) { outEl.textContent = '等待输入…'; errEl.innerHTML = ''; return; }
+  try { outEl.textContent = JSON.stringify(JSON.parse(input)); errEl.innerHTML = ''; }
+  catch (e) { errEl.innerHTML = `<div class="error-msg">JSON 解析错误: ${e.message}</div>`; }
+}
+function jsonCopy() {
+  const text = document.getElementById('json-output').textContent;
+  if (text && text !== '等待输入…') navigator.clipboard.writeText(text);
+}
+function jsonSample() {
+  document.getElementById('json-input').value = JSON.stringify({ name: "DevKit", version: "0.1.0", tools: [{ id: "json", status: "可用" }, { id: "regex", status: "可用" }], config: { theme: "flow", lang: "zh-CN" } }, null, 2);
+}
+
+// --- Regex ---
+pages.regex = () => `
+<div class="tool-page-header">
+  <a href="#/" class="back-btn">←</a>
+  <div>
+    <h1>正则验证器</h1>
+    <p>实时测试正则表达式，高亮匹配结果</p>
+  </div>
+</div>
+<div class="tool-layout">
+  <div class="tool-panel">
+    <div class="panel-header">正则表达式 <div class="panel-actions">
+      <button class="flag-btn" id="flag-g" onclick="toggleFlag('g')">g</button>
+      <button class="flag-btn on" id="flag-i" onclick="toggleFlag('i')">i</button>
+      <button class="flag-btn" id="flag-m" onclick="toggleFlag('m')">m</button>
+      <button class="flag-btn" id="flag-s" onclick="toggleFlag('s')">s</button>
+    </div></div>
+    <div class="regex-input-row">
+      <span class="delim">/</span>
+      <input type="text" id="regex-pattern" placeholder="输入正则表达式…" oninput="runRegex()">
+      <span class="delim">/</span>
+      <span id="regex-flags-display" style="color:var(--cyan);font-size:14px;">i</span>
+    </div>
+    <div class="panel-header">测试字符串</div>
+    <textarea id="regex-test" placeholder="输入要测试的文本…" oninput="runRegex()" style="min-height:200px;"></textarea>
+  </div>
+  <div class="tool-panel">
+    <div class="panel-header">匹配结果 <span id="regex-count" style="font-size:12px;color:var(--muted);">0 个匹配</span></div>
+    <div id="regex-output" class="output-area" style="min-height:200px;"><span style="color:var(--muted);">输入正则和文本后自动匹配…</span></div>
+    <div class="panel-header">匹配列表</div>
+    <div id="regex-matches" style="max-height:250px;overflow:auto;"><div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div></div>
+  </div>
+</div>
+`;
+const regexFlags = { g: false, i: true, m: false, s: false };
+function toggleFlag(f) {
+  regexFlags[f] = !regexFlags[f];
+  document.getElementById('flag-' + f).classList.toggle('on', regexFlags[f]);
+  document.getElementById('regex-flags-display').textContent = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+  runRegex();
+}
+function runRegex() {
+  const pattern = document.getElementById('regex-pattern').value;
+  const testStr = document.getElementById('regex-test').value;
+  const outEl = document.getElementById('regex-output');
+  const matchEl = document.getElementById('regex-matches');
+  const countEl = document.getElementById('regex-count');
+  if (!pattern || !testStr) { outEl.innerHTML = '<span style="color:var(--muted);">输入正则和文本后自动匹配…</span>'; matchEl.innerHTML = '<div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div>'; countEl.textContent = '0 个匹配'; return; }
+  try {
+    const flags = Object.entries(regexFlags).filter(([,v])=>v).map(([k])=>k).join('');
+    const re = new RegExp(pattern, flags);
+    const matches = []; let m;
+    if (flags.includes('g')) { while ((m = re.exec(testStr)) !== null) { matches.push({ index: m.index, match: m[0], groups: m.slice(1) }); if (m[0].length === 0) re.lastIndex++; } }
+    else { m = re.exec(testStr); if (m) matches.push({ index: m.index, match: m[0], groups: m.slice(1) }); }
+    countEl.textContent = `${matches.length} 个匹配`;
+    let highlighted = '', last = 0;
+    matches.forEach(m => { highlighted += escHtml(testStr.slice(last, m.index)); highlighted += `<span class="match-highlight">${escHtml(m.match)}</span>`; last = m.index + m.match.length; });
+    highlighted += escHtml(testStr.slice(last));
+    outEl.innerHTML = highlighted || '<span style="color:var(--muted);">无匹配</span>';
+    matchEl.innerHTML = matches.length ? matches.map((m, i) => `<div class="match-item"><span class="match-idx">#${i+1}</span><span>${escHtml(m.match)}</span>${m.groups.length ? `<span class="match-group">groups: ${m.groups.map(g => escHtml(g||'—')).join(', ')}</span>` : ''}</div>`).join('') : '<div style="padding:16px;color:var(--muted);font-size:13px;">暂无匹配</div>';
+  } catch (e) { outEl.innerHTML = `<div class="error-msg">正则语法错误: ${e.message}</div>`; matchEl.innerHTML = ''; countEl.textContent = '错误'; }
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// --- Logs ---
+pages.logs = () => `
+<div class="tool-page-header">
+  <a href="#/" class="back-btn">←</a>
+  <div>
+    <h1>日志分析器</h1>
+    <p>粘贴日志，按级别和关键词筛选</p>
+  </div>
+</div>
+<div style="display:grid;grid-template-columns:1fr;gap:16px;">
+  <div class="tool-panel">
+    <div class="panel-header">日志输入 <div class="panel-actions">
+      <button class="panel-btn" onclick="logSample()">示例</button>
+      <button class="panel-btn accent" onclick="parseLogs()">分析</button>
+    </div></div>
+    <textarea id="log-input" placeholder="粘贴日志内容…" style="min-height:150px;"></textarea>
+  </div>
+  <div class="tool-panel" id="log-panel" style="display:none;">
+    <div class="log-controls">
+      <input type="text" id="log-filter-text" placeholder="关键词搜索…" oninput="filterLogs()">
+      <select id="log-filter-level" onchange="filterLogs()">
+        <option value="all">所有级别</option>
+        <option value="ERROR">ERROR</option>
+        <option value="WARN">WARN</option>
+        <option value="INFO">INFO</option>
+        <option value="DEBUG">DEBUG</option>
+      </select>
+      <span style="font-size:12px;color:var(--muted);margin-left:auto;" id="log-filter-count"></span>
+    </div>
+    <div id="log-output" style="max-height:500px;overflow:auto;"></div>
+    <div class="log-stats" id="log-stats"></div>
+  </div>
+</div>
+`;
+let parsedLogs = [];
+function parseLogs() {
+  const raw = document.getElementById('log-input').value.trim();
+  if (!raw) return;
+  parsedLogs = raw.split('\n').map((line, i) => {
+    const levelMatch = line.match(/\b(ERROR|WARN|INFO|DEBUG)\b/i);
+    const tsMatch = line.match(/(\d{4}[-/]\d{2}[-/]\d{2}[\sT]\d{2}:\d{2}(?::\d{2})?)/);
+    return { line: i+1, raw: line, level: levelMatch ? levelMatch[1].toUpperCase() : 'INFO', timestamp: tsMatch ? tsMatch[1] : '' };
+  });
+  document.getElementById('log-panel').style.display = '';
+  filterLogs();
+}
+function filterLogs() {
+  const text = document.getElementById('log-filter-text').value.toLowerCase();
+  const level = document.getElementById('log-filter-level').value;
+  const filtered = parsedLogs.filter(l => (level === 'all' || l.level === level) && (!text || l.raw.toLowerCase().includes(text)));
+  document.getElementById('log-filter-count').textContent = `${filtered.length} / ${parsedLogs.length} 行`;
+  document.getElementById('log-output').innerHTML = filtered.map(l => {
+    const colored = l.raw.replace(/(ERROR)/i, '<span class="log-level-ERROR">$1</span>').replace(/(WARN)/i, '<span class="log-level-WARN">$1</span>').replace(/(INFO)/i, '<span class="log-level-INFO">$1</span>').replace(/(DEBUG)/i, '<span class="log-level-DEBUG">$1</span>');
+    return `<div class="log-line">${l.timestamp ? `<span class="log-ts">${escHtml(l.timestamp)}</span> ` : ''}${colored}</div>`;
+  }).join('') || '<div style="padding:16px;color:var(--muted);font-size:13px;">无匹配日志</div>';
+  const counts = {};
+  parsedLogs.forEach(l => { counts[l.level] = (counts[l.level]||0)+1; });
+  const colors = { ERROR:'var(--red)', WARN:'var(--accent)', INFO:'var(--cyan)', DEBUG:'var(--muted)' };
+  document.getElementById('log-stats').innerHTML = Object.entries(counts).map(([k,v]) => `<div style="display:flex;align-items:center;gap:4px;"><span class="log-stat-dot" style="background:${colors[k]||'var(--muted)'}"></span>${k}: ${v}</div>`).join('');
+}
+function logSample() {
+  document.getElementById('log-input').value = `2024-01-15 10:23:45 [INFO] Application started on port 3000\n2024-01-15 10:23:46 [DEBUG] Loading config from /etc/app/config.yaml\n2024-01-15 10:23:46 [INFO] Database connected (pool: 10)\n2024-01-15 10:23:47 [WARN] Cache miss: user_session_abc123\n2024-01-15 10:23:48 [INFO] GET /api/users 200 12ms\n2024-01-15 10:23:49 [ERROR] Redis connection refused: 127.0.0.1:6379\n2024-01-15 10:23:49 [WARN] Falling back to in-memory cache\n2024-01-15 10:23:50 [INFO] GET /api/products 200 45ms\n2024-01-15 10:23:51 [ERROR] NullPointerException at OrderService.java:142\n2024-01-15 10:23:51 [DEBUG] Retrying payment gateway (1/3)\n2024-01-15 10:23:52 [INFO] POST /api/orders 201 230ms\n2024-01-15 10:23:53 [WARN] Memory usage: 85% (threshold: 80%)\n2024-01-15 10:23:54 [INFO] Job done: sync_inventory (1.2s)\n2024-01-15 10:23:55 [ERROR] External API timeout (30000ms)\n2024-01-15 10:23:56 [DEBUG] GC: 45ms, heap 512/1024MB`;
+}
+
+// --- About ---
+pages.about = () => `
+<div class="about-header">
+  <h1>关于 DevKit</h1>
+  <p>面向开发者的一站式效率工具集合，所有工具均在浏览器端运行，无需后端服务。</p>
+</div>
+<div class="about-grid">
+  <div class="about-card"><h3>设计原则</h3><ul><li>极简界面，零学习成本</li><li>客户端运行，数据不出浏览器</li><li>键盘优先，支持快捷键</li><li>即用即走，无需注册</li></ul></div>
+  <div class="about-card"><h3>技术栈</h3><ul><li>纯 HTML / CSS / JavaScript</li><li>零外部依赖，单文件部署</li><li>CSS OKLch 色彩系统</li><li>响应式布局</li></ul></div>
+  <div class="about-card"><h3>工具列表</h3><ul><li>JSON 格式化 — 可用</li><li>正则验证器 — 可用</li><li>日志分析器 — 可用</li><li>2FA 验证码 — 开发中</li><li>翻译工具 — 开发中</li><li>ADB 自动化 — 开发中</li></ul></div>
+  <div class="about-card"><h3>隐私声明</h3><p>所有数据处理在浏览器本地完成，不上传任何输入至服务器。</p></div>
+</div>
+`;
+
+// --- Changelog ---
+pages.changelog = () => `
+<div class="changelog-header"><h1>更新日志</h1></div>
+<div class="changelog-entry"><div class="changelog-entry-head"><span class="changelog-version">v0.1.0</span><span class="changelog-date">2024-01-15</span></div><ul class="changelog-list">
+  <li><span class="changelog-tag tag-new">新功能</span> JSON 格式化 — 格式化 / 压缩 / 验证</li>
+  <li><span class="changelog-tag tag-new">新功能</span> 正则验证器 — 实时匹配 / 捕获组</li>
+  <li><span class="changelog-tag tag-new">新功能</span> 日志分析器 — 筛选 / 过滤 / 统计</li>
+  <li><span class="changelog-tag tag-new">新功能</span> 首页 Flow Grid 布局</li>
+</ul></div>
+<div class="changelog-entry"><div class="changelog-entry-head"><span class="changelog-version">v0.0.1</span><span class="changelog-date">2024-01-10</span></div><ul class="changelog-list">
+  <li><span class="changelog-tag tag-new">初始化</span> 项目搭建</li>
+  <li><span class="changelog-tag tag-improve">设计</span> 确定 Flow Grid 方向</li>
+</ul></div>
+`;
+
+navigate();
+</script>
+</body>
+</html>
