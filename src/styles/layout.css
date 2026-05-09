@@ -70,6 +70,25 @@
   background: var(--surface-3);
 }
 
+.header-lang-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: 4px;
+}
+
+.header-lang-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ── Main Content ── */
 .main {
   padding: 96px 24px 48px;
@@ -222,7 +241,8 @@
   transition: all 0.2s;
   position: relative;
   overflow: hidden;
-  display: block;
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
   color: var(--fg);
 }
@@ -254,6 +274,15 @@
   flex-shrink: 0;
 }
 
+.flow-card-icon svg,
+.flow-card-icon span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
 .flow-card h3 {
   font-size: 16px;
   font-weight: 600;
@@ -265,12 +294,18 @@
   color: var(--muted);
   line-height: 1.6;
   margin-bottom: 16px;
+  min-height: 2.6em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .flow-card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: auto;
 }
 
 .flow-card-tag {

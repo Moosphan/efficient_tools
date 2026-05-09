@@ -4,6 +4,8 @@ import { Layout } from './shell/Layout';
 import { HomePage } from './shell/HomePage';
 import { AboutPage } from './shell/AboutPage';
 import { ToastProvider } from './shared/context/ToastContext';
+import { I18nProvider } from './shared/context/I18nContext';
+import { tools } from './registry';
 
 const LazyTool = ({ loader }: { loader: () => Promise<{ default: React.ComponentType }> }) => {
   const Component = lazy(loader);
@@ -17,17 +19,23 @@ const LazyTool = ({ loader }: { loader: () => Promise<{ default: React.Component
 export default function App() {
   return (
     <ToastProvider>
+      <I18nProvider>
       <BrowserRouter>
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/totp" element={<LazyTool loader={() => import('./features/totp')} />} />
-            <Route path="/json" element={<LazyTool loader={() => import('./features/json-formatter')} />} />
-            <Route path="/regex" element={<LazyTool loader={() => import('./features/regex-tester')} />} />
+            {tools.map((tool) => (
+              <Route
+                key={tool.id}
+                path={tool.path}
+                element={<LazyTool loader={tool.component} />}
+              />
+            ))}
           </Routes>
         </Layout>
       </BrowserRouter>
+      </I18nProvider>
     </ToastProvider>
   );
 }

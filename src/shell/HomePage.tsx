@@ -1,50 +1,65 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { tools, categories } from '../registry';
+import { useI18n, toolI18n } from '../shared/context/I18nContext';
+
+const catMap: Record<string, string> = {
+  'all': 'cat.all',
+  '格式化/转换': 'cat.format',
+  '编码/解码': 'cat.codec',
+  '安全/加密': 'cat.security',
+  '文本处理': 'cat.text',
+  '开发调试': 'cat.debug',
+  '系统工具': 'cat.system',
+};
 
 export function HomePage() {
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState('all');
+  const { lang, t } = useI18n();
 
   const filtered = useMemo(() => {
-    return tools.filter((t) => {
-      const matchCat = activeCat === 'all' || t.category === activeCat;
+    return tools.filter((tool) => {
+      const matchCat = activeCat === 'all' || tool.category === activeCat;
+      const i18n = toolI18n[tool.id];
+      const name = i18n?.name[lang] || tool.name;
+      const desc = i18n?.desc[lang] || tool.description;
       const matchSearch =
         !search ||
-        t.name.toLowerCase().includes(search.toLowerCase()) ||
-        t.description.toLowerCase().includes(search.toLowerCase()) ||
-        t.keywords.some((k) => k.includes(search.toLowerCase()));
+        name.toLowerCase().includes(search.toLowerCase()) ||
+        desc.toLowerCase().includes(search.toLowerCase()) ||
+        tool.keywords.some((k) => k.includes(search.toLowerCase()));
       return matchCat && matchSearch;
     });
-  }, [search, activeCat]);
+  }, [search, activeCat, lang]);
 
-  const availableCount = tools.filter((t) => t.status === '可用').length;
+  const availableCount = tools.filter((tool) => tool.status === '可用').length;
 
   return (
     <>
       <div className="hero">
         <div className="hero-badge">
           <span className="hero-badge-dot" />
-          {availableCount} 个工具可用
+          {availableCount}{t('hero.badge')}
         </div>
         <h1>
-          开发者的<span className="accent">效率工具箱</span>
+          {t('hero.title1')}<span className="accent">{t('hero.title2')}</span>
         </h1>
-        <p>一站式汇集日常开发中最常用的小工具，纯前端运行，数据不出浏览器。</p>
+        <p>{t('hero.desc')}</p>
       </div>
 
       <div className="stats-row">
         <div className="stat-item">
           <div className="stat-num">{tools.length}</div>
-          <div className="stat-label">内置工具</div>
+          <div className="stat-label">{t('stats.tools')}</div>
         </div>
         <div className="stat-item">
           <div className="stat-num">0</div>
-          <div className="stat-label">外部依赖</div>
+          <div className="stat-label">{t('stats.deps')}</div>
         </div>
         <div className="stat-item">
           <div className="stat-num">100%</div>
-          <div className="stat-label">客户端运行</div>
+          <div className="stat-label">{t('stats.client')}</div>
         </div>
       </div>
 
@@ -52,7 +67,7 @@ export function HomePage() {
         <span className="search-icon">⌕</span>
         <input
           type="text"
-          placeholder="搜索工具…"
+          placeholder={t('search.placeholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -65,7 +80,7 @@ export function HomePage() {
             className={`cat-btn${activeCat === cat.id ? ' active' : ''}`}
             onClick={() => setActiveCat(cat.id)}
           >
-            {cat.label}
+            {t(catMap[cat.id] || cat.label)}
           </button>
         ))}
       </div>
@@ -80,7 +95,7 @@ export function HomePage() {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
-        本地运行 · 数据不出浏览器
+        {t('security.note')}
       </div>
     </>
   );
@@ -106,16 +121,26 @@ function ToolCard({ tool }: { tool: typeof tools[number] }) {
 
 function ToolCardContent({ tool }: { tool: typeof tools[number] }) {
   const isAvailable = tool.status === '可用';
+  const { lang, t } = useI18n();
+  const i18n = toolI18n[tool.id];
+  const name = i18n?.name[lang] || tool.name;
+  const desc = i18n?.desc[lang] || tool.description;
 
   return (
     <>
       <div className="flow-card-head">
-        <div className={`flow-card-icon ${tool.iconClass}`}>{tool.icon}</div>
+        <div className={`flow-card-icon ${tool.iconClass}`}>
+          {tool.icon.startsWith('<svg') ? (
+            <span dangerouslySetInnerHTML={{ __html: tool.icon }} />
+          ) : (
+            tool.icon
+          )}
+        </div>
         <div>
-          <h3>{tool.name}</h3>
+          <h3>{name}</h3>
         </div>
       </div>
-      <p>{tool.description}</p>
+      <p>{desc}</p>
       {tool.preview && <div className="flow-card-preview">{tool.preview}</div>}
       <div className="flow-card-footer">
         <span
@@ -126,9 +151,9 @@ function ToolCardContent({ tool }: { tool: typeof tools[number] }) {
             border: `1px solid ${isAvailable ? 'var(--green)' : 'var(--border)'}`,
           }}
         >
-          {tool.status}
+          {isAvailable ? t('status.available') : t('status.developing')}
         </span>
-        {isAvailable && <span className="flow-card-action">打开 →</span>}
+        {isAvailable && <span className="flow-card-action">{t('card.open')}</span>}
       </div>
     </>
   );

@@ -382,6 +382,83 @@
   flex-shrink: 0;
 }
 
+/* ── Timestamp ── */
+.ts-clock {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.ts-clock-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.ts-clock-value {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+.ts-clock-ts {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.tool-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 12px 16px;
+  background: var(--surface);
+  color: var(--fg);
+  border-bottom: 1px solid var(--border);
+}
+
+.tool-input::placeholder { color: var(--muted); font-family: var(--font-body); }
+
+/* ── URL Params ── */
+.url-params {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.url-param-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 6px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.url-param-key {
+  color: var(--accent);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.url-param-sep {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.url-param-value {
+  color: var(--fg);
+  word-break: break-all;
+}
+
 /* ── Timer Ring ── */
 .code-timer {
   margin-top: 16px;
