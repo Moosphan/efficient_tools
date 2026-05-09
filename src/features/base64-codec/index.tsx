@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useCleanup } from '../../shared/hooks/useCleanup';
 
 export default function Base64Codec() {
   const [input, setInput] = useState('');
@@ -7,6 +8,8 @@ export default function Base64Codec() {
   const [error, setError] = useState('');
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [urlSafe, setUrlSafe] = useState(false);
+
+  useCleanup(() => { setInput(''); setOutput(''); });
 
   const process = () => {
     const raw = input;

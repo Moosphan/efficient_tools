@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useCleanup } from '../../shared/hooks/useCleanup';
 
 const SAMPLE = JSON.stringify(
   { name: "Efficient Tools", version: "1.0.0", tools: [{ id: "json", status: "可用" }, { id: "regex", status: "可用" }], config: { theme: "flow", lang: "zh-CN" } },
@@ -11,6 +12,8 @@ export default function JsonFormatter() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
+
+  useCleanup(() => { setInput(''); setOutput(''); });
 
   const format = () => {
     const raw = input.trim();

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useCleanup } from '../../shared/hooks/useCleanup';
 
 export default function UrlCodec() {
   const [input, setInput] = useState('');
@@ -8,6 +9,8 @@ export default function UrlCodec() {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [component, setComponent] = useState(false);
   const [params, setParams] = useState<{ key: string; value: string }[]>([]);
+
+  useCleanup(() => { setInput(''); setOutput(''); setParams([]); });
 
   const process = () => {
     const raw = input;

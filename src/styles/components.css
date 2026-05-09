@@ -459,6 +459,91 @@
   word-break: break-all;
 }
 
+/* ── Diff Viewer ── */
+.diff-stats {
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-family: var(--font-mono);
+}
+
+.diff-stat-add { color: var(--green); font-weight: 600; }
+.diff-stat-remove { color: var(--red); font-weight: 600; }
+.diff-stat-unchanged { color: var(--muted); }
+
+.diff-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 200px;
+}
+
+.diff-split-pane {
+  overflow: auto;
+  border-right: 1px solid var(--border);
+}
+
+.diff-split-pane:last-child { border-right: none; }
+
+.diff-inline { overflow: auto; min-height: 200px; }
+
+.diff-line {
+  display: flex;
+  align-items: stretch;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  border-bottom: 1px solid oklch(90% 0.012 60 / 0.3);
+}
+
+.diff-line-num {
+  width: 40px;
+  min-width: 40px;
+  text-align: right;
+  padding: 0 8px;
+  color: var(--muted);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.diff-line-prefix {
+  width: 20px;
+  min-width: 20px;
+  text-align: center;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.diff-line-content {
+  flex: 1;
+  padding: 0 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  min-height: 1.6em;
+}
+
+.diff-line-equal .diff-line-content { background: var(--surface); }
+.diff-line-add { background: var(--green-bg); }
+.diff-line-add .diff-line-prefix { color: var(--green); }
+.diff-line-add .diff-line-content { background: var(--green-bg); }
+.diff-line-remove { background: var(--red-bg); }
+.diff-line-remove .diff-line-prefix { color: var(--red); }
+.diff-line-remove .diff-line-content { background: var(--red-bg); }
+.diff-line-empty { background: var(--surface-2); }
+
 /* ── Timer Ring ── */
 .code-timer {
   margin-top: 16px;

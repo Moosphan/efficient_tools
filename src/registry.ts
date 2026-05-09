@@ -104,7 +104,7 @@ export const tools: ToolMeta[] = [
     path: '/diff',
     component: () => import('./features/diff-viewer'),
     keywords: ['diff', 'compare', '对比', '差异'],
-    status: '开发中',
+    status: '可用',
   },
   {
     id: 'hash',
