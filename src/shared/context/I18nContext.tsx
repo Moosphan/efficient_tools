@@ -141,14 +141,14 @@ export const toolI18n: Record<string, {
   // ── regex ──
   regex: {
     name: { zh: '正则验证器', en: 'Regex Tester' },
-    desc: { zh: '实时测试正则表达式，高亮匹配结果，支持捕获组查看', en: 'Test regex patterns in real-time with match highlighting and capture groups' },
+    desc: { zh: '实时测试正则表达式，高亮匹配结果，支持捕获组查看和结构可视化', en: 'Test regex patterns in real-time with match highlighting, capture groups, and structure visualization' },
     ui: {
-      zh: { pattern: '正则表达式', flags: '标志', testStr: '测试文本', placeholder: '输入正则表达式…', textPlaceholder: '输入要匹配的文本…', matches: '匹配结果', matchList: '匹配列表', noMatch: '无匹配', groups: '捕获组' },
-      en: { pattern: 'Regular Expression', flags: 'Flags', testStr: 'Test String', placeholder: 'Enter regex pattern…', textPlaceholder: 'Enter text to match…', matches: 'Matches', matchList: 'Match List', noMatch: 'No matches', groups: 'Capture Groups' },
+      zh: { pattern: '正则表达式', flags: '标志', testStr: '测试文本', placeholder: '输入正则表达式…', textPlaceholder: '输入要匹配的文本…', matches: '匹配结果', matchList: '匹配列表', noMatch: '无匹配', groups: '捕获组', visual: '结构可视化', showVisual: '显示结构图' },
+      en: { pattern: 'Regular Expression', flags: 'Flags', testStr: 'Test String', placeholder: 'Enter regex pattern…', textPlaceholder: 'Enter text to match…', matches: 'Matches', matchList: 'Match List', noMatch: 'No matches', groups: 'Capture Groups', visual: 'Structure Visualization', showVisual: 'Show Structure' },
     },
     help: {
-      zh: { title: '使用说明', features: ['实时高亮匹配结果', '支持 g/i/m/s 等标志位', '捕获组分组展示', '常用正则表达式预设'], usage: ['在上方输入正则表达式', '在下方输入要匹配的测试文本', '匹配结果实时高亮显示', '点击匹配项查看捕获组详情'] },
-      en: { title: 'Usage Guide', features: ['Real-time match highlighting', 'Supports g/i/m/s flags', 'Capture group display', 'Common regex presets'], usage: ['Enter a regex pattern in the top field', 'Enter test text in the bottom field', 'Matches are highlighted in real-time', 'Click a match to view capture group details'] },
+      zh: { title: '使用说明', features: ['实时高亮匹配结果', '正则表达式结构可视化（分组/字符类/量词/锚点）', '支持 g/i/m/s 等标志位', '捕获组分组展示'], usage: ['在上方输入正则表达式', '结构图实时展示正则的分组和量词关系', '在下方输入要匹配的测试文本', '匹配结果高亮显示，点击查看捕获组'] },
+      en: { title: 'Usage Guide', features: ['Real-time match highlighting', 'Regex structure visualization (groups/classes/quantifiers/anchors)', 'Supports g/i/m/s flags', 'Capture group display'], usage: ['Enter a regex pattern in the top field', 'Structure diagram shows groups and quantifiers in real-time', 'Enter test text in the bottom field', 'Matches are highlighted, click to view capture groups'] },
     },
   },
   // ── timestamp ──
@@ -166,15 +166,15 @@ export const toolI18n: Record<string, {
   },
   // ── base64 ──
   base64: {
-    name: { zh: 'Base64 编解码', en: 'Base64 Codec' },
-    desc: { zh: '文本和文件的 Base64 编解码，支持 URL-safe 格式', en: 'Encode and decode Base64 text with URL-safe format support' },
+    name: { zh: 'Base64/Base32 编解码', en: 'Base64/Base32 Codec' },
+    desc: { zh: '文本的 Base64/Base32 编解码，支持 URL-safe 格式', en: 'Encode and decode Base64/Base32 text with URL-safe format support' },
     ui: {
       zh: { encode: '编码', decode: '解码', urlSafe: 'URL-safe', placeholder: '输入要编码的文本…', decodePlaceholder: '粘贴 Base64 字符串…' },
       en: { encode: 'Encode', decode: 'Decode', urlSafe: 'URL-safe', placeholder: 'Enter text to encode…', decodePlaceholder: 'Paste Base64 string…' },
     },
     help: {
-      zh: { title: '使用说明', features: ['文本 Base64 编码与解码', '支持 URL-safe 格式（+/→-_）', '支持文件编码为 Base64'], usage: ['输入文本后点击「编码」生成 Base64', '粘贴 Base64 字符串后点击「解码」还原', '勾选 URL-safe 使用 URL 安全字符'] },
-      en: { title: 'Usage Guide', features: ['Text Base64 encoding and decoding', 'URL-safe format support (+/ → -_ )', 'File encoding to Base64'], usage: ['Enter text and click "Encode" to generate Base64', 'Paste Base64 string and click "Decode" to还原', 'Check URL-safe to use URL-safe characters'] },
+      zh: { title: '使用说明', features: ['文本 Base64 编码与解码', '支持 Base32 编码/解码（RFC 4648）', '支持 URL-safe 格式（+/→-_）', '适合 2FA/OTP 密钥配置和 DNS TXT 记录'], usage: ['选择编码格式：Base64 或 Base32', '输入文本后点击「编码」', '粘贴编码字符串后点击「解码」还原', 'Base64 可勾选 URL-safe 使用安全字符'] },
+      en: { title: 'Usage Guide', features: ['Text Base64 encoding and decoding', 'Base32 encode/decode support (RFC 4648)', 'URL-safe format support (+/ → -_ )', 'Great for 2FA/OTP keys and DNS TXT records'], usage: ['Select format: Base64 or Base32', 'Enter text and click "Encode"', 'Paste encoded string and click "Decode"', 'Base64 supports URL-safe characters option'] },
     },
   },
   // ── url ──
@@ -563,6 +563,71 @@ export const toolI18n: Record<string, {
     help: {
       zh: { title: '使用说明', features: ['XML 美化格式化，支持 2/4 空格缩进', 'XML 压缩为单行', 'XML 转 JSON 一键转换', '自动处理属性和嵌套元素'], usage: ['在左侧粘贴 XML 数据', '选择缩进大小（2 或 4 空格）', '点击「格式化」「压缩」或「转 JSON」', '右侧实时显示结果'] },
       en: { title: 'Usage Guide', features: ['Pretty-print XML with 2/4 space indentation', 'Minify XML to single line', 'One-click XML to JSON conversion', 'Auto-handles attributes and nested elements'], usage: ['Paste XML data on the left', 'Select indent size (2 or 4 spaces)', 'Click "Format", "Minify", or "To JSON"', 'Results appear in real-time on the right'] },
+    },
+  },
+  // ── mockGen ──
+  mockGen: {
+    name: { zh: 'Mock API 生成器', en: 'Mock API Generator' },
+    desc: { zh: '定义 API 端点生成 Mock 代码，支持批量生成测试数据', en: 'Define API endpoints and generate mock server code, with batch test data generation' },
+    ui: {
+      zh: { apiMock: 'API Mock', testData: '测试数据', endpoints: 'API 端点', addEndpoint: '添加端点', preview: '预览', generateCode: '生成代码', fields: '字段定义', addField: '添加字段', dataCount: '数量', generateData: '生成数据', injectToApi: '注入到 API' },
+      en: { apiMock: 'API Mock', testData: 'Test Data', endpoints: 'API Endpoints', addEndpoint: 'Add Endpoint', preview: 'Preview', generateCode: 'Generate Code', fields: 'Fields', addField: 'Add Field', dataCount: 'Count', generateData: 'Generate Data', injectToApi: 'Inject to API' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['API Mock：可视化定义端点，生成 MSW/json-server/fetch-mock 代码', '测试数据：按字段定义批量生成 Mock 数据（姓名/邮箱/手机/地址等）', '内置 4 种数据模板（用户/商品/订单/文章）', '生成的测试数据可一键注入为 API 响应体'], usage: ['API Mock Tab：定义端点 → 选格式 → 生成代码', '测试数据 Tab：选模板或自定义字段 → 生成数据', '可将生成的数据注入到 API 端点作为响应体', '复制代码到项目中使用'] },
+      en: { title: 'Usage Guide', features: ['API Mock: visual endpoint definition, generate MSW/json-server/fetch-mock code', 'Test Data: batch generate mock data from field definitions (name/email/phone/address)', '4 built-in data templates (User/Product/Order/Post)', 'Generated data can be injected as API response body'], usage: ['API Mock tab: define endpoints → choose format → generate code', 'Test Data tab: select template or customize fields → generate data', 'Inject generated data into API endpoints as response body', 'Copy code to your project'] },
+    },
+  },
+  // ── emoji ──
+  emoji: {
+    name: { zh: 'Emoji 搜索', en: 'Emoji Browser' },
+    desc: { zh: 'Emoji 搜索与复制，支持中英文关键词和平台差异说明', en: 'Search and copy emojis with CJK/English keywords and platform difference notes' },
+    ui: {
+      zh: { search: '搜索 Emoji', placeholder: '搜索表情…（支持中文如"笑"、英文如"smile"）', all: '全部', details: '详情', platformNotes: '平台差异说明', clickToCopy: '点击复制到剪贴板', noResults: '未找到匹配的 Emoji', showingFirst: '仅显示前 200 个结果，请使用搜索缩小范围' },
+      en: { search: 'Search Emoji', placeholder: 'Search emojis… (e.g. "smile", "love", "笑")', all: 'All', details: 'Details', platformNotes: 'Platform Notes', clickToCopy: 'Click to copy', noResults: 'No matching emojis found', showingFirst: 'Showing first 200 results — use search to narrow down' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['Emoji 搜索支持中英文关键词', '按类别筛选：表情/手势/符号/物品/旗帜', '点击一键复制到剪贴板', '内置平台差异说明（Apple/Google/Microsoft/Samsung/Twitter 渲染差异）'], usage: ['输入关键词搜索（如"笑"、"love"、"bug"）', '按类别筛选缩小范围', '点击 Emoji 复制到剪贴板', '点击「平台差异说明」查看各平台渲染差异'] },
+      en: { title: 'Usage Guide', features: ['Search emojis with CJK or English keywords', 'Filter by category: Smileys/Gestures/Symbols/Objects/Flags', 'One-click copy to clipboard', 'Built-in platform difference notes (Apple/Google/Microsoft/Samsung/Twitter rendering)'], usage: ['Type a keyword to search (e.g. "smile", "love", "bug")', 'Filter by category to narrow results', 'Click an emoji to copy to clipboard', 'Click "Platform Notes" to view cross-platform rendering differences'] },
+    },
+  },
+  // ── graphql ──
+  graphql: {
+    name: { zh: 'GraphQL 格式化', en: 'GraphQL Formatter' },
+    desc: { zh: 'GraphQL query/mutation 美化、压缩', en: 'Beautify and minify GraphQL queries and mutations' },
+    ui: {
+      zh: { format: '格式化', minify: '压缩', indent: '缩进', placeholder: '粘贴 GraphQL query/mutation…' },
+      en: { format: 'Format', minify: 'Minify', indent: 'Indent', placeholder: 'Paste GraphQL query/mutation…' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['GraphQL query/mutation 美化格式化', '支持参数换行对齐', '支持 fragment 和嵌套字段', '压缩为单行'], usage: ['粘贴 GraphQL 查询到输入框', '选择缩进大小（2 或 4 空格）', '点击「格式化」美化或「压缩」单行', '复制结果'] },
+      en: { title: 'Usage Guide', features: ['Pretty-print GraphQL queries and mutations', 'Argument alignment with line breaks', 'Supports fragments and nested fields', 'Minify to single line'], usage: ['Paste GraphQL query into the input', 'Select indent size (2 or 4 spaces)', 'Click "Format" to beautify or "Minify"', 'Copy the result'] },
+    },
+  },
+  // ── csvViewer ──
+  csvViewer: {
+    name: { zh: 'CSV 查看器', en: 'CSV Viewer' },
+    desc: { zh: 'CSV 数据预览、排序、筛选，支持导出 JSON', en: 'Preview, sort, and filter CSV data with JSON export' },
+    ui: {
+      zh: { placeholder: '粘贴 CSV 数据…\nName,Age,City\nAlice,28,Beijing\nBob,32,Shanghai', delimiter: '分隔符', table: '数据表格', filter: '筛选…', rows: '行', exportJson: '导出 JSON' },
+      en: { placeholder: 'Paste CSV data…\nName,Age,City\nAlice,28,Beijing\nBob,32,Shanghai', delimiter: 'Delimiter', table: 'Data Table', filter: 'Filter…', rows: 'rows', exportJson: 'Export JSON' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['CSV 数据表格化预览', '点击列头排序（升序/降序）', '关键词实时筛选', '支持导出为 JSON 格式'], usage: ['粘贴 CSV 数据到输入框', '选择分隔符（逗号/分号/Tab）', '点击列头排序，输入关键词筛选', '点击「导出 JSON」复制 JSON 数据'] },
+      en: { title: 'Usage Guide', features: ['CSV data table preview', 'Click column headers to sort (asc/desc)', 'Real-time keyword filtering', 'Export to JSON format'], usage: ['Paste CSV data into the input', 'Select delimiter (comma/semicolon/Tab)', 'Click headers to sort, type to filter', 'Click "Export JSON" to copy JSON data'] },
+    },
+  },
+  // ── textToolkit ──
+  textToolkit: {
+    name: { zh: '文本编辑工具', en: 'Text Editor' },
+    desc: { zh: '大小写转换、排序/去重、批量替换、转义/反转义、对齐/表格化', en: 'Case convert, sort/dedup, find/replace, escape/unescape, align/tabulate text' },
+    ui: {
+      zh: { caseConvert: '大小写', sortDedup: '排序/去重', findReplace: '查找/替换', escapeUnescape: '转义/反转义', alignTable: '对齐/表格化', inputPlaceholder: '输入或粘贴文本…', run: '执行', upper: '全大写', lower: '全小写', titleCase: '首字母大写', sentenceCase: '句首大写', camelCase: '小驼峰', pascalCase: '大驼峰', snakeCase: '蛇形', kebabCase: '横线', az: 'A→Z 升序', za: 'Z→A 降序', unique: '去重', shuffle: '打乱', reverse: '反转', find: '查找…', replace: '替换为…', regex: '正则', caseSensitive: '区分大小写', escape: '转义', unescape: '反转义', left: '左对齐', right: '右对齐', center: '居中', table: '表格对齐' },
+      en: { caseConvert: 'Case', sortDedup: 'Sort/Dedup', findReplace: 'Find/Replace', escapeUnescape: 'Escape/Unescape', alignTable: 'Align/Table', inputPlaceholder: 'Enter or paste text…', run: 'Run', upper: 'UPPER', lower: 'lower', titleCase: 'Title Case', sentenceCase: 'Sentence case', camelCase: 'camelCase', pascalCase: 'PascalCase', snakeCase: 'snake_case', kebabCase: 'kebab-case', az: 'A→Z Asc', za: 'Z→A Desc', unique: 'Dedup', shuffle: 'Shuffle', reverse: 'Reverse', find: 'Find…', replace: 'Replace with…', regex: 'Regex', caseSensitive: 'Case Sensitive', escape: 'Escape', unescape: 'Unescape', left: 'Left', right: 'Right', center: 'Center', table: 'Table' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['大小写转换：UPPER/lower/Title/camelCase/PascalCase/snake_case/kebab-case', '排序/去重：A→Z、Z→A、去重、打乱、反转', '查找/替换：支持正则表达式和大小写控制', '转义/反转义：JSON/HTML/JS/URL 四种格式', '对齐/表格化：左对齐、右对齐、居中、按列对齐'], usage: ['选择功能 Tab（大小写/排序/替换/转义/对齐）', '输入文本和对应参数', '大小写 Tab 直接展示 8 种格式结果', '其他 Tab 点击「执行」查看结果'] },
+      en: { title: 'Usage Guide', features: ['Case: UPPER/lower/Title/camelCase/PascalCase/snake_case/kebab-case', 'Sort/Dedup: A→Z, Z→A, deduplicate, shuffle, reverse', 'Find/Replace: regex support and case control', 'Escape/Unescape: JSON/HTML/JS/URL formats', 'Align/Table: left, right, center, column-aligned'], usage: ['Select a tab (Case/Sort/Replace/Escape/Align)', 'Enter text and configure options', 'Case tab shows all 8 formats instantly', 'Other tabs: click "Run" to see the result'] },
     },
   },
   // ── x509 ──
