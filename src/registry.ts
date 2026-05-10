@@ -252,6 +252,32 @@ export const tools: ToolMeta[] = [
     status: '可用',
     preview: 'aB3$kL9#mN2&pQ7^\n→ 16 chars, Very Strong',
   },
+  {
+    id: 'imgCompress',
+    name: '图片压缩',
+    description: 'PNG/JPEG/WebP 图片有损压缩，支持质量调节和尺寸缩放',
+    icon: 'IMG',
+    iconClass: 'icon-amber',
+    category: '格式化/转换',
+    path: '/img-compress',
+    component: () => import('./features/image-compressor'),
+    keywords: ['image', 'compress', '图片', '压缩', 'jpeg', 'webp', 'png', 'quality'],
+    status: '可用',
+    preview: 'photo.jpg 2.4MB\n→ compressed 380KB\n→ -84% size',
+  },
+  {
+    id: 'imgConvert',
+    name: '图片格式转换',
+    description: 'PNG/JPEG/WebP 图片格式互转，支持质量调节',
+    icon: '↔',
+    iconClass: 'icon-green',
+    category: '格式化/转换',
+    path: '/img-convert',
+    component: () => import('./features/image-converter'),
+    keywords: ['image', 'convert', '图片', '转换', 'format', 'png', 'jpeg', 'webp'],
+    status: '可用',
+    preview: 'photo.png 1.2MB\n→ photo.webp 280KB\n→ WebP format',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [

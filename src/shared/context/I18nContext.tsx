@@ -448,6 +448,32 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Cryptographically secure passwords via crypto.getRandomValues()', 'Configurable: uppercase/lowercase/digits/symbols', 'Batch generate up to 20 passwords at once', 'Real-time strength indicator based on entropy calculation'], usage: ['Adjust the length slider (4-128 characters)', 'Select the character set types to include', 'Set the count and click "Generate"', 'Click a single password or "Copy" to copy all'] },
     },
   },
+  // ── imgCompress ──
+  imgCompress: {
+    name: { zh: '图片压缩', en: 'Image Compressor' },
+    desc: { zh: 'PNG/JPEG/WebP 图片有损压缩，支持质量调节和尺寸缩放', en: 'Compress PNG/JPEG/WebP images with quality control and resize' },
+    ui: {
+      zh: { format: '输出格式', quality: '压缩质量', maxWidth: '最大宽度', noLimit: '不限制', dropzone: '点击或拖拽图片到此处', processing: '压缩中…', compress: '开始压缩', originalSize: '原始大小', compressedSize: '压缩后', dimensions: '尺寸', reduction: '压缩率', pngTip: 'PNG 为无损格式，不会降低图片质量，压缩效果有限', sizeIncreased: '压缩后文件反而变大了，建议降低质量或切换为 JPEG/WebP 格式', adjustHint: '调整压缩参数后点击「开始压缩」' },
+      en: { format: 'Output Format', quality: 'Quality', maxWidth: 'Max Width', noLimit: 'No Limit', dropzone: 'Click or drag image here', processing: 'Compressing…', compress: 'Compress', originalSize: 'Original', compressedSize: 'Compressed', dimensions: 'Dimensions', reduction: 'Reduction', pngTip: 'PNG is lossless and will not reduce quality — compression is limited', sizeIncreased: 'Compressed file is larger than original. Try lower quality or switch to JPEG/WebP.', adjustHint: 'Adjust settings then click "Compress"' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 JPEG/WebP/PNG 三种输出格式', '可调节压缩质量（10%-100%）', '可限制最大宽度，自动等比缩放', '纯浏览器本地处理，图片不上传'], usage: ['选择输出格式和压缩质量', '可选设置最大宽度限制', '点击或拖拽图片到上传区域', '预览压缩效果后下载'] },
+      en: { title: 'Usage Guide', features: ['Supports JPEG/WebP/PNG output formats', 'Adjustable compression quality (10%-100%)', 'Optional max width with auto-resize', 'All processing happens locally in browser'], usage: ['Select output format and quality', 'Optionally set max width limit', 'Click or drag an image to upload', 'Preview and download the result'] },
+    },
+  },
+  // ── imgConvert ──
+  imgConvert: {
+    name: { zh: '图片格式转换', en: 'Image Format Converter' },
+    desc: { zh: 'PNG/JPEG/WebP 图片格式互转，支持质量调节', en: 'Convert between PNG/JPEG/WebP formats with quality control' },
+    ui: {
+      zh: { targetFormat: '目标格式', quality: '输出质量', dropzone: '点击或拖拽图片到此处', processing: '转换中…', convert: '开始转换', from: '原始格式', to: '目标格式', originalSize: '原始大小', convertedSize: '转换后', dimensions: '尺寸', adjustHint: '选择目标格式后点击「开始转换」' },
+      en: { targetFormat: 'Target Format', quality: 'Quality', dropzone: 'Click or drag image here', processing: 'Converting…', convert: 'Convert', from: 'From', to: 'To', originalSize: 'Original', convertedSize: 'Converted', dimensions: 'Dimensions', adjustHint: 'Select target format then click "Convert"' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 PNG/JPEG/WebP 格式互转', 'JPEG/WebP 可调节输出质量', '自动处理透明背景（JPEG 填充白色）', '纯浏览器本地处理，图片不上传'], usage: ['选择目标输出格式', '可选调节输出质量', '点击或拖拽图片到上传区域', '预览后下载转换结果'] },
+      en: { title: 'Usage Guide', features: ['Convert between PNG/JPEG/WebP formats', 'Quality control for JPEG/WebP output', 'Auto-handle transparency (JPEG fills white)', 'All processing happens locally in browser'], usage: ['Select target output format', 'Optionally adjust output quality', 'Click or drag an image to upload', 'Preview and download the converted image'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

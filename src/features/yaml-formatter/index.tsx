@@ -66,7 +66,7 @@ export default function YamlFormatter() {
 
   const handleInput = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
-    autoResize(e.target);
+    requestAnimationFrame(() => autoResize(e.target));
   }, [autoResize]);
 
   const setExample = useCallback(() => {
@@ -129,7 +129,7 @@ export default function YamlFormatter() {
               <button className="panel-btn" onClick={() => { setInput(''); setOutput(''); setError(''); }}>{t('common.clear')}</button>
             </div>
           </div>
-          <textarea ref={textareaRef} className="tool-textarea" style={{ height: 'auto', overflow: 'hidden' }} value={input} onInput={handleInput} placeholder={ui.placeholder} />
+          <textarea ref={textareaRef} className="tool-textarea" style={{ height: 'auto', overflow: 'hidden' }} value={input} onChange={handleInput} placeholder={ui.placeholder} />
         </div>
         <div className="tool-panel">
           <div className="panel-header">
