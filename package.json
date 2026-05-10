@@ -10,13 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ajv": "^8.20.0",
     "idb": "^8.0.2",
     "js-yaml": "^4.1.1",
     "jsqr": "^1.4.0",
     "qrcode": "^1.5.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-router-dom": "^7.15.0"
+    "react-router-dom": "^7.15.0",
+    "smol-toml": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

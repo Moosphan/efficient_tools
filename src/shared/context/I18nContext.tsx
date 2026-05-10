@@ -422,6 +422,97 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['One-click copy for common ADB commands', 'Grouped by category: Device/App/Screen/File/Debug', 'Each command includes a description', 'Search to quickly find commands'], usage: ['Ensure device is connected with USB debugging enabled', 'Browse by category or search for the command', 'Click a command card to copy to clipboard', 'Paste and run in your terminal'] },
     },
   },
+  // ── unicode ──
+  unicode: {
+    name: { zh: 'Unicode 编解码', en: 'Unicode Codec' },
+    desc: { zh: 'Unicode 码点与字符互转，支持 \\uXXXX、U+XXXX、HTML Entity', en: 'Convert between Unicode code points and characters, supports \\uXXXX, U+XXXX, HTML entities' },
+    ui: {
+      zh: { escape: '\\uXXXX', codepoint: 'U+XXXX', html: 'HTML Entity', placeholder: '输入文本或 Unicode 编码…', encoded: '编码结果', decoded: '解码结果' },
+      en: { escape: '\\uXXXX', codepoint: 'U+XXXX', html: 'HTML Entity', placeholder: 'Enter text or Unicode codes…', encoded: 'Encoded', decoded: 'Decoded' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['文本 → Unicode 转义序列（\\uXXXX）', '文本 → 码点表示（U+XXXX）', '文本 → HTML 数字实体（&#NNNN;）', '支持完整 Unicode 范围含 Emoji'], usage: ['选择输出格式：\\uXXXX / U+XXXX / HTML Entity', '输入文本自动编码', '输入 Unicode 编码自动解码为文本', '点击复制结果'] },
+      en: { title: 'Usage Guide', features: ['Text → Unicode escape sequences (\\uXXXX)', 'Text → Code point notation (U+XXXX)', 'Text → HTML numeric entities (&#NNNN;)', 'Full Unicode range including Emoji'], usage: ['Select output format: \\uXXXX / U+XXXX / HTML Entity', 'Enter text to auto-encode', 'Enter Unicode codes to auto-decode', 'Click to copy result'] },
+    },
+  },
+  // ── hex ──
+  hex: {
+    name: { zh: 'Hex 编解码', en: 'Hex Codec' },
+    desc: { zh: '十六进制与文本/字节互转，支持 DEC/BIN 预览', en: 'Convert between hex and text/bytes with DEC/BIN preview' },
+    ui: {
+      zh: { encodePlaceholder: '输入要编码的文本…', decodePlaceholder: '输入十六进制字符串…（如 48 65 6C 6C 6F）', separator: '分隔符', none: '无', preview: '字节预览' },
+      en: { encodePlaceholder: 'Enter text to encode…', decodePlaceholder: 'Enter hex string… (e.g. 48 65 6C 6C 6F)', separator: 'Separator', none: 'None', preview: 'Byte Preview' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['文本 ↔ 十六进制双向转换', '可选分隔符（空格/冒号/横线/无）', '附带十进制和二进制字节预览', '支持 UTF-8 多字节编码'], usage: ['选择编码或解码模式', '输入文本或十六进制字符串', '编码模式可选分隔符格式', '查看字节预览后复制结果'] },
+      en: { title: 'Usage Guide', features: ['Bidirectional text ↔ hex conversion', 'Configurable separator (space/colon/dash/none)', 'DEC and binary byte preview', 'Supports UTF-8 multi-byte encoding'], usage: ['Select encode or decode mode', 'Enter text or hex string', 'Choose separator format in encode mode', 'Preview bytes and copy the result'] },
+    },
+  },
+  // ── htmlEntity ──
+  htmlEntity: {
+    name: { zh: 'HTML Entity 编解码', en: 'HTML Entity Codec' },
+    desc: { zh: 'HTML 实体与字符互转，支持命名实体和数字实体', en: 'Convert between HTML entities and characters, supports named and numeric entities' },
+    ui: {
+      zh: { placeholder: '输入文本或 HTML 实体…（如 &amp; 或 &#20013;）', encoded: '编码结果', decoded: '解码结果' },
+      en: { placeholder: 'Enter text or HTML entities… (e.g. &amp; or &#20013;)', encoded: 'Encoded', decoded: 'Decoded' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['字符 → HTML 实体（命名实体优先）', '支持 &amp; &#1234; &#xABCD; 三种格式', '内置 30+ 常用命名实体（©®™€ 等）', '适合调试 XSS 和 HTML 模板'], usage: ['输入文本自动编码为 HTML 实体', '输入 HTML 实体自动解码为字符', '支持同时输入混合格式', '点击复制结果'] },
+      en: { title: 'Usage Guide', features: ['Characters → HTML entities (named entities preferred)', 'Supports &amp; &#1234; &#xABCD; formats', '30+ built-in named entities (©®™€ etc.)', 'Great for debugging XSS and HTML templates'], usage: ['Enter text to auto-encode to HTML entities', 'Enter HTML entities to auto-decode to characters', 'Supports mixed format input', 'Click to copy result'] },
+    },
+  },
+  // ── textCase ──
+  textCase: {
+    name: { zh: '文本大小写转换', en: 'Text Case Converter' },
+    desc: { zh: '大写/小写/首字母大写/驼峰/蛇形等 8 种命名风格转换', en: 'Convert between 8 naming styles: upper/lower/title/camel/snake/kebab and more' },
+    ui: {
+      zh: { placeholder: '输入要转换的文本…', upper: '全大写', lower: '全小写', title: '首字母大写', sentence: '句首大写', camel: '小驼峰', pascal: '大驼峰', snake: '蛇形', kebab: '横线' },
+      en: { placeholder: 'Enter text to convert…', upper: 'UPPER', lower: 'lower', title: 'Title Case', sentence: 'Sentence case', camel: 'camelCase', pascal: 'PascalCase', snake: 'snake_case', kebab: 'kebab-case' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['8 种命名风格一键转换', 'UPPER / lower / Title Case / Sentence case', 'camelCase / PascalCase / snake_case / kebab-case', '适合代码重构和变量命名风格切换'], usage: ['输入文本后 8 种格式实时同步', '点击「复制」复制单个结果', '支持中英文混合文本'] },
+      en: { title: 'Usage Guide', features: ['8 naming styles in one click', 'UPPER / lower / Title Case / Sentence case', 'camelCase / PascalCase / snake_case / kebab-case', 'Perfect for code refactoring and naming conventions'], usage: ['Enter text — all 8 formats update in real-time', 'Click "Copy" to copy any result', 'Works with mixed CJK and English text'] },
+    },
+  },
+  // ── asciiArt ──
+  asciiArt: {
+    name: { zh: 'ASCII 艺术字', en: 'ASCII Art Text' },
+    desc: { zh: '文字转 ASCII Art，支持 6 种字体主题', en: 'Convert text to ASCII art with 6 font styles' },
+    ui: {
+      zh: { font: '字体', placeholder: '输入文字…（最多 20 字符）', supportedChars: '支持 A-Z、0-9 和常见符号' },
+      en: { font: 'Font', placeholder: 'Enter text… (max 20 chars)', supportedChars: 'Supports A-Z, 0-9, and common symbols' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['6 种 ASCII 字体主题：Standard / Slant / Banner / Small / Big / Block', '支持 A-Z、0-9 和常见符号', '适合终端欢迎信息、CI/CD 注释、代码装饰', '一键复制结果'], usage: ['输入文字（最多 20 字符）', '选择字体主题', '实时预览 ASCII Art 效果', '点击「复制」复制到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['6 ASCII font styles: Standard / Slant / Banner / Small / Big / Block', 'Supports A-Z, 0-9, and common symbols', 'Great for terminal banners, CI/CD comments, code decoration', 'One-click copy'], usage: ['Enter text (max 20 characters)', 'Choose a font style', 'Preview ASCII art in real-time', 'Click "Copy" to copy to clipboard'] },
+    },
+  },
+  // ── lorem ──
+  lorem: {
+    name: { zh: 'Lorem Ipsum 生成器', en: 'Lorem Ipsum Generator' },
+    desc: { zh: '生成占位文本，支持拉丁文和中文，可选段落/句子/词', en: 'Generate placeholder text in Latin or Chinese, choose paragraphs/sentences/words' },
+    ui: {
+      zh: { language: '语言', chinese: '中文', type: '类型', count: '数量', paragraphs: '段落', sentences: '句子', words: '词', generate: '生成' },
+      en: { language: 'Language', chinese: 'Chinese', type: 'Type', count: 'Count', paragraphs: 'Paragraphs', sentences: 'Sentences', words: 'Words', generate: 'Generate' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 Lorem Ipsum 拉丁文和中文占位文本', '可选按段落、句子或词生成', '数量可调 1-20', '适合 UI 设计阶段快速填充内容'], usage: ['选择语言（拉丁文/中文）', '选择生成类型（段落/句子/词）', '调整数量后点击「生成」', '点击「复制」复制到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['Latin Lorem Ipsum and Chinese placeholder text', 'Generate by paragraphs, sentences, or words', 'Adjustable count 1-20', 'Perfect for UI design prototyping'], usage: ['Select language (Latin/Chinese)', 'Choose type (Paragraphs/Sentences/Words)', 'Adjust count and click "Generate"', 'Click "Copy" to copy to clipboard'] },
+    },
+  },
+  // ── charRef ──
+  charRef: {
+    name: { zh: '字符对照表', en: 'Character Reference' },
+    desc: { zh: 'ASCII/Unicode 码表速查，字符反查编码', en: 'ASCII/Unicode character table lookup and reverse encoding search' },
+    ui: {
+      zh: { lookup: '字符反查', lookupPlaceholder: '输入字符查看编码…', table: '码表', searchPlaceholder: '搜索字符或名称…', details: '字符网格', detailsDesc: '点击字符复制到剪贴板', clickToCopy: '点击任意字符可复制', printable: '可打印字符', digits: '数字', uppercase: '大写字母', lowercase: '小写字母', symbols: '符号', control: '控制字符', extended: '扩展字符' },
+      en: { lookup: 'Character Lookup', lookupPlaceholder: 'Enter a character to see its encoding…', table: 'Character Table', searchPlaceholder: 'Search character or name…', details: 'Character Grid', detailsDesc: 'Click a character to copy to clipboard', clickToCopy: 'Click any character to copy', printable: 'Printable', digits: 'Digits', uppercase: 'Uppercase', lowercase: 'Lowercase', symbols: 'Symbols', control: 'Control', extended: 'Extended' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['ASCII 码表速查：可打印字符/数字/字母/符号/控制字符', '输入字符反查 DEC/HEX/OCT/BIN 编码', '支持按类别筛选和搜索', '点击字符一键复制'], usage: ['在顶部输入字符查看编码详情', '按类别筛选码表内容', '输入关键词搜索字符', '点击码表中的字符复制到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['ASCII table: printable/digits/letters/symbols/control chars', 'Input character to reverse-lookup DEC/HEX/OCT/BIN', 'Filter by category and search', 'Click character to copy'], usage: ['Enter a character at the top to see encoding details', 'Filter the table by category', 'Search by keyword', 'Click any character in the table to copy'] },
+    },
+  },
   // ── yaml ──
   yaml: {
     name: { zh: 'YAML 格式化', en: 'YAML Formatter' },
@@ -433,6 +524,136 @@ export const toolI18n: Record<string, {
     help: {
       zh: { title: '使用说明', features: ['YAML 美化格式化，自动缩进排版', 'YAML 压缩为紧凑格式', 'YAML 转 JSON 一键转换', '语法错误定位，快速排查格式问题'], usage: ['在左侧输入框粘贴或输入 YAML 数据', '点击「格式化」美化缩进，或「压缩」去除空白', '点击「转 JSON」将 YAML 转换为 JSON 格式', '右侧实时显示处理结果或错误信息'] },
       en: { title: 'Usage Guide', features: ['Pretty-print YAML with auto-indentation', 'Minify YAML to compact format', 'One-click YAML to JSON conversion', 'Syntax error detection with precise location'], usage: ['Paste or type YAML data in the left panel', 'Click "Format" to pretty-print or "Minify" to compress', 'Click "To JSON" to convert YAML to JSON format', 'Results or error messages appear in real-time on the right'] },
+    },
+  },
+  // ── jsonSchema ──
+  jsonSchema: {
+    name: { zh: 'JSON Schema 验证器', en: 'JSON Schema Validator' },
+    desc: { zh: '根据 JSON Schema 校验 JSON 数据，高亮错误位置', en: 'Validate JSON data against a JSON Schema with error highlighting' },
+    ui: {
+      zh: { schema: 'Schema 定义', data: 'JSON 数据', validate: '验证', result: '验证结果', valid: '✓ 通过', invalid: '✗ 不通过', schemaPlaceholder: '粘贴 JSON Schema…', dataPlaceholder: '粘贴待验证的 JSON 数据…' },
+      en: { schema: 'Schema', data: 'JSON Data', validate: 'Validate', result: 'Result', valid: '✓ Valid', invalid: '✗ Invalid', schemaPlaceholder: 'Paste JSON Schema…', dataPlaceholder: 'Paste JSON data to validate…' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['基于 ajv 引擎，支持 JSON Schema Draft 2020-12', '高亮显示每个验证错误的位置和原因', '支持嵌套对象和数组校验', '提供内置示例快速体验'], usage: ['在左侧粘贴 JSON Schema 定义', '在右侧粘贴待验证的 JSON 数据', '点击「验证」查看结果', '错误列表显示路径和具体原因'] },
+      en: { title: 'Usage Guide', features: ['Powered by ajv, supports JSON Schema Draft 2020-12', 'Highlights each validation error with location', 'Supports nested object and array validation', 'Built-in example for quick testing'], usage: ['Paste JSON Schema definition on the left', 'Paste JSON data to validate on the right', 'Click "Validate" to see results', 'Error list shows path and reason for each issue'] },
+    },
+  },
+  // ── jsonCsv ──
+  jsonCsv: {
+    name: { zh: 'JSON ↔ CSV 转换', en: 'JSON ↔ CSV Converter' },
+    desc: { zh: 'JSON 数组与 CSV 双向转换，支持自定义分隔符和嵌套展开', en: 'Bidirectional JSON array ↔ CSV conversion with custom delimiters and nested object flattening' },
+    ui: {
+      zh: { convert: '转换', delimiter: '分隔符', jsonPlaceholder: '粘贴 JSON 数组…\n[{"name":"张三","age":28},{"name":"李四","age":32}]', csvPlaceholder: '粘贴 CSV 数据…\nname,age\n张三,28\n李四,32' },
+      en: { convert: 'Convert', delimiter: 'Delimiter', jsonPlaceholder: 'Paste JSON array…\n[{"name":"Alice","age":28},{"name":"Bob","age":32}]', csvPlaceholder: 'Paste CSV data…\nname,age\nAlice,28\nBob,32' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['JSON 数组 → CSV 一键转换', 'CSV → JSON 数组反向转换', '嵌套对象自动展开为列名（如 address.city）', '支持逗号/分号/Tab 分隔符'], usage: ['选择转换方向：JSON → CSV 或 CSV → JSON', '选择分隔符类型', '在输入框粘贴数据', '点击「转换」后复制结果'] },
+      en: { title: 'Usage Guide', features: ['JSON array → CSV one-click conversion', 'CSV → JSON array reverse conversion', 'Nested objects flatten to dot-notation columns (e.g. address.city)', 'Supports comma/semicolon/Tab delimiters'], usage: ['Select direction: JSON → CSV or CSV → JSON', 'Choose delimiter type', 'Paste data in the input area', 'Click "Convert" and copy the result'] },
+    },
+  },
+  // ── xml ──
+  xml: {
+    name: { zh: 'XML 格式化', en: 'XML Formatter' },
+    desc: { zh: 'XML 美化、压缩、转 JSON', en: 'Beautify, minify, and convert XML to JSON' },
+    ui: {
+      zh: { format: '格式化', minify: '压缩', toJson: '转 JSON', indent: '缩进', placeholder: '粘贴 XML…', errorPrefix: 'XML 解析错误' },
+      en: { format: 'Format', minify: 'Minify', toJson: 'To JSON', indent: 'Indent', placeholder: 'Paste XML…', errorPrefix: 'XML parse error' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['XML 美化格式化，支持 2/4 空格缩进', 'XML 压缩为单行', 'XML 转 JSON 一键转换', '自动处理属性和嵌套元素'], usage: ['在左侧粘贴 XML 数据', '选择缩进大小（2 或 4 空格）', '点击「格式化」「压缩」或「转 JSON」', '右侧实时显示结果'] },
+      en: { title: 'Usage Guide', features: ['Pretty-print XML with 2/4 space indentation', 'Minify XML to single line', 'One-click XML to JSON conversion', 'Auto-handles attributes and nested elements'], usage: ['Paste XML data on the left', 'Select indent size (2 or 4 spaces)', 'Click "Format", "Minify", or "To JSON"', 'Results appear in real-time on the right'] },
+    },
+  },
+  // ── x509 ──
+  x509: {
+    name: { zh: 'X.509 证书解析', en: 'X.509 Certificate Parser' },
+    desc: { zh: '解析 PEM 格式 SSL 证书，查看有效期、颁发者、版本等信息', en: 'Parse PEM SSL certificates to view validity, issuer, version and more' },
+    ui: {
+      zh: { parse: '解析证书', placeholder: '粘贴 PEM 格式证书…\n-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----', type: '证书类型' },
+      en: { parse: 'Parse', placeholder: 'Paste PEM certificate…\n-----BEGIN CERTIFICATE-----\n...\n-----END CERTIFICATE-----', type: 'Certificate Type' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['解析 PEM 格式 X.509 证书', '提取有效期起止时间和剩余天数', '识别签名算法（RSA/ECDSA）', '提取主题 CN 和颁发者 CN'], usage: ['粘贴 PEM 格式证书到输入框', '点击「解析证书」', '查看证书详情（有效期、颁发者等）', '已过期证书会红色标注'] },
+      en: { title: 'Usage Guide', features: ['Parse PEM format X.509 certificates', 'Extract validity period and days remaining', 'Detect signature algorithm (RSA/ECDSA)', 'Extract Subject CN and Issuer CN'], usage: ['Paste PEM certificate into the input', 'Click "Parse"', 'View certificate details (validity, issuer, etc.)', 'Expired certificates are highlighted in red'] },
+    },
+  },
+  // ── hmac ──
+  hmac: {
+    name: { zh: 'HMAC 计算器', en: 'HMAC Calculator' },
+    desc: { zh: 'HMAC-SHA1/256/384/512 带密钥哈希计算', en: 'Compute HMAC with SHA-1/256/384/512 and secret key' },
+    ui: {
+      zh: { message: '消息内容', messagePlaceholder: '输入要签名的消息…', secret: '密钥', secretPlaceholder: '输入密钥…', algorithm: '算法', outputFormat: '输出格式', compute: '计算', computeAll: '全部算法' },
+      en: { message: 'Message', messagePlaceholder: 'Enter message to sign…', secret: 'Secret Key', secretPlaceholder: 'Enter secret key…', algorithm: 'Algorithm', outputFormat: 'Output Format', compute: 'Compute', computeAll: 'All Algorithms' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 HMAC-SHA1/256/384/512', '可选 HEX 或 Base64 输出', '一键计算全部算法对比', '适合 API 签名验证调试'], usage: ['输入消息内容和密钥', '选择算法和输出格式', '点击「计算」或「全部算法」', '点击「复制」复制结果'] },
+      en: { title: 'Usage Guide', features: ['Supports HMAC-SHA1/256/384/512', 'HEX or Base64 output format', 'Compute all algorithms at once', 'Perfect for API signature debugging'], usage: ['Enter message and secret key', 'Select algorithm and output format', 'Click "Compute" or "All Algorithms"', 'Click "Copy" to copy result'] },
+    },
+  },
+  // ── textStats ──
+  textStats: {
+    name: { zh: '文本统计', en: 'Text Statistics' },
+    desc: { zh: '字符数、词数、行数、段落数、阅读时间、字符频率分析', en: 'Count characters, words, lines, paragraphs, reading time, and character frequency' },
+    ui: {
+      zh: { placeholder: '粘贴或输入文本…', statistics: '统计信息', chars: '字符数', charsNoSpace: '字符(去空格)', words: '词数', lines: '行数', paragraphs: '段落数', sentences: '句数', cjkChars: '中文字符', enWords: '英文词', numbers: '数字', bytes: '字节数', readTime: '阅读时间', avgLineLen: '平均行长', charFreq: '字符频率 Top 10' },
+      en: { placeholder: 'Paste or type text…', statistics: 'Statistics', chars: 'Characters', charsNoSpace: 'Chars (no space)', words: 'Words', lines: 'Lines', paragraphs: 'Paragraphs', sentences: 'Sentences', cjkChars: 'CJK Chars', enWords: 'English Words', numbers: 'Numbers', bytes: 'Bytes', readTime: 'Read Time', avgLineLen: 'Avg Line Len', charFreq: 'Character Frequency Top 10' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['统计字符数、词数、行数、段落数、句数', '区分中英文字符和数字', '估算阅读时间（中文 ~400 字/分钟，英文 ~200 词/分钟）', '字符频率 Top 10 排行'], usage: ['粘贴或输入文本', '实时显示各项统计指标', '查看字符频率分布', '适合文章字数统计和 SEO 分析'] },
+      en: { title: 'Usage Guide', features: ['Count characters, words, lines, paragraphs, sentences', 'Distinguish CJK/English characters and numbers', 'Estimate reading time (~400 CJK/min, ~200 EN words/min)', 'Top 10 character frequency ranking'], usage: ['Paste or type text', 'All stats update in real-time', 'View character frequency distribution', 'Great for word count and SEO analysis'] },
+    },
+  },
+  // ── toml ──
+  toml: {
+    name: { zh: 'TOML 格式化', en: 'TOML Formatter' },
+    desc: { zh: 'TOML 格式化、验证、转 JSON', en: 'Format, validate, and convert TOML to JSON' },
+    ui: {
+      zh: { format: '格式化', toJson: '转 JSON', validate: '验证', valid: '✓ TOML 格式正确', placeholder: '粘贴 TOML…', errorPrefix: 'TOML 解析错误' },
+      en: { format: 'Format', toJson: 'To JSON', validate: 'Validate', valid: '✓ Valid TOML', placeholder: 'Paste TOML…', errorPrefix: 'TOML parse error' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['TOML 美化格式化', 'TOML 转 JSON 一键转换', '语法验证，快速定位格式错误', '适合 Cargo.toml / pyproject.toml 等配置文件'], usage: ['在左侧粘贴 TOML 数据', '点击「格式化」美化缩进', '点击「转 JSON」查看等效 JSON', '点击「验证」检查语法是否正确'] },
+      en: { title: 'Usage Guide', features: ['Pretty-print TOML files', 'One-click TOML to JSON conversion', 'Syntax validation with error location', 'Works with Cargo.toml / pyproject.toml configs'], usage: ['Paste TOML data on the left', 'Click "Format" to pretty-print', 'Click "To JSON" to see equivalent JSON', 'Click "Validate" to check syntax'] },
+    },
+  },
+  // ── sql ──
+  sql: {
+    name: { zh: 'SQL 格式化', en: 'SQL Formatter' },
+    desc: { zh: 'SQL 语句美化、压缩，支持关键字高亮', en: 'Beautify and minify SQL statements with keyword highlighting' },
+    ui: {
+      zh: { format: '格式化', minify: '压缩', indent: '缩进', placeholder: '粘贴 SQL 语句…' },
+      en: { format: 'Format', minify: 'Minify', indent: 'Indent', placeholder: 'Paste SQL statement…' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['SQL 语句美化，关键字自动换行和大写', 'SQL 压缩为单行', '支持 SELECT/INSERT/UPDATE/DELETE 等语句', '支持 2/4 空格缩进'], usage: ['粘贴 SQL 语句到输入框', '选择缩进大小（2 或 4 空格）', '点击「格式化」美化或「压缩」单行', '复制结果到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['SQL beautification with keyword newlines and uppercase', 'SQL minification to single line', 'Supports SELECT/INSERT/UPDATE/DELETE statements', 'Configurable 2/4 space indentation'], usage: ['Paste SQL statement into the input', 'Select indent size (2 or 4 spaces)', 'Click "Format" to beautify or "Minify" to compress', 'Copy result to clipboard'] },
+    },
+  },
+  // ── tokenCounter ──
+  tokenCounter: {
+    name: { zh: 'Token 计数器', en: 'Token Counter' },
+    desc: { zh: '估算文本 Token 数量和 API 调用成本', en: 'Estimate token count and API cost for LLM calls' },
+    ui: {
+      zh: { placeholder: '粘贴文本以估算 Token 数量…', stats: '统计信息', tokens: 'Token 数', chars: '字符数', words: '词数', lines: '行数', costEstimate: '成本估算', outputRatio: '输出/输入比', model: '模型', inputCost: '输入成本', outputCost: '输出成本', totalCost: '总计', note: '注：Token 数为估算值，实际可能有 ±20% 偏差。价格为参考值，以各平台最新定价为准。' },
+      en: { placeholder: 'Paste text to estimate token count…', stats: 'Statistics', tokens: 'Tokens', chars: 'Characters', words: 'Words', lines: 'Lines', costEstimate: 'Cost Estimate', outputRatio: 'Output/Input Ratio', model: 'Model', inputCost: 'Input', outputCost: 'Output', totalCost: 'Total', note: 'Note: Token counts are estimates (±20%). Prices are references — check each provider for current pricing.' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['估算文本的 Token 数量（英文 ~4 字符/Token，中文 ~1 字符/Token）', '统计字符数、词数、行数', '多模型 API 成本对比（GPT-4o、Claude、DeepSeek 等）', '可调节输出/输入比估算总成本'], usage: ['粘贴文本到输入框', '查看 Token 数和统计信息', '调整输出/输入比滑块', '对比不同模型的 API 调用成本'] },
+      en: { title: 'Usage Guide', features: ['Estimate token count (~4 chars/token EN, ~1 char/token CJK)', 'Count characters, words, and lines', 'Multi-model API cost comparison (GPT-4o, Claude, DeepSeek)', 'Adjustable output/input ratio for total cost'], usage: ['Paste text into the input area', 'View token count and statistics', 'Adjust the output/input ratio slider', 'Compare costs across different models'] },
+    },
+  },
+  // ── tsType ──
+  tsType: {
+    name: { zh: 'TypeScript 类型生成', en: 'TypeScript Type Generator' },
+    desc: { zh: '从 JSON 数据自动生成 TypeScript 接口定义', en: 'Auto-generate TypeScript interfaces from JSON data' },
+    ui: {
+      zh: { generate: '生成类型', rootName: '根类型名', placeholder: '粘贴 JSON 数据…' },
+      en: { generate: 'Generate', rootName: 'Root type name', placeholder: 'Paste JSON data…' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['从 JSON 数据自动生成 TypeScript interface', '支持嵌套对象自动展开为独立接口', '支持数组类型推断', '可自定义根类型名称'], usage: ['粘贴 JSON 数据到输入框', '设置根类型名称（默认 RootObject）', '点击「生成类型」查看结果', '复制生成的 TypeScript 代码'] },
+      en: { title: 'Usage Guide', features: ['Auto-generate TypeScript interfaces from JSON', 'Nested objects become separate interfaces', 'Array type inference', 'Customizable root type name'], usage: ['Paste JSON data into the input', 'Set root type name (default: RootObject)', 'Click "Generate" to see the result', 'Copy the generated TypeScript code'] },
     },
   },
   // ── password ──
