@@ -203,6 +203,18 @@ export const tools: ToolMeta[] = [
     status: '可用',
   },
   {
+    id: 'qrcode',
+    name: '二维码工具',
+    description: '生成/解析二维码，支持8种主题样式、渐变色彩、Logo嵌入',
+    icon: 'QR',
+    iconClass: 'icon-cyan',
+    category: '开发调试',
+    path: '/qrcode',
+    component: () => import('./features/qrcode-tool'),
+    keywords: ['qr', 'qrcode', '二维码', '条形码', 'barcode', '生成', '解析'],
+    status: '可用',
+  },
+  {
     id: 'adb',
     name: 'ADB 自动化',
     description: '常用 ADB 命令封装，设备管理、应用安装、日志抓取',

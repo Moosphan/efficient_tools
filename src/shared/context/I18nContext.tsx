@@ -88,6 +88,7 @@ export const toolI18n: Record<string, { name: Record<Lang, string>; desc: Record
   logs: { name: { zh: '日志分析器', en: 'Log Analyzer' }, desc: { zh: '粘贴日志后按级别、关键词筛选，快速定位问题', en: 'Paste logs and filter by level and keywords to quickly find issues' } },
   translate: { name: { zh: '快速翻译', en: 'Quick Translate' }, desc: { zh: '翻译代码注释、文档片段，支持多语言互译', en: 'Translate code comments and docs with multi-language support' } },
   uuid: { name: { zh: 'UUID 生成器', en: 'UUID Generator' }, desc: { zh: '生成 v4/v7 UUID，批量生成，自定义格式', en: 'Generate v4/v7 UUIDs with batch generation and custom formats' } },
+  qrcode: { name: { zh: '二维码工具', en: 'QR Code Tool' }, desc: { zh: '生成/解析二维码，支持8种主题样式、渐变色彩、Logo嵌入', en: 'Generate and decode QR codes with 8 themes, gradient colors, and logo embedding' } },
   adb: { name: { zh: 'ADB 自动化', en: 'ADB Automation' }, desc: { zh: '常用 ADB 命令封装，设备管理、应用安装、日志抓取', en: 'Common ADB commands for device management, app install, and log capture' } },
 };
 
