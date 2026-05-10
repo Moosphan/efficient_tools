@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './shell/Layout';
 import { HomePage } from './shell/HomePage';
 import { AboutPage } from './shell/AboutPage';
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <ToastProvider>
       <I18nProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -34,7 +34,7 @@ export default function App() {
             ))}
           </Routes>
         </Layout>
-      </BrowserRouter>
+      </HashRouter>
       </I18nProvider>
     </ToastProvider>
   );
