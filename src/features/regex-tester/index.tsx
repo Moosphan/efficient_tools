@@ -1,7 +1,11 @@
 import { useState, useMemo } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 export default function RegexTester() {
+  const { t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('regex');
   const [pattern, setPattern] = useState('');
   const [flags, setFlags] = useState<Record<string, boolean>>({ g: true, i: false, m: false, s: false });
   const [testStr, setTestStr] = useState('');
@@ -44,89 +48,53 @@ export default function RegexTester() {
   }, [result, testStr]);
 
   return (
-    <ToolShell title="正则验证器" description="实时测试正则表达式，高亮匹配结果">
+    <ToolShell title={name} description={desc}>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">
-            正则表达式
+            {ui.pattern}
             <div className="panel-actions">
               {Object.keys(flags).map((f) => (
-                <button
-                  key={f}
-                  className={`flag-btn${flags[f] ? ' on' : ''}`}
-                  onClick={() => toggleFlag(f)}
-                >
-                  {f}
-                </button>
+                <button key={f} className={`flag-btn${flags[f] ? ' on' : ''}`} onClick={() => toggleFlag(f)}>{f}</button>
               ))}
             </div>
           </div>
           <div className="regex-input-row">
             <span className="delim">/</span>
-            <input
-              type="text"
-              value={pattern}
-              onChange={(e) => setPattern(e.target.value)}
-              placeholder="输入正则表达式…"
-            />
+            <input type="text" value={pattern} onChange={(e) => setPattern(e.target.value)} placeholder={ui.placeholder} />
             <span className="delim">/</span>
-            <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 14 }}>
-              {flagStr}
-            </span>
+            <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: 14 }}>{flagStr}</span>
           </div>
-          <div className="panel-header">测试字符串</div>
-          <textarea
-            className="tool-textarea"
-            value={testStr}
-            onChange={(e) => setTestStr(e.target.value)}
-            placeholder="输入要测试的文本…"
-            style={{ minHeight: 200 }}
-          />
+          <div className="panel-header">{ui.testStr}</div>
+          <textarea className="tool-textarea" value={testStr} onChange={(e) => setTestStr(e.target.value)} placeholder={ui.textPlaceholder} style={{ minHeight: 200 }} />
         </div>
         <div className="tool-panel">
           <div className="panel-header">
-            匹配结果
-            <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-              {result ? `${result.matches.length} 个匹配` : '0 个匹配'}
-            </span>
+            {ui.matches}
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>{result ? `${result.matches.length}` : '0'}</span>
           </div>
           <div className="output-area" style={{ minHeight: 200 }}>
             {result?.error ? (
-              <div className="error-msg">正则语法错误: {result.error}</div>
+              <div className="error-msg">{result.error}</div>
             ) : highlighted ? (
-              <span>
-                {highlighted.map((part, i) =>
-                  part.highlight ? (
-                    <span key={i} className="match-highlight">{part.text}</span>
-                  ) : (
-                    <span key={i}>{part.text}</span>
-                  )
-                )}
-              </span>
+              <span>{highlighted.map((part, i) => part.highlight ? <span key={i} className="match-highlight">{part.text}</span> : <span key={i}>{part.text}</span>)}</span>
             ) : (
-              <span style={{ color: 'var(--muted)' }}>输入正则和文本后自动匹配…</span>
+              <span style={{ color: 'var(--muted)' }}>{t('common.waiting')}</span>
             )}
           </div>
-          <div className="panel-header">匹配列表</div>
+          <div className="panel-header">{ui.matchList}</div>
           <div style={{ maxHeight: 250, overflow: 'auto' }}>
-            {result?.matches.length ? (
-              result.matches.map((m, i) => (
-                <div key={i} className="match-item">
-                  <span className="match-idx">#{i + 1}</span>
-                  <span>{m.match}</span>
-                  {m.groups.length > 0 && (
-                    <span className="match-group">
-                      groups: {m.groups.map((g) => g || '—').join(', ')}
-                    </span>
-                  )}
-                </div>
-              ))
-            ) : (
-              <div style={{ padding: 16, color: 'var(--muted)', fontSize: 13 }}>暂无匹配</div>
-            )}
+            {result?.matches.length ? result.matches.map((m, i) => (
+              <div key={i} className="match-item">
+                <span className="match-idx">#{i + 1}</span>
+                <span>{m.match}</span>
+                {m.groups.length > 0 && <span className="match-group">{ui.groups}: {m.groups.map((g) => g || '—').join(', ')}</span>}
+              </div>
+            )) : <div style={{ padding: 16, color: 'var(--muted)', fontSize: 13 }}>{ui.noMatch}</div>}
           </div>
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }

@@ -1,5 +1,7 @@
 import { useState, useMemo } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 interface RGBA { r: number; g: number; b: number; a: number }
 
@@ -87,6 +89,9 @@ function toCssColor(c: RGBA): string {
 }
 
 export default function ColorConverter() {
+  const { t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('color');
+
   const [hexInput, setHexInput] = useState('#5b7fff');
   const [rInput, setRInput] = useState('91');
   const [gInput, setGInput] = useState('127');
@@ -152,10 +157,10 @@ export default function ColorConverter() {
   const copy = (text: string) => navigator.clipboard.writeText(text);
 
   return (
-    <ToolShell title="颜色格式转换" description="HEX / RGBA / HSL 互转，支持透明度，对比度检查">
+    <ToolShell title={name} description={desc}>
       <div className="tool-layout">
         <div className="tool-panel">
-          <div className="panel-header">HEX</div>
+          <div className="panel-header">{ui.hex}</div>
           <div className="color-input-row">
             <div
               className="color-preview"
@@ -168,10 +173,10 @@ export default function ColorConverter() {
               onChange={(e) => updateFromHex(e.target.value)}
               placeholder="#5b7fff 或 #AARRGGBB"
             />
-            <button className="panel-btn" onClick={() => copy(hexInput)}>复制</button>
+            <button className="panel-btn" onClick={() => copy(hexInput)}>{t('common.copy')}</button>
           </div>
 
-          <div className="panel-header">RGBA</div>
+          <div className="panel-header">{ui.rgb}</div>
           <div className="color-input-row color-rgb-row">
             <div className="color-field">
               <label>R</label>
@@ -189,10 +194,10 @@ export default function ColorConverter() {
               <label>A%</label>
               <input type="number" min="0" max="100" value={aInput} onChange={(e) => updateFromRgb(rInput, gInput, bInput, e.target.value)} />
             </div>
-            <button className="panel-btn" onClick={() => copy(`rgba(${rInput}, ${gInput}, ${bInput}, ${(parseInt(aInput) / 100).toFixed(2)})`)}>复制</button>
+            <button className="panel-btn" onClick={() => copy(`rgba(${rInput}, ${gInput}, ${bInput}, ${(parseInt(aInput) / 100).toFixed(2)})`)}>{t('common.copy')}</button>
           </div>
 
-          <div className="panel-header">HSL</div>
+          <div className="panel-header">{ui.hsl}</div>
           <div className="color-input-row color-rgb-row">
             <div className="color-field">
               <label>H</label>
@@ -206,10 +211,10 @@ export default function ColorConverter() {
               <label>L%</label>
               <input type="number" min="0" max="100" value={lInput} onChange={(e) => updateFromHsl(hInput, sInput, e.target.value)} />
             </div>
-            <button className="panel-btn" onClick={() => copy(`hsl(${hInput}, ${sInput}%, ${lInput}%)`)}>复制</button>
+            <button className="panel-btn" onClick={() => copy(`hsl(${hInput}, ${sInput}%, ${lInput}%)`)}>{t('common.copy')}</button>
           </div>
 
-          <div className="panel-header">CSS 输出</div>
+          <div className="panel-header">{t('common.output')}</div>
           <div className="color-css-output">
             <code>{hasAlpha
               ? `background: rgba(${rInput}, ${gInput}, ${bInput}, ${(parseInt(aInput) / 100).toFixed(2)});`
@@ -218,22 +223,22 @@ export default function ColorConverter() {
             <button className="panel-btn" onClick={() => copy(hasAlpha
               ? `rgba(${rInput}, ${gInput}, ${bInput}, ${(parseInt(aInput) / 100).toFixed(2)})`
               : hexInput
-            )}>复制</button>
+            )}>{t('common.copy')}</button>
           </div>
         </div>
 
         <div className="tool-panel">
-          <div className="panel-header">预览</div>
+          <div className="panel-header">{ui.preview}</div>
           <div className="color-preview-checker">
             <div className="color-preview-large" style={{ background: parsed ? toCssColor(parsed) : hexInput }}>
               <span style={{ color: (contrast && contrast >= 4.5) ? '#fff' : '#000' }}>Aa</span>
             </div>
           </div>
 
-          <div className="panel-header">对比度检查</div>
+          <div className="panel-header">{ui.contrast}</div>
           <div className="color-contrast">
             <div className="color-contrast-bg">
-              <label>背景色</label>
+              <label>{ui.background}</label>
               <div className="color-input-row">
                 <div className="color-preview-sm" style={{ background: bgHex }} />
                 <input
@@ -250,10 +255,10 @@ export default function ColorConverter() {
                 <div className="color-contrast-ratio">{contrast.toFixed(2)}:1</div>
                 <div className="color-contrast-badges">
                   <span className={`contrast-badge ${contrast >= 4.5 ? 'pass' : 'fail'}`}>
-                    AA {contrast >= 4.5 ? '✓' : '✗'}
+                    {ui.aa} {contrast >= 4.5 ? ui.pass : ui.fail}
                   </span>
                   <span className={`contrast-badge ${contrast >= 7 ? 'pass' : 'fail'}`}>
-                    AAA {contrast >= 7 ? '✓' : '✗'}
+                    {ui.aaa} {contrast >= 7 ? ui.pass : ui.fail}
                   </span>
                 </div>
                 <div className="color-contrast-preview" style={{ background: bgHex, color: parsed ? toCssColor(parsed) : hexInput }}>
@@ -263,7 +268,7 @@ export default function ColorConverter() {
             )}
           </div>
 
-          <div className="panel-header">调色板</div>
+          <div className="panel-header">{ui.picker}</div>
           <div className="color-palette">
             {[10, 20, 30, 40, 50, 60, 70, 80, 90].map((l) => {
               const h = parseInt(hInput) || 0;
@@ -283,6 +288,7 @@ export default function ColorConverter() {
           </div>
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }

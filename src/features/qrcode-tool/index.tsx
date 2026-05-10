@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 import QRCode from 'qrcode';
 import jsQR from 'jsqr';
 
@@ -12,7 +14,7 @@ type TabMode = 'generate' | 'parse';
 
 interface Theme {
   id: string;
-  name: string;
+  nameKey: string;
   fg: string;
   bg: string;
   fg2?: string;
@@ -25,14 +27,14 @@ interface Theme {
 // ── Preset themes ──
 
 const THEMES: Theme[] = [
-  { id: 'classic', name: '经典黑', fg: '#000000', bg: '#ffffff', dotStyle: 'square', cornerStyle: 'square' },
-  { id: 'dark', name: '暗夜模式', fg: '#ffffff', bg: '#1a1a2e', dotStyle: 'square', cornerStyle: 'square' },
-  { id: 'ocean', name: '海洋渐变', fg: '#0c3483', fg2: '#6b8cce', bg: '#ffffff', dotStyle: 'rounded', cornerStyle: 'rounded', isGradient: true },
-  { id: 'forest', name: '森林绿', fg: '#134e4a', fg2: '#2dd4bf', bg: '#f0fdf4', dotStyle: 'circle', cornerStyle: 'circle', isGradient: true },
-  { id: 'sunset', name: '日落橙', fg: '#ea580c', fg2: '#fbbf24', bg: '#fffbeb', dotStyle: 'rounded', cornerStyle: 'rounded', isGradient: true },
-  { id: 'neon', name: '霓虹炫彩', fg: '#00f5ff', fg2: '#ff00ff', bg: '#0a0a0a', dotStyle: 'rounded', cornerStyle: 'square', isGradient: true, glow: true },
-  { id: 'vintage', name: '复古牛皮纸', fg: '#78350f', bg: '#fef3c7', dotStyle: 'square', cornerStyle: 'rounded' },
-  { id: 'purple', name: '紫韵', fg: '#4c1d95', fg2: '#a78bfa', bg: '#f5f3ff', dotStyle: 'circle', cornerStyle: 'rounded', isGradient: true },
+  { id: 'classic', nameKey: 'themeClassic', fg: '#000000', bg: '#ffffff', dotStyle: 'square', cornerStyle: 'square' },
+  { id: 'dark', nameKey: 'themeDark', fg: '#ffffff', bg: '#1a1a2e', dotStyle: 'square', cornerStyle: 'square' },
+  { id: 'ocean', nameKey: 'themeOcean', fg: '#0c3483', fg2: '#6b8cce', bg: '#ffffff', dotStyle: 'rounded', cornerStyle: 'rounded', isGradient: true },
+  { id: 'forest', nameKey: 'themeForest', fg: '#134e4a', fg2: '#2dd4bf', bg: '#f0fdf4', dotStyle: 'circle', cornerStyle: 'circle', isGradient: true },
+  { id: 'sunset', nameKey: 'themeSunset', fg: '#ea580c', fg2: '#fbbf24', bg: '#fffbeb', dotStyle: 'rounded', cornerStyle: 'rounded', isGradient: true },
+  { id: 'neon', nameKey: 'themeNeon', fg: '#00f5ff', fg2: '#ff00ff', bg: '#0a0a0a', dotStyle: 'rounded', cornerStyle: 'square', isGradient: true, glow: true },
+  { id: 'vintage', nameKey: 'themeVintage', fg: '#78350f', bg: '#fef3c7', dotStyle: 'square', cornerStyle: 'rounded' },
+  { id: 'purple', nameKey: 'themePurple', fg: '#4c1d95', fg2: '#a78bfa', bg: '#f5f3ff', dotStyle: 'circle', cornerStyle: 'rounded', isGradient: true },
 ];
 
 // ── Helpers ──
@@ -198,6 +200,9 @@ function renderQR(
 // ── Component ──
 
 export default function QrcodeTool() {
+  const { lang, t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('qrcode');
+
   // Generate state
   const [tab, setTab] = useState<TabMode>('generate');
   const [input, setInput] = useState('');
@@ -218,7 +223,7 @@ export default function QrcodeTool() {
   const parseCanvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
+  const theme = THEMES.find((th) => th.id === themeId) ?? THEMES[0];
 
   // ── Generate QR matrix when input changes ──
 
@@ -329,10 +334,10 @@ export default function QrcodeTool() {
       setTab('parse');
     } else {
       setParseResult(null);
-      setParseError('自检失败：无法解码矩阵数据');
+      setParseError(ui.selfCheckFail || '自检失败：无法解码矩阵数据');
       setTab('parse');
     }
-  }, [matrix]);
+  }, [matrix, ui.selfCheckFail]);
 
   // Attempt jsQR decode with multiple preprocessing strategies
   const tryDecode = useCallback((canvas: HTMLCanvasElement): string | null => {
@@ -475,16 +480,16 @@ export default function QrcodeTool() {
       if (result) {
         setParseResult(result);
       } else {
-        setParseError('未检测到二维码，请确保图片清晰、二维码完整可见。');
+        setParseError(ui.noQr || '未检测到二维码，请确保图片清晰、二维码完整可见。');
       }
       URL.revokeObjectURL(url);
     };
     img.onerror = () => {
-      setParseError('图片加载失败');
+      setParseError(ui.imageLoadFail || '图片加载失败');
       URL.revokeObjectURL(url);
     };
     img.src = url;
-  }, [tryDecode]);
+  }, [tryDecode, ui.noQr, ui.imageLoadFail]);
 
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
     const items = e.clipboardData?.items;
@@ -505,11 +510,11 @@ export default function QrcodeTool() {
 
   // Input presets
   const presets: Record<string, { label: string; template: string; placeholder: string }> = {
-    text: { label: '文本', template: '', placeholder: '输入任意文本...' },
-    url: { label: '网址', template: 'https://', placeholder: '输入网址...' },
-    email: { label: '邮箱', template: 'mailto:', placeholder: 'user@example.com' },
-    phone: { label: '电话', template: 'tel:', placeholder: '+86 13800000000' },
-    wifi: { label: 'WiFi', template: 'WIFI:S:MyWiFi;T:WPA;P:12345678;;', placeholder: 'WIFI:S:SSID;T:WPA;P:password;;' },
+    text: { label: ui.text || '文本', template: '', placeholder: ui.inputPlaceholder || '输入内容…' },
+    url: { label: ui.url || '网址', template: 'https://', placeholder: 'https://example.com' },
+    email: { label: ui.email || '邮箱', template: 'mailto:', placeholder: 'user@example.com' },
+    phone: { label: ui.phone || '电话', template: 'tel:', placeholder: '+86 13800000000' },
+    wifi: { label: ui.wifi || 'WiFi', template: 'WIFI:S:MyWiFi;T:WPA;P:12345678;;', placeholder: 'WIFI:S:SSID;T:WPA;P:password;;' },
   };
 
   const handleModeSwitch = (mode: string) => {
@@ -549,29 +554,37 @@ export default function QrcodeTool() {
     updateWifiString(ssid, security, password, hidden);
   };
 
+  // Error level titles (i18n-aware)
+  const errorLevelTitles: Record<ErrorLevel, string> = {
+    L: ui.elLow || '低 (~7%)',
+    M: ui.elMed || '中 (~15%)',
+    Q: ui.elQuart || '较高 (~25%)',
+    H: ui.elHigh || '高 (~30%)',
+  };
+
   return (
-    <ToolShell title="二维码工具" description="生成/解析二维码，支持多种主题样式和 Logo 嵌入">
+    <ToolShell title={name} description={desc}>
       {/* Tab switcher */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 16, background: 'var(--surface)', borderRadius: 8, padding: 4, width: 'fit-content' }}>
         <button
           className={`panel-btn${tab === 'generate' ? ' accent' : ''}`}
           onClick={() => setTab('generate')}
-        >生成</button>
+        >{ui.generate || '生成'}</button>
         <button
           className={`panel-btn${tab === 'parse' ? ' accent' : ''}`}
           onClick={() => setTab('parse')}
-        >解析</button>
+        >{ui.parse || '解析'}</button>
       </div>
 
       {tab === 'generate' ? (
         <div className="tool-layout">
           {/* Left: Config */}
           <div className="tool-panel">
-            <div className="panel-header">配置</div>
+            <div className="panel-header">{ui.config || t('common.settings')}</div>
 
             {/* Input mode selector */}
             <div className="qr-config-section">
-              <label className="qr-label">内容类型</label>
+              <label className="qr-label">{ui.inputType || '内容类型'}</label>
               <div className="panel-actions" style={{ flexWrap: 'wrap' }}>
                 {Object.entries(presets).map(([key, preset]) => (
                   <button
@@ -590,33 +603,33 @@ export default function QrcodeTool() {
               <div className="qr-config-section">
                 <div className="qr-wifi-form">
                   <div className="qr-wifi-row">
-                    <label>网络名 (SSID)</label>
+                    <label>{ui.ssid || '网络名 (SSID)'}</label>
                     <input
                       className="input-field"
                       value={wifiSsid}
                       onChange={(e) => handleWifiChange('ssid', e.target.value)}
-                      placeholder="WiFi 名称"
+                      placeholder={ui.wifiName || 'WiFi 名称'}
                     />
                   </div>
                   <div className="qr-wifi-row">
-                    <label>加密方式</label>
+                    <label>{ui.security || '加密方式'}</label>
                     <select
                       value={wifiSecurity}
                       onChange={(e) => handleWifiChange('security', e.target.value)}
                       className="panel-btn"
                     >
-                      <option value="WPA">WPA/WPA2</option>
-                      <option value="WEP">WEP</option>
-                      <option value="nopass">无密码</option>
+                      <option value="WPA">{ui.wpa || 'WPA/WPA2'}</option>
+                      <option value="WEP">{ui.wep || 'WEP'}</option>
+                      <option value="nopass">{ui.noPassword || '无密码'}</option>
                     </select>
                   </div>
                   <div className="qr-wifi-row">
-                    <label>密码</label>
+                    <label>{ui.password || '密码'}</label>
                     <input
                       className="input-field"
                       value={wifiPassword}
                       onChange={(e) => handleWifiChange('password', e.target.value)}
-                      placeholder={wifiSecurity === 'nopass' ? '无需密码' : 'WiFi 密码'}
+                      placeholder={wifiSecurity === 'nopass' ? (ui.noPwdPlaceholder || '无需密码') : (ui.wifiPasswordPlaceholder || 'WiFi 密码')}
                       disabled={wifiSecurity === 'nopass'}
                     />
                   </div>
@@ -627,7 +640,7 @@ export default function QrcodeTool() {
                         checked={wifiHidden}
                         onChange={(e) => handleWifiChange('hidden', e.target.checked)}
                       />
-                      隐藏网络
+                      {ui.hidden || '隐藏网络'}
                     </label>
                   </div>
                 </div>
@@ -640,32 +653,32 @@ export default function QrcodeTool() {
                 className="input-field qr-input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={presets[inputMode]?.placeholder ?? '输入内容...'}
+                placeholder={presets[inputMode]?.placeholder ?? (ui.inputPlaceholder || '输入内容…')}
                 rows={3}
               />
             </div>
 
             {/* Theme selector */}
             <div className="qr-config-section">
-              <label className="qr-label">主题样式</label>
+              <label className="qr-label">{ui.theme || '主题样式'}</label>
               <div className="qr-theme-grid">
-                {THEMES.map((t) => (
+                {THEMES.map((th) => (
                   <button
-                    key={t.id}
-                    className={`qr-theme-btn${themeId === t.id ? ' active' : ''}`}
-                    onClick={() => setThemeId(t.id)}
-                    title={t.name}
+                    key={th.id}
+                    className={`qr-theme-btn${themeId === th.id ? ' active' : ''}`}
+                    onClick={() => setThemeId(th.id)}
+                    title={ui[th.nameKey] || th.nameKey}
                   >
                     <span
                       className="qr-theme-swatch"
                       style={{
-                        background: t.isGradient && t.fg2
-                          ? `linear-gradient(135deg, ${t.fg}, ${t.fg2})`
-                          : t.fg,
-                        borderColor: t.bg,
+                        background: th.isGradient && th.fg2
+                          ? `linear-gradient(135deg, ${th.fg}, ${th.fg2})`
+                          : th.fg,
+                        borderColor: th.bg,
                       }}
                     />
-                    <span className="qr-theme-name">{t.name}</span>
+                    <span className="qr-theme-name">{ui[th.nameKey] || th.nameKey}</span>
                   </button>
                 ))}
               </div>
@@ -673,7 +686,7 @@ export default function QrcodeTool() {
 
             {/* Size slider */}
             <div className="qr-config-section">
-              <label className="qr-label">尺寸: {size}px</label>
+              <label className="qr-label">{ui.size || '尺寸'}: {size}px</label>
               <input
                 type="range"
                 min={150}
@@ -687,16 +700,14 @@ export default function QrcodeTool() {
 
             {/* Error correction */}
             <div className="qr-config-section">
-              <label className="qr-label">纠错级别</label>
+              <label className="qr-label">{ui.errorLevel || '纠错级别'}</label>
               <div className="panel-actions">
                 {(['L', 'M', 'Q', 'H'] as ErrorLevel[]).map((lvl) => (
                   <button
                     key={lvl}
                     className={`panel-btn panel-btn-sm${errorLevel === lvl ? ' accent' : ''}`}
                     onClick={() => setErrorLevel(lvl)}
-                    title={{
-                      L: '低 (~7%)', M: '中 (~15%)', Q: '较高 (~25%)', H: '高 (~30%)',
-                    }[lvl]}
+                    title={errorLevelTitles[lvl]}
                   >
                     {lvl}
                   </button>
@@ -706,7 +717,7 @@ export default function QrcodeTool() {
 
             {/* Logo upload */}
             <div className="qr-config-section">
-              <label className="qr-label">中心 Logo</label>
+              <label className="qr-label">{ui.logo || '中心 Logo'}</label>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <input
                   ref={fileInputRef}
@@ -717,17 +728,17 @@ export default function QrcodeTool() {
                   id="qr-logo-upload"
                 />
                 <button className="panel-btn" onClick={() => fileInputRef.current?.click()}>
-                  上传图片
+                  {ui.uploadLogo || '上传图片'}
                 </button>
                 {logo && (
                   <button className="panel-btn" onClick={removeLogo} style={{ color: 'var(--red)' }}>
-                    移除
+                    {ui.removeLogo || '移除'}
                   </button>
                 )}
               </div>
               {logo && (
                 <div style={{ marginTop: 8 }}>
-                  <label className="qr-label">Logo 大小: {logoSize}%</label>
+                  <label className="qr-label">{ui.logoSize || 'Logo 大小'}: {logoSize}%</label>
                   <input
                     type="range"
                     min={8}
@@ -738,7 +749,7 @@ export default function QrcodeTool() {
                     className="qr-slider"
                   />
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
-                    ≤12% 安全 · 12~18% 建议配合 Q/H 纠错
+                    {ui.logoSizeTip || '≤12% 安全 · 12~18% 建议配合 Q/H 纠错'}
                   </div>
                 </div>
               )}
@@ -746,16 +757,16 @@ export default function QrcodeTool() {
 
             {/* Download buttons */}
             <div className="qr-config-section">
-              <label className="qr-label">导出</label>
+              <label className="qr-label">{ui.export || '导出'}</label>
               <div className="panel-actions">
                 <button className="panel-btn accent" onClick={downloadPNG} disabled={!matrix}>
-                  下载 PNG
+                  {ui.downloadPng || '下载 PNG'}
                 </button>
                 <button className="panel-btn" onClick={downloadSVG} disabled={!input.trim()}>
-                  下载 SVG
+                  {ui.downloadSvg || '下载 SVG'}
                 </button>
                 <button className="panel-btn" onClick={selfParse} disabled={!matrix} style={{ borderColor: 'var(--accent)', color: 'var(--accent)' }}>
-                  自检 →
+                  {ui.selfCheck || '自检'} →
                 </button>
               </div>
             </div>
@@ -763,7 +774,7 @@ export default function QrcodeTool() {
 
           {/* Right: Preview */}
           <div className="tool-panel">
-            <div className="panel-header">预览</div>
+            <div className="panel-header">{ui.preview || t('common.preview')}</div>
             <div className="qr-preview">
               {matrix ? (
                 <canvas ref={canvasRef} className="qr-canvas" />
@@ -797,8 +808,8 @@ export default function QrcodeTool() {
                     <rect x="52" y="94" width="8" height="8" rx="1.5" fill="var(--muted)" opacity="0.18" />
                     <rect x="80" y="94" width="8" height="8" rx="1.5" fill="var(--muted)" opacity="0.15" />
                   </svg>
-                  <p style={{ fontSize: 14, fontWeight: 500, marginTop: 4 }}>输入内容后自动生成二维码</p>
-                  <p style={{ fontSize: 12 }}>支持文本、网址、WiFi、邮箱等多种格式</p>
+                  <p style={{ fontSize: 14, fontWeight: 500, marginTop: 4 }}>{ui.generatePlaceholder || '输入内容后自动生成二维码'}</p>
+                  <p style={{ fontSize: 12 }}>{ui.generateHint || '支持文本、网址、WiFi、邮箱等多种格式'}</p>
                 </div>
               )}
             </div>
@@ -808,7 +819,7 @@ export default function QrcodeTool() {
         /* Parse tab */
         <div className="tool-layout">
           <div className="tool-panel">
-            <div className="panel-header">上传二维码图片</div>
+            <div className="panel-header">{ui.parseUploadTitle || '上传二维码图片'}</div>
             <div
               className="qr-dropzone"
               onPaste={handlePaste}
@@ -830,13 +841,13 @@ export default function QrcodeTool() {
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
                 </svg>
-                <span>点击上传或拖拽图片到此处</span>
-                <span style={{ fontSize: 12, color: 'var(--muted)' }}>也支持 Ctrl+V 粘贴剪贴板中的截图</span>
+                <span>{ui.dropzone || '点击上传或拖拽图片到此处'}</span>
+                <span style={{ fontSize: 12, color: 'var(--muted)' }}>{ui.pasteHint || '也支持 Ctrl+V 粘贴剪贴板中的截图'}</span>
               </label>
             </div>
           </div>
           <div className="tool-panel">
-            <div className="panel-header">解析结果</div>
+            <div className="panel-header">{ui.parseResult || '解析结果'}</div>
             <div className="qr-parse-result">
               {parseResult ? (
                 <>
@@ -846,7 +857,7 @@ export default function QrcodeTool() {
                     onClick={() => navigator.clipboard.writeText(parseResult)}
                     style={{ marginTop: 12 }}
                   >
-                    复制结果
+                    {ui.copyResult || '复制结果'}
                   </button>
                   {/^https?:\/\//.test(parseResult) && (
                     <button
@@ -854,7 +865,7 @@ export default function QrcodeTool() {
                       onClick={() => window.open(parseResult, '_blank')}
                       style={{ marginTop: 8, marginLeft: 8 }}
                     >
-                      打开链接 →
+                      {ui.openLink || '打开链接'} →
                     </button>
                   )}
                 </>
@@ -862,7 +873,7 @@ export default function QrcodeTool() {
                 <div style={{ color: 'var(--red)', fontSize: 14 }}>{parseError}</div>
               ) : (
                 <div className="qr-placeholder" style={{ padding: 32 }}>
-                  <p>上传或粘贴二维码图片进行解析</p>
+                  <p>{ui.dropzone || '上传或粘贴二维码图片进行解析'}</p>
                 </div>
               )}
             </div>
@@ -871,53 +882,54 @@ export default function QrcodeTool() {
         </div>
       )}
       {/* Usage guide */}
-      <div className="qr-help">
-        <h3>使用说明</h3>
-        <div className="qr-help-grid">
-          <div className="qr-help-card">
-            <h4>纠错级别</h4>
-            <table className="qr-help-table">
-              <thead>
-                <tr><th>级别</th><th>容错率</th><th>适用场景</th></tr>
-              </thead>
-              <tbody>
-                <tr><td><strong>L</strong></td><td>~7%</td><td>信息密度高、展示空间小，如在标签、名片上使用</td></tr>
-                <tr><td><strong>M</strong></td><td>~15%</td><td>日常使用首选，平衡数据密度与容错</td></tr>
-                <tr><td><strong>Q</strong></td><td>~25%</td><td>需要嵌入 Logo 或可能被部分遮挡的场景</td></tr>
-                <tr><td><strong>H</strong></td><td>~30%</td><td>Logo 占比大、印刷品、户外标识等易磨损环境</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="qr-help-card">
-            <h4>二维码知识</h4>
-            <ul>
-              <li><strong>二维码</strong>是一种矩阵式二维条码，信息存储在黑白模块（点阵）中</li>
-              <li>三个角落的<strong>定位图案</strong>（回字形）帮助扫描设备快速识别方向和位置</li>
-              <li>二维码容量：最多可存储 <strong>4296 个字母数字</strong>或 <strong>2953 个字节</strong></li>
-              <li>本工具所有数据<strong>纯本地处理</strong>，不会上传到任何服务器</li>
-            </ul>
-          </div>
-          <div className="qr-help-card">
-            <h4>Logo 技巧</h4>
-            <ul>
-              <li>建议使用 <strong>正方形图片</strong>（如 200×200px），自动居中裁剪</li>
-              <li>Logo 面积建议不超过二维码的 <strong>20%</strong></li>
-              <li>添加 Logo 后建议将纠错级别提升至 <strong>Q 或 H</strong></li>
-              <li>移除 Logo 后纠错级别可恢复为 M，以减小二维码密度</li>
-            </ul>
-          </div>
-          <div className="qr-help-card">
-            <h4>扫码解析</h4>
-            <ul>
-              <li>支持 <strong>上传图片</strong>、<strong>拖拽</strong>或 <strong>Ctrl+V 粘贴截图</strong></li>
-              <li>先用灰度二值化预处理，再尝试正常+反色识别，适配深色主题</li>
-              <li>对样式化二维码（圆角/渐变），建议用「<strong>自检</strong>」按钮直接从 canvas 解码</li>
-              <li>支持常见二维码格式：URL、文本、WiFi、vCard 等</li>
-              <li>解析完全在浏览器本地完成，图片不会上传</li>
-            </ul>
-          </div>
+      <HelpSection title={ui.helpTitle || (help?.title) || t('common.usage')}>
+        <div className="qr-help-card">
+          <h4>{ui.helpLevel || '纠错级别'}</h4>
+          <table className="qr-help-table">
+            <thead>
+              <tr>
+                <th>{ui.helpLevelCol1 || '级别'}</th>
+                <th>{ui.helpLevelCol2 || '容错率'}</th>
+                <th>{ui.helpLevelCol3 || '适用场景'}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>L</strong></td><td>~7%</td><td>{ui.helpLevelL || '信息密度高、展示空间小，如在标签、名片上使用'}</td></tr>
+              <tr><td><strong>M</strong></td><td>~15%</td><td>{ui.helpLevelM || '日常使用首选，平衡数据密度与容错'}</td></tr>
+              <tr><td><strong>Q</strong></td><td>~25%</td><td>{ui.helpLevelQ || '需要嵌入 Logo 或可能被部分遮挡的场景'}</td></tr>
+              <tr><td><strong>H</strong></td><td>~30%</td><td>{ui.helpLevelH || 'Logo 占比大、印刷品、户外标识等易磨损环境'}</td></tr>
+            </tbody>
+          </table>
         </div>
-      </div>
+        <div className="qr-help-card">
+          <h4>{ui.helpQrKnowledge || '二维码知识'}</h4>
+          <ul>
+            <li><strong>{lang === 'zh' ? '二维码' : 'QR code'}</strong>{ui.helpQrDesc || '是一种矩阵式二维条码，信息存储在黑白模块（点阵）中'}</li>
+            <li>{ui.helpQrFinder || '三个角落的'}<strong>{lang === 'zh' ? '定位图案' : 'finder patterns'}</strong>{ui.helpQrFinderEnd || '（回字形）帮助扫描设备快速识别方向和位置'}</li>
+            <li>{ui.helpQrCapacity1 || '二维码容量：最多可存储'} <strong>{ui.helpQrCapacityAlpha || '4296 个字母数字'}</strong>{ui.helpQrCapacityOr || '或'} <strong>{ui.helpQrCapacityByte || '2953 个字节'}</strong></li>
+            <li>{ui.helpQrLocal || '本工具所有数据'}<strong>{ui.helpQrLocalBold || '纯本地处理'}</strong>{ui.helpQrLocalEnd || '，不会上传到任何服务器'}</li>
+          </ul>
+        </div>
+        <div className="qr-help-card">
+          <h4>{ui.helpLogoTips || 'Logo 技巧'}</h4>
+          <ul>
+            <li>{ui.helpLogoSquare || '建议使用'} <strong>{ui.helpLogoSquareBold || '正方形图片'}</strong>{ui.helpLogoSquareEnd || '（如 200×200px），自动居中裁剪'}</li>
+            <li>{ui.helpLogoArea || 'Logo 面积建议不超过二维码的'} <strong>{ui.helpLogoAreaBold || '20%'}</strong></li>
+            <li>{ui.helpLogoEC || '添加 Logo 后建议将纠错级别提升至'} <strong>{ui.helpLogoECBold || 'Q 或 H'}</strong></li>
+            <li>{ui.helpLogoRemove || '移除 Logo 后纠错级别可恢复为 M，以减小二维码密度'}</li>
+          </ul>
+        </div>
+        <div className="qr-help-card">
+          <h4>{ui.helpScanTips || '扫码解析'}</h4>
+          <ul>
+            <li>{ui.helpScanUpload || '支持'} <strong>{ui.helpScanUploadBold1 || '上传图片'}</strong>{ui.helpScanUploadSep || '、'}<strong>{ui.helpScanUploadBold2 || '拖拽'}</strong>{ui.helpScanUploadOr || '或'} <strong>{ui.helpScanUploadBold3 || 'Ctrl+V 粘贴截图'}</strong></li>
+            <li>{ui.helpScanPreprocess || '先用灰度二值化预处理，再尝试正常+反色识别，适配深色主题'}</li>
+            <li>{ui.helpScanStyled || '对样式化二维码（圆角/渐变），建议用「'}<strong>{ui.helpScanStyledBold || '自检'}</strong>{ui.helpScanStyledEnd || '」按钮直接从 canvas 解码'}</li>
+            <li>{ui.helpScanFormats || '支持常见二维码格式：URL、文本、WiFi、vCard 等'}</li>
+            <li>{ui.helpScanLocal || '解析完全在浏览器本地完成，图片不会上传'}</li>
+          </ul>
+        </div>
+      </HelpSection>
     </ToolShell>
   );
 }

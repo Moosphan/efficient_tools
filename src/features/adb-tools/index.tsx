@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
 import { useToast } from '../../shared/context/ToastContext';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 interface AdbCmd {
   category: string;
@@ -51,23 +53,91 @@ const ADB_COMMANDS: AdbCmd[] = [
   { category: '日志', label: '过滤日志', cmd: 'adb logcat -s ', desc: '按 tag 过滤日志（后接 TAG）' },
 ];
 
+/** English labels/descriptions for ADB commands when lang === 'en' */
+const EN_COMMANDS: Record<string, { label: string; desc: string }> = {
+  '查看设备': { label: 'List Devices', desc: 'List connected devices' },
+  '设备型号': { label: 'Device Model', desc: 'Get device model' },
+  'Android 版本': { label: 'Android Version', desc: 'Get Android version' },
+  '屏幕分辨率': { label: 'Screen Resolution', desc: 'Get screen resolution' },
+  '电池信息': { label: 'Battery Info', desc: 'View battery status' },
+  'IP 地址': { label: 'IP Address', desc: 'Get WiFi IP address' },
+  '已安装应用': { label: 'Installed Apps', desc: 'List all installed packages' },
+  '第三方应用': { label: 'Third-party Apps', desc: 'List third-party apps' },
+  '当前 Activity': { label: 'Current Activity', desc: 'Get current foreground Activity' },
+  '安装 APK': { label: 'Install APK', desc: 'Install APK file (append file path)' },
+  '卸载应用': { label: 'Uninstall App', desc: 'Uninstall app (append package name)' },
+  '清除数据': { label: 'Clear Data', desc: 'Clear app data (append package name)' },
+  '强制停止': { label: 'Force Stop', desc: 'Force stop app (append package name)' },
+  '截图': { label: 'Screenshot', desc: 'Capture screen' },
+  '拉取截图': { label: 'Pull Screenshot', desc: 'Pull screenshot to local' },
+  '录屏': { label: 'Record Screen', desc: 'Start recording (Ctrl+C to stop)' },
+  '点亮屏幕': { label: 'Wake Screen', desc: 'Wake up screen' },
+  '推送文件': { label: 'Push File', desc: 'Push file to device (append local path /sdcard/)' },
+  '拉取文件': { label: 'Pull File', desc: 'Pull file from device (append /sdcard/path)' },
+  'Shell': { label: 'Shell', desc: 'Enter device shell' },
+  '返回键': { label: 'Back Key', desc: 'Simulate back key' },
+  'Home 键': { label: 'Home Key', desc: 'Simulate home key' },
+  '点击': { label: 'Tap', desc: 'Simulate tap (append x y coordinates)' },
+  '滑动': { label: 'Swipe', desc: 'Simulate swipe (append x1 y1 x2 y2)' },
+  '输入文本': { label: 'Input Text', desc: 'Input text (append content)' },
+  '查看日志': { label: 'View Logs', desc: 'View device logs in real-time' },
+  '清除日志': { label: 'Clear Logs', desc: 'Clear log buffer' },
+  '过滤日志': { label: 'Filter Logs', desc: 'Filter logs by tag (append TAG)' },
+};
+
+/** Map Chinese category names to ui.xxx keys */
+const CATEGORY_UI_MAP: Record<string, string> = {
+  '设备': 'deviceMgmt',
+  '应用': 'appMgmt',
+  '屏幕': 'screen',
+  '文件': 'file',
+  '输入': 'debug',
+  '日志': 'debug',
+};
+
 export default function AdbTools() {
+  const { t, lang } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('adb');
   const [filter, setFilter] = useState('');
   const { showToast } = useToast();
 
-  const filtered = ADB_COMMANDS.filter((c) =>
-    !filter || c.label.includes(filter) || c.cmd.includes(filter) || c.desc.includes(filter) || c.category.includes(filter)
+  const commands = useMemo(() => {
+    if (lang === 'zh') return ADB_COMMANDS;
+    return ADB_COMMANDS.map((c) => {
+      const en = EN_COMMANDS[c.label];
+      return en ? { ...c, label: en.label, desc: en.desc } : c;
+    });
+  }, [lang]);
+
+  const categories = useMemo(
+    () => [...new Set(commands.map((c) => c.category))],
+    [commands],
   );
 
-  const categories = [...new Set(ADB_COMMANDS.map((c) => c.category))];
+  const filtered = commands.filter(
+    (c) =>
+      !filter ||
+      c.label.toLowerCase().includes(filter.toLowerCase()) ||
+      c.cmd.toLowerCase().includes(filter.toLowerCase()) ||
+      c.desc.toLowerCase().includes(filter.toLowerCase()) ||
+      c.category.toLowerCase().includes(filter.toLowerCase()),
+  );
+
+  const getCategoryLabel = (cat: string) => {
+    if (lang === 'en') {
+      const uiKey = CATEGORY_UI_MAP[cat];
+      return uiKey ? ui[uiKey] ?? cat : cat;
+    }
+    return cat;
+  };
 
   const copyCmd = (cmd: string) => {
     navigator.clipboard.writeText(cmd);
-    showToast('已复制: ' + cmd);
+    showToast((ui.copy ?? '已复制') + ': ' + cmd);
   };
 
   return (
-    <ToolShell title="ADB 自动化" description="常用 ADB 命令快速复制">
+    <ToolShell title={name} description={desc}>
       <div className="tool-panel">
         <div className="panel-header">
           <input
@@ -75,9 +145,11 @@ export default function AdbTools() {
             className="adb-search"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            placeholder="搜索命令…"
+            placeholder={ui.search ?? '搜索命令…'}
           />
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>{filtered.length} 条命令</span>
+          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
+            {filtered.length} {ui.command ?? '条命令'}
+          </span>
         </div>
         <div className="adb-commands">
           {categories.map((cat) => {
@@ -85,7 +157,7 @@ export default function AdbTools() {
             if (cmds.length === 0) return null;
             return (
               <div key={cat} className="adb-category">
-                <div className="adb-category-title">{cat}</div>
+                <div className="adb-category-title">{getCategoryLabel(cat)}</div>
                 {cmds.map((c, i) => (
                   <div key={i} className="adb-cmd-item" onClick={() => copyCmd(c.cmd)}>
                     <div className="adb-cmd-info">
@@ -100,6 +172,7 @@ export default function AdbTools() {
           })}
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }

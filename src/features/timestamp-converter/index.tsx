@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 export default function TimestampConverter() {
+  const { lang, t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('timestamp');
   const [now, setNow] = useState(Date.now());
   const [tsInput, setTsInput] = useState('');
   const [dateInput, setDateInput] = useState('');
@@ -13,21 +17,23 @@ export default function TimestampConverter() {
     return () => clearInterval(timer);
   }, []);
 
+  const locale = lang === 'zh' ? 'zh-CN' : 'en-US';
+
   const tsToDate = () => {
     const raw = tsInput.trim();
     if (!raw) return;
     const num = Number(raw);
-    if (isNaN(num)) { setTsResult('请输入有效数字'); return; }
+    if (isNaN(num)) { setTsResult(t('common.error') + '：' + (lang === 'zh' ? '请输入有效数字' : 'Please enter a valid number')); return; }
     const ms = raw.length <= 10 ? num * 1000 : num;
     const d = new Date(ms);
-    if (isNaN(d.getTime())) { setTsResult('无效时间戳'); return; }
+    if (isNaN(d.getTime())) { setTsResult(t('common.error') + '：' + (lang === 'zh' ? '无效时间戳' : 'Invalid timestamp')); return; }
     setTsResult([
-      `本地时间: ${d.toLocaleString('zh-CN')}`,
-      `UTC 时间: ${d.toUTCString()}`,
+      `${lang === 'zh' ? '本地时间' : 'Local Time'}: ${d.toLocaleString(locale)}`,
+      `${lang === 'zh' ? 'UTC 时间' : 'UTC Time'}: ${d.toUTCString()}`,
       `ISO 8601: ${d.toISOString()}`,
-      `秒级时间戳: ${Math.floor(ms / 1000)}`,
-      `毫秒时间戳: ${ms}`,
-      `相对时间: ${getRelativeTime(ms)}`,
+      `${ui.seconds || 'Seconds'}: ${Math.floor(ms / 1000)}`,
+      `${ui.milliseconds || 'Milliseconds'}: ${ms}`,
+      `${ui.relative || 'Relative'}: ${getRelativeTime(ms, lang)}`,
     ].join('\n'));
   };
 
@@ -35,12 +41,12 @@ export default function TimestampConverter() {
     const raw = dateInput.trim();
     if (!raw) return;
     const d = new Date(raw);
-    if (isNaN(d.getTime())) { setDateResult('请输入有效日期格式'); return; }
+    if (isNaN(d.getTime())) { setDateResult(t('common.error') + '：' + (lang === 'zh' ? '请输入有效日期格式' : 'Please enter a valid date')); return; }
     setDateResult([
-      `秒级时间戳: ${Math.floor(d.getTime() / 1000)}`,
-      `毫秒时间戳: ${d.getTime()}`,
-      `本地时间: ${d.toLocaleString('zh-CN')}`,
-      `UTC 时间: ${d.toUTCString()}`,
+      `${ui.seconds || 'Seconds'}: ${Math.floor(d.getTime() / 1000)}`,
+      `${ui.milliseconds || 'Milliseconds'}: ${d.getTime()}`,
+      `${lang === 'zh' ? '本地时间' : 'Local Time'}: ${d.toLocaleString(locale)}`,
+      `${lang === 'zh' ? 'UTC 时间' : 'UTC Time'}: ${d.toUTCString()}`,
       `ISO 8601: ${d.toISOString()}`,
     ].join('\n'));
   };
@@ -54,19 +60,19 @@ export default function TimestampConverter() {
   };
 
   return (
-    <ToolShell title="时间戳转换" description="Unix 时间戳与日期互转，支持秒/毫秒">
+    <ToolShell title={name} description={desc}>
       <div className="ts-clock">
-        <div className="ts-clock-label">当前时间</div>
-        <div className="ts-clock-value">{new Date(now).toLocaleString('zh-CN')}</div>
+        <div className="ts-clock-label">{ui.now || 'Current Time'}</div>
+        <div className="ts-clock-value">{new Date(now).toLocaleString(locale)}</div>
         <div className="ts-clock-ts">{Math.floor(now / 1000)}</div>
       </div>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">
-            时间戳 → 日期
+            {ui.tsToDate || 'Timestamp to Date'}
             <div className="panel-actions">
-              <button className="panel-btn" onClick={setCurrentTs}>当前时间戳</button>
-              <button className="panel-btn accent" onClick={tsToDate}>转换</button>
+              <button className="panel-btn" onClick={setCurrentTs}>{ui.now || 'Current Time'}</button>
+              <button className="panel-btn accent" onClick={tsToDate}>{lang === 'zh' ? '转换' : 'Convert'}</button>
             </div>
           </div>
           <input
@@ -75,16 +81,16 @@ export default function TimestampConverter() {
             value={tsInput}
             onChange={(e) => setTsInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && tsToDate()}
-            placeholder="输入 Unix 时间戳（秒或毫秒）"
+            placeholder={lang === 'zh' ? '输入 Unix 时间戳（秒或毫秒）' : 'Enter Unix timestamp (seconds or milliseconds)'}
           />
-          <div className="output-area">{tsResult || '输入时间戳后点击转换…'}</div>
+          <div className="output-area">{tsResult || (lang === 'zh' ? '输入时间戳后点击转换…' : 'Enter a timestamp and click Convert…')}</div>
         </div>
         <div className="tool-panel">
           <div className="panel-header">
-            日期 → 时间戳
+            {ui.dateToTs || 'Date to Timestamp'}
             <div className="panel-actions">
-              <button className="panel-btn" onClick={setCurrentDate}>当前时间</button>
-              <button className="panel-btn accent" onClick={dateToTs}>转换</button>
+              <button className="panel-btn" onClick={setCurrentDate}>{ui.now || 'Current Time'}</button>
+              <button className="panel-btn accent" onClick={dateToTs}>{lang === 'zh' ? '转换' : 'Convert'}</button>
             </div>
           </div>
           <input
@@ -95,20 +101,31 @@ export default function TimestampConverter() {
             onKeyDown={(e) => e.key === 'Enter' && dateToTs()}
             placeholder="2024-01-15 10:30:00"
           />
-          <div className="output-area">{dateResult || '输入日期后点击转换…'}</div>
+          <div className="output-area">{dateResult || (lang === 'zh' ? '输入日期后点击转换…' : 'Enter a date and click Convert…')}</div>
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }
 
-function getRelativeTime(ms: number): string {
+function getRelativeTime(ms: number, lang: string): string {
   const diff = Date.now() - ms;
   const abs = Math.abs(diff);
-  const suffix = diff > 0 ? '前' : '后';
-  if (abs < 60_000) return `${Math.floor(abs / 1000)} 秒${suffix}`;
-  if (abs < 3_600_000) return `${Math.floor(abs / 60_000)} 分钟${suffix}`;
-  if (abs < 86_400_000) return `${Math.floor(abs / 3_600_000)} 小时${suffix}`;
-  if (abs < 2_592_000_000) return `${Math.floor(abs / 86_400_000)} 天${suffix}`;
-  return `${Math.floor(abs / 2_592_000_000)} 个月${suffix}`;
+
+  if (lang === 'zh') {
+    const suffix = diff > 0 ? '前' : '后';
+    if (abs < 60_000) return `${Math.floor(abs / 1000)} 秒${suffix}`;
+    if (abs < 3_600_000) return `${Math.floor(abs / 60_000)} 分钟${suffix}`;
+    if (abs < 86_400_000) return `${Math.floor(abs / 3_600_000)} 小时${suffix}`;
+    if (abs < 2_592_000_000) return `${Math.floor(abs / 86_400_000)} 天${suffix}`;
+    return `${Math.floor(abs / 2_592_000_000)} 个月${suffix}`;
+  }
+
+  const suffix = diff > 0 ? ' ago' : ' from now';
+  if (abs < 60_000) return `${Math.floor(abs / 1000)} second${abs >= 2000 ? 's' : ''}${suffix}`;
+  if (abs < 3_600_000) return `${Math.floor(abs / 60_000)} minute${abs >= 120_000 ? 's' : ''}${suffix}`;
+  if (abs < 86_400_000) return `${Math.floor(abs / 3_600_000)} hour${abs >= 7_200_000 ? 's' : ''}${suffix}`;
+  if (abs < 2_592_000_000) return `${Math.floor(abs / 86_400_000)} day${abs >= 172_800_000 ? 's' : ''}${suffix}`;
+  return `${Math.floor(abs / 2_592_000_000)} month${abs >= 5_184_000_000 ? 's' : ''}${suffix}`;
 }

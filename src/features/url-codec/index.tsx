@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
 import { useCleanup } from '../../shared/hooks/useCleanup';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 export default function UrlCodec() {
+  const { t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('url');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
@@ -59,37 +63,37 @@ export default function UrlCodec() {
   };
 
   return (
-    <ToolShell title="URL 编解码" description="URL 编码/解码，自动解析查询参数">
+    <ToolShell title={name} description={desc}>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">
-            {mode === 'encode' ? '原始文本' : '编码文本'}
+            {mode === 'encode' ? t('common.input') : 'Base64'}
             <div className="panel-actions">
-              <button className="panel-btn" onClick={() => { setInput(''); setOutput(''); setError(''); setParams([]); }}>清空</button>
+              <button className="panel-btn" onClick={() => { setInput(''); setOutput(''); setError(''); setParams([]); }}>{t('common.clear')}</button>
             </div>
           </div>
           <textarea
             className="tool-textarea"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={mode === 'encode' ? '输入 URL 或文本…\nhttps://example.com/path?name=你好&lang=zh' : '输入编码后的 URL…'}
+            placeholder={ui.placeholder}
           />
         </div>
         <div className="tool-panel">
           <div className="panel-header">
-            {mode === 'encode' ? '编码结果' : '解码结果'}
+            {mode === 'encode' ? t('common.output') : t('common.output')}
             <div className="panel-actions">
-              <button className={`panel-btn${component ? ' accent' : ''}`} onClick={() => setComponent(!component)}>Component</button>
-              <button className="panel-btn accent" onClick={process}>{mode === 'encode' ? '编码' : '解码'}</button>
-              <button className="panel-btn" onClick={swap}>⇄ 交换</button>
-              <button className="panel-btn" onClick={copy}>复制</button>
+              <button className={`panel-btn${component ? ' accent' : ''}`} onClick={() => setComponent(!component)}>{ui.component}</button>
+              <button className="panel-btn accent" onClick={process}>{mode === 'encode' ? t('common.encode') : t('common.decode')}</button>
+              <button className="panel-btn" onClick={swap}>⇄ {t('common.swap')}</button>
+              <button className="panel-btn" onClick={copy}>{t('common.copy')}</button>
             </div>
           </div>
-          <div className="output-area">{output || '等待处理…'}</div>
-          {error && <div className="error-msg">错误: {error}</div>}
+          <div className="output-area">{output || t('common.waiting')}</div>
+          {error && <div className="error-msg">{t('common.error')}: {error}</div>}
           {params.length > 0 && (
             <>
-              <div className="panel-header">查询参数</div>
+              <div className="panel-header">{ui.params}</div>
               <div className="url-params">
                 {params.map((p, i) => (
                   <div key={i} className="url-param-row">
@@ -103,6 +107,7 @@ export default function UrlCodec() {
           )}
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }

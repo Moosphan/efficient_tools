@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
 import { useCleanup } from '../../shared/hooks/useCleanup';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 
 export default function Base64Codec() {
+  const { t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('base64');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
@@ -44,36 +48,37 @@ export default function Base64Codec() {
   };
 
   return (
-    <ToolShell title="Base64 编解码" description="文本的 Base64 编解码，支持 URL-safe 格式">
+    <ToolShell title={name} description={desc}>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">
-            {mode === 'encode' ? '原始文本' : 'Base64 文本'}
+            {mode === 'encode' ? ui.encode : ui.decode}
             <div className="panel-actions">
-              <button className="panel-btn" onClick={() => { setInput(''); setOutput(''); setError(''); }}>清空</button>
+              <button className="panel-btn" onClick={() => { setInput(''); setOutput(''); setError(''); }}>{t('common.clear')}</button>
             </div>
           </div>
           <textarea
             className="tool-textarea"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={mode === 'encode' ? '输入要编码的文本…' : '输入 Base64 文本…'}
+            placeholder={mode === 'encode' ? ui.placeholder : ui.decodePlaceholder}
           />
         </div>
         <div className="tool-panel">
           <div className="panel-header">
-            {mode === 'encode' ? 'Base64 结果' : '解码结果'}
+            {mode === 'encode' ? 'Base64' : t('common.output')}
             <div className="panel-actions">
               <button className={`panel-btn${urlSafe ? ' accent' : ''}`} onClick={() => setUrlSafe(!urlSafe)}>URL-safe</button>
-              <button className="panel-btn accent" onClick={process}>{mode === 'encode' ? '编码' : '解码'}</button>
-              <button className="panel-btn" onClick={swap}>⇄ 交换</button>
-              <button className="panel-btn" onClick={copy}>复制</button>
+              <button className="panel-btn accent" onClick={process}>{mode === 'encode' ? t('common.encode') : t('common.decode')}</button>
+              <button className="panel-btn" onClick={swap}>⇄ {t('common.swap')}</button>
+              <button className="panel-btn" onClick={copy}>{t('common.copy')}</button>
             </div>
           </div>
-          <div className="output-area">{output || '等待处理…'}</div>
-          {error && <div className="error-msg">错误: {error}</div>}
+          <div className="output-area">{output || t('common.waiting')}</div>
+          {error && <div className="error-msg">{t('common.error')}: {error}</div>}
         </div>
       </div>
+      {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
     </ToolShell>
   );
 }

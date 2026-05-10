@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
+import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
 import { useTOTP } from './hooks/useTOTP';
 import { useImport } from './hooks/useImport';
 import { formatCode } from './utils/format';
@@ -8,6 +9,8 @@ import { CopyButton } from './components/CopyButton';
 import type { TotpEntry } from './types';
 
 export default function TotpTool() {
+  const { t } = useI18n();
+  const { name, desc, ui, help } = useToolI18n('totp');
   const [entries, setEntries] = useState<TotpEntry[]>([]);
   const [currentEntry, setCurrentEntry] = useState<TotpEntry | null>(null);
   const [secretInput, setSecretInput] = useState('');
@@ -29,11 +32,11 @@ export default function TotpTool() {
   };
 
   return (
-    <ToolShell title="2FA 验证码" description="基于 TOTP 协议生成二步验证码">
+    <ToolShell title={name} description={desc}>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">
-            输入 Secret 或 otpauth:// URI
+            {ui.secretKey || 'Secret'}
           </div>
           <div className="totp-input-row">
             <input
@@ -41,18 +44,18 @@ export default function TotpTool() {
               value={secretInput}
               onChange={(e) => { setSecretInput(e.target.value); if (inputError) setInputError(''); }}
               onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-              placeholder="JBSWY3DPEHPK3PXP or otpauth://totp/..."
+              placeholder={ui.placeholder || 'JBSWY3DPEHPK3PXP or otpauth://totp/...'}
               className="totp-input"
             />
-            <button className="panel-btn accent" onClick={handleGenerate}>生成</button>
+            <button className="panel-btn accent" onClick={handleGenerate}>{t('common.generate')}</button>
           </div>
           {inputError && <div className="error-msg">{inputError}</div>}
-          {currentEntry && <TotpDisplay entry={currentEntry} />}
+          {currentEntry && <TotpDisplay entry={currentEntry} ui={ui} />}
           {entries.length > 1 && (
             <>
-              <div className="panel-header" style={{ marginTop: 16 }}>历史记录</div>
+              <div className="panel-header" style={{ marginTop: 16 }}>{ui.history || 'History'}</div>
               <div className="totp-history">
-                {entries.map((e, i) => (
+                {entries.map((e) => (
                   <div
                     key={e.id}
                     className={`totp-history-item${currentEntry?.id === e.id ? ' active' : ''}`}
@@ -67,39 +70,39 @@ export default function TotpTool() {
           )}
         </div>
         <div className="tool-panel">
-          <div className="panel-header">使用说明</div>
+          <div className="panel-header">{ui.setupGuide || help?.title || 'Usage Guide'}</div>
           <div className="totp-guide">
             <div className="totp-guide-step">
               <div className="totp-guide-num">1</div>
               <div>
-                <div className="totp-guide-title">进入账号安全设置</div>
-                <div className="totp-guide-desc">登录要开启两步验证的服务，找到安全设置页面。</div>
+                <div className="totp-guide-title">{ui.step1}</div>
+                <div className="totp-guide-desc">{ui.step1Desc}</div>
               </div>
             </div>
             <div className="totp-guide-step">
               <div className="totp-guide-num">2</div>
               <div>
-                <div className="totp-guide-title">选择认证器应用</div>
-                <div className="totp-guide-desc">选择"认证器应用"作为验证方式，会显示一个密钥。</div>
+                <div className="totp-guide-title">{ui.step2}</div>
+                <div className="totp-guide-desc">{ui.step2Desc}</div>
               </div>
             </div>
             <div className="totp-guide-step">
               <div className="totp-guide-num">3</div>
               <div>
-                <div className="totp-guide-title">复制密钥</div>
-                <div className="totp-guide-desc">点击"无法扫描二维码"，复制显示的 Base32 密钥。</div>
+                <div className="totp-guide-title">{ui.step3}</div>
+                <div className="totp-guide-desc">{ui.step3Desc}</div>
               </div>
             </div>
             <div className="totp-guide-step">
               <div className="totp-guide-num">4</div>
               <div>
-                <div className="totp-guide-title">粘贴到左侧输入框</div>
-                <div className="totp-guide-desc">将密钥粘贴到输入框，点击"生成"即可看到验证码。</div>
+                <div className="totp-guide-title">{ui.step4}</div>
+                <div className="totp-guide-desc">{ui.step4Desc}</div>
               </div>
             </div>
           </div>
           <div className="totp-services">
-            <div className="totp-services-title">常见服务设置入口</div>
+            <div className="totp-services-title">{ui.services || 'Popular Services'}</div>
             <div className="totp-services-links">
               <a className="totp-service-link" href="https://github.com/settings/security" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -129,12 +132,12 @@ export default function TotpTool() {
   );
 }
 
-function TotpDisplay({ entry }: { entry: TotpEntry }) {
+function TotpDisplay({ entry, ui }: { entry: TotpEntry; ui: Record<string, string> }) {
   const { code, remaining, progress, isUrgent } = useTOTP(entry);
 
   return (
     <div className="totp-display">
-      <div className="totp-code-label">{entry.issuer || 'Verification Code'}</div>
+      <div className="totp-code-label">{entry.issuer || ui.accountName || 'Verification Code'}</div>
       <div className="totp-code-value">{formatCode(code)}</div>
       <TimerRing progress={progress} isUrgent={isUrgent} remaining={remaining} />
       <CopyButton code={code} />
