@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
 
 export type Lang = 'zh' | 'en';
 
@@ -93,6 +93,27 @@ export const toolI18n: Record<string, { name: Record<Lang, string>; desc: Record
 
 const STORAGE_KEY = '2fa_lang';
 
+// Timezones where Chinese is the expected primary language
+const ZH_TIMEZONES = new Set([
+  'Asia/Shanghai',
+  'Asia/Urumqi',
+  'Asia/Taipei',
+  'Asia/Hong_Kong',
+  'Asia/Macau',
+  'Asia/Singapore',
+  'Asia/Kuala_Lumpur',
+  'Asia/Kuching',
+]);
+
+function detectLangFromTimezone(): Lang {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return ZH_TIMEZONES.has(tz) ? 'zh' : 'en';
+  } catch {
+    return 'zh';
+  }
+}
+
 const I18nContext = createContext<I18nContextValue>({
   lang: 'zh',
   toggleLang: () => {},
@@ -106,7 +127,8 @@ export function useI18n() {
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved === 'en' ? 'en' : 'zh';
+    if (saved === 'en' || saved === 'zh') return saved;
+    return detectLangFromTimezone();
   });
 
   const toggleLang = useCallback(() => {
@@ -116,6 +138,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       return next;
     });
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  }, [lang]);
 
   const t = useCallback(
     (key: string) => translations[lang][key] || key,
