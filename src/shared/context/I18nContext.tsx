@@ -604,6 +604,45 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Supports Code128/Code39/EAN-13/EAN-8/UPC-A/ITF-14', 'Custom barcode and background colors', 'Toggle bottom text display', 'Export PNG (2x) and SVG vector formats'], usage: ['Select barcode format', 'Enter the value to encode', 'Adjust height and colors', 'Download PNG or SVG'] },
     },
   },
+  // ── dns ──
+  dns: {
+    name: { zh: 'DNS 查询', en: 'DNS Lookup' },
+    desc: { zh: '查询域名的 A/AAAA/MX/CNAME/TXT/NS 等 DNS 记录', en: 'Query domain DNS records: A/AAAA/MX/CNAME/TXT/NS and more' },
+    ui: {
+      zh: { query: '域名查询', placeholder: '输入域名，如 example.com', queryBtn: '查询', queryAll: '查询全部', querying: '查询中', result: '查询结果', type: '类型', value: '记录值', noRecords: '该类型无 DNS 记录' },
+      en: { query: 'Domain Lookup', placeholder: 'Enter domain, e.g. example.com', queryBtn: 'Lookup', queryAll: 'Lookup All', querying: 'Querying', result: 'Results', type: 'Type', value: 'Value', noRecords: 'No DNS records for this type' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 A/AAAA/MX/CNAME/TXT/NS/SRV/SOA/PTR/CAA 记录查询', '使用 Google DNS-over-HTTPS，无需安装任何工具', '「查询全部」一次获取所有常见记录类型', '显示 TTL 和格式化后的记录值'], usage: ['输入域名（如 example.com）', '选择记录类型或点击「查询全部」', '查看查询结果，点击复制单条记录', 'MX/SRV/SOA 记录自动格式化显示'] },
+      en: { title: 'Usage Guide', features: ['Query A/AAAA/MX/CNAME/TXT/NS/SRV/SOA/PTR/CAA records', 'Uses Google DNS-over-HTTPS — no tools needed', 'Lookup All fetches all common record types at once', 'Shows TTL and formatted record values'], usage: ['Enter a domain (e.g. example.com)', 'Select a record type or click "Lookup All"', 'View results, click copy on any record', 'MX/SRV/SOA records are auto-formatted'] },
+    },
+  },
+  // ── whois ──
+  whois: {
+    name: { zh: 'WHOIS 查询', en: 'WHOIS Lookup' },
+    desc: { zh: '查询域名注册信息、到期时间、注册商', en: 'Query domain registration info, expiry date, and registrar' },
+    ui: {
+      zh: { query: '域名查询', placeholder: '输入域名，如 example.com', queryBtn: '查询', querying: '查询中', result: '查询结果', apiNote: '使用 RDAP 协议（WHOIS 现代替代），自动尝试多个注册局数据源。', notFound: '未查询到注册信息，可尝试下方外链查询', externalLookup: '外部 WHOIS 查询（点击跳转）', tryExternal: 'API 未返回数据，试试外部查询：', noData: '未查询到注册信息' },
+      en: { query: 'Domain Lookup', placeholder: 'Enter domain, e.g. example.com', queryBtn: 'Lookup', querying: 'Querying', result: 'Results', apiNote: 'Uses RDAP protocol (modern WHOIS replacement), tries multiple registry sources automatically.', notFound: 'No data found — try external lookup below', externalLookup: 'External WHOIS lookup (click to open)', tryExternal: 'API returned no data. Try external lookup:', noData: 'No registration data found' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['使用 RDAP 协议查询（WHOIS 的现代替代标准）', '查看域名注册日期、到期日期、最后更新时间', '查看注册商和域名状态', '查看 NS 记录'], usage: ['输入域名（如 example.com）', '点击「查询」获取注册信息', '查看域名状态、到期时间等', '点击「复制」复制单条信息'] },
+      en: { title: 'Usage Guide', features: ['Uses RDAP protocol (modern WHOIS replacement standard)', 'View registration date, expiry date, last update time', 'View registrar and domain status', 'View nameservers'], usage: ['Enter a domain (e.g. example.com)', 'Click "Lookup" to get registration info', 'View domain status, expiry, etc.', 'Click "Copy" to copy any field'] },
+    },
+  },
+  // ── ipLookup ──
+  ipLookup: {
+    name: { zh: 'IP 归属地查询', en: 'IP Geolocation' },
+    desc: { zh: '查询 IP 地理位置、运营商、时区等信息', en: 'Query IP geolocation, ISP, timezone, and more' },
+    ui: {
+      zh: { query: 'IP 查询', placeholder: '输入 IP 地址（留空查询本机 IP）', queryBtn: '查询', querying: '查询中', myIp: '查本机', result: '查询结果', country: '国家', region: '地区', city: '城市', postal: '邮编', timezone: '时区', viewOnMap: '在地图中查看', apiNote: '使用 ipinfo.io 免费 API（每月 5 万次）' },
+      en: { query: 'IP Lookup', placeholder: 'Enter IP address (leave empty for your IP)', queryBtn: 'Lookup', querying: 'Querying', myIp: 'My IP', result: 'Results', country: 'Country', region: 'Region', city: 'City', postal: 'Postal', timezone: 'Timezone', viewOnMap: 'View on Map', apiNote: 'Uses ipinfo.io free API (50k/month)' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['查询 IP 的国家/地区/城市/邮编/时区', '显示 ASN 和运营商信息', '自动检测本机 IP 并显示归属地', '可直接在 Google Maps 中查看位置'], usage: ['输入 IP 地址或留空查询本机', '点击「查询」获取归属地信息', '点击「查本机」快速查看自己的 IP', '点击地图链接在 Google Maps 中查看'] },
+      en: { title: 'Usage Guide', features: ['Query IP country/region/city/postal/timezone', 'Show ASN and ISP info', 'Auto-detect your IP and show its location', 'View location on Google Maps directly'], usage: ['Enter IP or leave empty for your own IP', 'Click "Lookup" to get geolocation info', 'Click "My IP" to quickly check your IP', 'Click map link to view on Google Maps'] },
+    },
+  },
   // ── colorPalette ──
   colorPalette: {
     name: { zh: '色板生成器', en: 'Color Palette Generator' },
