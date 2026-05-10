@@ -237,7 +237,6 @@ export const tools: ToolMeta[] = [
     component: () => import('./features/yaml-formatter'),
     keywords: ['yaml', 'yml', 'format', '格式化', '美化', '压缩', 'k8s', 'docker'],
     status: '可用',
-    preview: 'server:\n  host: 0.0.0.0\n  port: 3000\n→ Valid YAML, 4 keys',
   },
   {
     id: 'password',
@@ -250,7 +249,6 @@ export const tools: ToolMeta[] = [
     component: () => import('./features/password-generator'),
     keywords: ['password', 'generate', '密码', '生成', '安全', 'random'],
     status: '可用',
-    preview: 'aB3$kL9#mN2&pQ7^\n→ 16 chars, Very Strong',
   },
   {
     id: 'imgCompress',
@@ -263,7 +261,6 @@ export const tools: ToolMeta[] = [
     component: () => import('./features/image-compressor'),
     keywords: ['image', 'compress', '图片', '压缩', 'jpeg', 'webp', 'png', 'quality'],
     status: '可用',
-    preview: 'photo.jpg 2.4MB\n→ compressed 380KB\n→ -84% size',
   },
   {
     id: 'imgConvert',
@@ -276,7 +273,30 @@ export const tools: ToolMeta[] = [
     component: () => import('./features/image-converter'),
     keywords: ['image', 'convert', '图片', '转换', 'format', 'png', 'jpeg', 'webp'],
     status: '可用',
-    preview: 'photo.png 1.2MB\n→ photo.webp 280KB\n→ WebP format',
+  },
+  {
+    id: 'baseConv',
+    name: '进制转换器',
+    description: '二进制/八进制/十进制/十六进制互转，支持分组显示',
+    icon: '0x',
+    iconClass: 'icon-amber',
+    category: '格式化/转换',
+    path: '/base-convert',
+    component: () => import('./features/base-converter'),
+    keywords: ['base', 'convert', 'binary', 'hex', 'octal', 'decimal', '进制', '转换'],
+    status: '可用',
+  },
+  {
+    id: 'unitConv',
+    name: '单位换算器',
+    description: '长度/重量/温度/存储/速度/面积等单位换算',
+    icon: '⇄',
+    iconClass: 'icon-green',
+    category: '格式化/转换',
+    path: '/unit-convert',
+    component: () => import('./features/unit-converter'),
+    keywords: ['unit', 'convert', '单位', '换算', '长度', '重量', '温度'],
+    status: '可用',
   },
 ];
 

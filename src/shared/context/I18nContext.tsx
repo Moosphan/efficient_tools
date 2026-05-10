@@ -474,6 +474,32 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Convert between PNG/JPEG/WebP formats', 'Quality control for JPEG/WebP output', 'Auto-handle transparency (JPEG fills white)', 'All processing happens locally in browser'], usage: ['Select target output format', 'Optionally adjust output quality', 'Click or drag an image to upload', 'Preview and download the converted image'] },
     },
   },
+  // ── baseConv ──
+  baseConv: {
+    name: { zh: '进制转换器', en: 'Base Converter' },
+    desc: { zh: '二进制/八进制/十进制/十六进制互转，支持分组显示', en: 'Convert between binary, octal, decimal, and hex with grouped display' },
+    ui: {
+      zh: { placeholder: '输入数值…', grouped: '分组显示' },
+      en: { placeholder: 'Enter a value…', grouped: 'Grouped' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['二进制/八进制/十进制/十六进制实时互转', '支持 0x/0o/0b 前缀自动识别', '可选分组显示便于阅读长数值', '纯浏览器本地计算'], usage: ['选择输入进制类型', '输入数值后其他进制实时同步', '点击「分组显示」便于阅读二进制/十六进制', '点击「复制」将结果复制到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['Real-time conversion between BIN/OCT/DEC/HEX', 'Auto-detect 0x/0o/0b prefixes', 'Optional grouped display for readability', 'All calculations happen locally'], usage: ['Select the input base type', 'Enter a value — other bases update in real-time', 'Toggle "Grouped" for easier reading of binary/hex', 'Click "Copy" to copy any result to clipboard'] },
+    },
+  },
+  // ── unitConv ──
+  unitConv: {
+    name: { zh: '单位换算器', en: 'Unit Converter' },
+    desc: { zh: '长度/重量/温度/存储/速度/面积等单位换算', en: 'Convert between length, weight, temperature, storage, speed, and area units' },
+    ui: {
+      zh: { category: '类别', from: '从', to: '到', placeholder: '输入数值…', length: '长度', weight: '重量', temperature: '温度', storage: '存储', speed: '速度', area: '面积', mm: '毫米', cm: '厘米', m: '米', km: '千米', inch: '英寸', foot: '英尺', yard: '码', mile: '英里', mg: '毫克', g: '克', kg: '千克', ton: '吨', oz: '盎司', lb: '磅', celsius: '摄氏度', fahrenheit: '华氏度', kelvin: '开尔文', byte: '字节', kilobyte: '千字节', megabyte: '兆字节', gigabyte: '吉字节', terabyte: '太字节', mps: '米/秒', kmh: '千米/时', mph: '英里/时', knot: '节', sqm: '平方米', sqkm: '平方千米', ha: '公顷', sqft: '平方英尺', acre: '英亩' },
+      en: { category: 'Category', from: 'From', to: 'To', placeholder: 'Enter a value…', length: 'Length', weight: 'Weight', temperature: 'Temperature', storage: 'Storage', speed: 'Speed', area: 'Area', mm: 'Millimeter', cm: 'Centimeter', m: 'Meter', km: 'Kilometer', inch: 'Inch', foot: 'Foot', yard: 'Yard', mile: 'Mile', mg: 'Milligram', g: 'Gram', kg: 'Kilogram', ton: 'Metric Ton', oz: 'Ounce', lb: 'Pound', celsius: 'Celsius', fahrenheit: 'Fahrenheit', kelvin: 'Kelvin', byte: 'Byte', kilobyte: 'Kilobyte', megabyte: 'Megabyte', gigabyte: 'Gigabyte', terabyte: 'Terabyte', mps: 'Meters/sec', kmh: 'Km/hour', mph: 'Miles/hour', knot: 'Knot', sqm: 'Sq Meter', sqkm: 'Sq Kilometer', ha: 'Hectare', sqft: 'Sq Foot', acre: 'Acre' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 6 大类单位：长度/重量/温度/存储/速度/面积', '选择类别后自动列出该类所有单位', '输入数值后实时换算', '支持交换源/目标单位'], usage: ['选择单位类别（如长度、重量等）', '选择源单位和目标单位', '输入数值后实时显示换算结果', '点击 ⇄ 按钮快速交换源和目标'] },
+      en: { title: 'Usage Guide', features: ['6 categories: Length/Weight/Temperature/Storage/Speed/Area', 'Auto-lists units for selected category', 'Real-time conversion as you type', 'Swap source and target units'], usage: ['Select a unit category (e.g. Length, Weight)', 'Choose source and target units', 'Enter a value — result updates in real-time', 'Click ⇄ to swap source and target'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';
