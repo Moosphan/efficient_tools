@@ -591,6 +591,58 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Search emojis with CJK or English keywords', 'Filter by category: Smileys/Gestures/Symbols/Objects/Flags', 'One-click copy to clipboard', 'Built-in platform difference notes (Apple/Google/Microsoft/Samsung/Twitter rendering)'], usage: ['Type a keyword to search (e.g. "smile", "love", "bug")', 'Filter by category to narrow results', 'Click an emoji to copy to clipboard', 'Click "Platform Notes" to view cross-platform rendering differences'] },
     },
   },
+  // ── barcode ──
+  barcode: {
+    name: { zh: '条形码生成器', en: 'Barcode Generator' },
+    desc: { zh: '支持 Code128/EAN-13/UPC 等多种条码格式，可导出 PNG/SVG', en: 'Generate barcodes in Code128/EAN-13/UPC and more, export PNG/SVG' },
+    ui: {
+      zh: { format: '条码格式', value: '编码内容', placeholder: '输入编码内容…', height: '条码高度', colors: '颜色', showText: '显示文字' },
+      en: { format: 'Format', value: 'Value', placeholder: 'Enter value…', height: 'Height', colors: 'Colors', showText: 'Show Text' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 Code128/Code39/EAN-13/EAN-8/UPC-A/ITF-14 等格式', '自定义条码颜色和背景色', '可选是否显示底部文字', '导出 PNG（2x）和 SVG 矢量格式'], usage: ['选择条码格式', '输入编码内容', '调整高度和颜色', '下载 PNG 或 SVG'] },
+      en: { title: 'Usage Guide', features: ['Supports Code128/Code39/EAN-13/EAN-8/UPC-A/ITF-14', 'Custom barcode and background colors', 'Toggle bottom text display', 'Export PNG (2x) and SVG vector formats'], usage: ['Select barcode format', 'Enter the value to encode', 'Adjust height and colors', 'Download PNG or SVG'] },
+    },
+  },
+  // ── colorPalette ──
+  colorPalette: {
+    name: { zh: '色板生成器', en: 'Color Palette Generator' },
+    desc: { zh: '基于色彩和谐理论生成调色板，支持互补/类似/三色/单色等模式', en: 'Generate color palettes using harmony rules: complementary, analogous, triadic, and more' },
+    ui: {
+      zh: { baseColor: '基础色', random: '随机', harmony: '和谐模式', shades: '明暗梯度', preview: '预览', sampleText: '示例文本', gradient: '渐变预览', complementary: '互补色', analogous: '类似色', triadic: '三色组', splitComplementary: '分裂互补', tetradic: '四色组', monochromatic: '单色系' },
+      en: { baseColor: 'Base Color', random: 'Random', harmony: 'Harmony', shades: 'Tints & Shades', preview: 'Preview', sampleText: 'Sample Text', gradient: 'Gradient Preview', complementary: 'Complementary', analogous: 'Analogous', triadic: 'Triadic', splitComplementary: 'Split', tetradic: 'Tetradic', monochromatic: 'Mono' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['6 种色彩和谐模式：互补/类似/三色/分裂互补/四色/单色', '自动生成明暗梯度（9 级）', '实时文字预览和渐变预览', '一键复制色值，导出 CSS 变量'], usage: ['选择或输入基础颜色', '选择和谐模式查看配色方案', '点击色块复制色值', '查看明暗梯度和渐变效果'] },
+      en: { title: 'Usage Guide', features: ['6 harmony modes: Complementary/Analogous/Triadic/Split/Tetradic/Mono', 'Auto-generate tints and shades (9 levels)', 'Live text preview and gradient preview', 'One-click copy, export as CSS variables'], usage: ['Select or enter a base color', 'Choose a harmony mode to view the palette', 'Click a color swatch to copy its value', 'View tints/shades and gradient preview'] },
+    },
+  },
+  // ── textCipher ──
+  textCipher: {
+    name: { zh: '文本加密/解密', en: 'Text Cipher' },
+    desc: { zh: '支持 ROT13/凯撒/盲文/颠倒字/零宽隐写等多种加密方式', en: 'Encode/decode with ROT13, Caesar, Braille, Upside-down, Zero-width steganography, and more' },
+    ui: {
+      zh: { cipherType: '加密方式', encode: '加密', decode: '解密', caesar: '凯撒密码', shift: '偏移量', reverse: '颠倒文字', morse: '摩斯密码', braille: '盲文', upsidedown: '颠倒字', emoji: 'Emoji 编码', zerowidth: '零宽隐写', classic: '经典', fun: '趣味', social: '社交', encoding: '编码', steganography: '隐写术', swap: '交换', inputPlaceholder: '输入要加密/解密的文本…', decodeError: '解码失败，请检查输入', zwNote: '零宽隐写使用 Unicode Tag 字符（不可见），文本看起来正常但隐藏了额外信息。复制输出文本发给对方，对方粘贴到本工具即可解码。' },
+      en: { cipherType: 'Cipher Type', encode: 'Encode', decode: 'Decode', caesar: 'Caesar', shift: 'Shift', reverse: 'Reverse', morse: 'Morse Code', braille: 'Braille', upsidedown: 'Upside Down', emoji: 'Emoji Code', zerowidth: 'Zero-Width', classic: 'Classic', fun: 'Fun', social: 'Social', encoding: 'Encoding', steganography: 'Steganography', swap: 'Swap', inputPlaceholder: 'Enter text to encode/decode…', decodeError: 'Decode error — check your input', zwNote: 'Zero-width steganography uses Unicode Tag characters (invisible). Text looks normal but hides extra data. Copy the output and send to someone — they paste it here to decode.' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['经典加密：ROT13、凯撒密码（可调偏移）、摩斯密码', '编码方式：二进制、十六进制', '社交趣味：颠倒字、盲文、Emoji 编码', '隐写术：零宽字符隐写（文本看似空白，实则隐藏信息）'], usage: ['选择加密方式', '输入文本，选择加密或解密', '点击「交换」将输出作为新输入', '零宽隐写的文本可直接粘贴到社交媒体'] },
+      en: { title: 'Usage Guide', features: ['Classic: ROT13, Caesar cipher (adjustable shift), Morse code', 'Encoding: Binary, Hexadecimal', 'Social/Fun: Upside-down text, Braille, Emoji encoding', 'Steganography: Zero-width characters (text appears blank, hides data)'], usage: ['Select a cipher type', 'Enter text, choose encode or decode', 'Click "Swap" to use output as new input', 'Zero-width text can be pasted directly on social media'] },
+    },
+  },
+  // ── worldClock ──
+  worldClock: {
+    name: { zh: '世界时钟', en: 'World Clock' },
+    desc: { zh: '全球主要城市实时时间，支持自定义城市列表', en: 'Real-time clocks for major cities worldwide with customizable city list' },
+    ui: {
+      zh: { addCity: '添加城市', closeAdd: '收起', remove: '移除', resetDefault: '恢复默认', beijing: '北京', shanghai: '上海', hongkong: '香港', tokyo: '东京', seoul: '首尔', singapore: '新加坡', mumbai: '孟买', dubai: '迪拜', moscow: '莫斯科', istanbul: '伊斯坦布尔', london: '伦敦', paris: '巴黎', berlin: '柏林', rome: '罗马', madrid: '马德里', amsterdam: '阿姆斯特丹', newyork: '纽约', chicago: '芝加哥', denver: '丹佛', losangeles: '洛杉矶', vancouver: '温哥华', toronto: '多伦多', saopaulo: '圣保罗', sydney: '悉尼', auckland: '奥克兰' },
+      en: { addCity: 'Add City', closeAdd: 'Close', remove: 'Remove', resetDefault: 'Reset', beijing: 'Beijing', shanghai: 'Shanghai', hongkong: 'Hong Kong', tokyo: 'Tokyo', seoul: 'Seoul', singapore: 'Singapore', mumbai: 'Mumbai', dubai: 'Dubai', moscow: 'Moscow', istanbul: 'Istanbul', london: 'London', paris: 'Paris', berlin: 'Berlin', rome: 'Rome', madrid: 'Madrid', amsterdam: 'Amsterdam', newyork: 'New York', chicago: 'Chicago', denver: 'Denver', losangeles: 'Los Angeles', vancouver: 'Vancouver', toronto: 'Toronto', saopaulo: 'São Paulo', sydney: 'Sydney', auckland: 'Auckland' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['25 个全球主要城市实时时钟', '显示时区偏移、日期、昼夜状态', '自定义添加/移除城市', '默认显示北京、东京、伦敦、纽约、洛杉矶、悉尼'], usage: ['打开即显示实时时钟', '点击 ✕ 移除不需要的城市', '点击「添加城市」从列表中选择', '点击「恢复默认」重置城市列表'] },
+      en: { title: 'Usage Guide', features: ['25 major global cities with real-time clocks', 'Shows timezone offset, date, day/night status', 'Customizable city list — add or remove', 'Default: Beijing, Tokyo, London, New York, LA, Sydney'], usage: ['Open to see real-time clocks', 'Click ✕ to remove a city', 'Click "Add City" to select from the list', 'Click "Reset" to restore default cities'] },
+    },
+  },
   // ── graphql ──
   graphql: {
     name: { zh: 'GraphQL 格式化', en: 'GraphQL Formatter' },
