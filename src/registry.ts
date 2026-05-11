@@ -647,6 +647,18 @@ export const tools: ToolMeta[] = [
     status: '可用',
   },
   {
+    id: 'travel',
+    name: '去哪玩',
+    description: '中国地图旅行路线规划，选择出发点和天数，推荐多条游玩路线',
+    icon: '🗺️',
+    iconClass: 'icon-green',
+    category: '其他',
+    path: '/travel',
+    component: () => import('./features/travel-planner'),
+    keywords: ['travel', 'trip', 'route', '旅行', '路线', '规划', '地图', '游玩'],
+    status: '可用',
+  },
+  {
     id: 'addressGen',
     name: '地址生成器',
     description: '生成真实格式的各国/地区收货地址，含邮编、街道、城市',

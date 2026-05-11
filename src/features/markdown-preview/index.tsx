@@ -6,7 +6,7 @@ import { HelpSection } from '../../shared/components/HelpSection';
 
 function escapeHtml(s: string): string { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-function renderMarkdown(md: string): string {
+export function renderMarkdown(md: string): string {
   let html = md.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => `<pre class="md-code-block"><code class="lang-${lang || 'text'}">${escapeHtml(code.trimEnd())}</code></pre>`);
   html = html.replace(/`([^`]+)`/g, '<code class="md-inline-code">$1</code>');

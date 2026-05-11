@@ -647,6 +647,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['10 countries: China, US, Japan, UK, Germany, Korea, France, Canada, Australia, Singapore', 'Addresses follow real national formats (postal codes, states, cities, streets)', 'Names, phones, and streets use realistic data pools', 'Perfect for e-commerce testing, form filling, logistics testing'], usage: ['Select a country/region', 'Set the count (1-20)', 'Click "Generate"', 'Click "Copy" for single or "Copy All" for all addresses'] },
     },
   },
+  // ── travel ──
+  travel: {
+    name: { zh: '去哪玩', en: 'Travel Planner' },
+    desc: { zh: '中国地图旅行路线规划，支持季节推荐、终点设置和 AI 行程生成', en: 'China travel route planner with seasonal recommendations, endpoint selection, and AI itinerary generation' },
+    ui: {
+      zh: { planTrip: '规划旅行', startCity: '出发城市', includeStartCity: '游玩出发城市', includeStartCityHint: '关闭后，不安排出发城市的景点与行程', days: '游玩天数', dayUnit: '天', season: '出行季节', generateRoute: '生成路线', routes: '推荐路线', attractions: '地区景点', aiSuggest: 'AI 生成行程', aiTab: 'AI 行程', aiGenerating: '正在生成行程，请稍候…', aiHint: '点击下方「AI 生成行程」按钮，AI 将为你规划详细路线', generateHint: '选择城市和天数后点击「生成路线」', seasonFilter: '按当前季节筛选', noSeasonalAttractions: '该城市当前季节暂无推荐景点', clickCityHint: '点击地图上的城市查看当地景点', llmSettings: '大模型配置', llmConfigHint: '请先配置大模型 API Key', provider: '模型厂商', apiKey: 'API Key', model: '模型', baseUrl: 'API 地址', saveConfig: '保存配置', configNote: '配置保存在浏览器本地，不会上传。支持通义千问、DeepSeek、OpenAI、月之暗面、智谱等 OpenAI 兼容接口。' },
+      en: { planTrip: 'Plan Trip', startCity: 'Departure', includeStartCity: 'Visit departure city', includeStartCityHint: 'When off, the itinerary skips sightseeing in the departure city', days: 'Duration', dayUnit: 'days', season: 'Season', generateRoute: 'Generate Routes', routes: 'Routes', attractions: 'Attractions', aiSuggest: 'AI Itinerary', aiTab: 'AI Trip', aiGenerating: 'Generating itinerary, please wait…', aiHint: 'Click "AI Itinerary" below to let AI plan your detailed route', generateHint: 'Select city and days, then click "Generate Routes"', seasonFilter: 'Filtered by current season', noSeasonalAttractions: 'No seasonal attractions for this city', clickCityHint: 'Click a city on the map to view local attractions', llmSettings: 'LLM Settings', llmConfigHint: 'Please configure LLM API Key first', provider: 'Provider', apiKey: 'API Key', model: 'Model', baseUrl: 'API URL', saveConfig: 'Save', configNote: 'Config saved locally in browser. Supports Qwen, DeepSeek, OpenAI, Moonshot, Zhipu, and any OpenAI-compatible API.' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['50+ 中国城市、200+ 真实景点数据', '6 种主题路线：自然风光/历史人文/美食/文艺小城/亲子乐园/当季最佳', '支持设置终点城市，路线顺路规划不绕路', '按季节推荐当季最佳景点（春季赏花/夏季避暑/秋季红叶/冬季冰雪）', '接入大模型 AI 生成详细每日行程（支持千问/DeepSeek/OpenAI 等）', '点击地图城市查看景点详情，路线实时可视化'], usage: ['选择出发城市、终点城市（可选）、天数和季节', '点击「生成路线」查看主题推荐', '点击路线在地图上查看轨迹', '点击 🤖 生成 AI 详细行程（需先配置 API Key）', '点击 ⚙️ 配置大模型 API'] },
+      en: { title: 'Usage Guide', features: ['50+ Chinese cities, 200+ real attractions', '6 themed routes: Nature/History/Food/Art Towns/Family/Best Season', 'Endpoint selection for non-return trips with optimized routing', 'Seasonal recommendations (spring flowers/summer cool/autumn leaves/winter ice)', 'AI-powered daily itinerary via LLM (Qwen/DeepSeek/OpenAI/etc.)', 'Click cities on map for details, real-time route visualization'], usage: ['Select departure, destination (optional), days, and season', 'Click "Generate Routes" for themed recommendations', 'Click a route to view it on the map', 'Click 🤖 for AI itinerary (configure API Key first)', 'Click ⚙️ to set up LLM API'] },
+    },
+  },
   // ── dns ──
   dns: {
     name: { zh: 'DNS 查询', en: 'DNS Lookup' },
