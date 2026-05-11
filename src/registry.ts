@@ -682,6 +682,18 @@ export const tools: ToolMeta[] = [
     keywords: ['unit', 'convert', '单位', '换算', '长度', '重量', '温度'],
     status: '可用',
   },
+  {
+    id: 'terminal',
+    name: '终端美化器',
+    description: '终端输出数据美化，支持 16 种主题样式、语法高亮和导出',
+    icon: '>_',
+    iconClass: 'icon-green',
+    category: '开发',
+    path: '/terminal',
+    component: () => import('./features/terminal-styler'),
+    keywords: ['terminal', 'theme', '终端', '美化', '主题', 'shell', 'highlight', 'dracula', 'nord'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [

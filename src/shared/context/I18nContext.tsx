@@ -933,6 +933,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['6 categories: Length/Weight/Temperature/Storage/Speed/Area', 'Auto-lists units for selected category', 'Real-time conversion as you type', 'Swap source and target units'], usage: ['Select a unit category (e.g. Length, Weight)', 'Choose source and target units', 'Enter a value — result updates in real-time', 'Click ⇄ to swap source and target'] },
     },
   },
+  // ── terminal ──
+  terminal: {
+    name: { zh: '终端美化器', en: 'Terminal Styler' },
+    desc: { zh: '终端输出数据美化，支持 16 种主题样式、语法高亮和导出', en: 'Beautify terminal output with 16 themes, syntax highlighting, and export' },
+    ui: {
+      zh: { placeholder: '粘贴终端输出数据…', theme: '主题', fontSize: '字号', windowStyle: '窗口样式', lineNumbers: '行号', wordWrap: '自动换行', copyHtml: '复制 HTML', copyImage: '下载图片', ws_macos: 'macOS', ws_linux: 'Linux', ws_none: '无' },
+      en: { placeholder: 'Paste terminal output…', theme: 'Theme', fontSize: 'Font Size', windowStyle: 'Window Style', lineNumbers: 'Line Numbers', wordWrap: 'Word Wrap', copyHtml: 'Copy HTML', copyImage: 'Download Image', ws_macos: 'macOS', ws_linux: 'Linux', ws_none: 'None' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['16 种精选终端主题：Dracula / Nord / Solarized / Gruvbox / Monokai / Catppuccin / Tokyo Night / One Dark / Cyberpunk / Matrix / Ayu Dark / Palenight / Horizon / Kanagawa / Everforest / Rose Pine', '自动识别终端模式：Shell 提示符、命令、错误、警告、成功信息', '高亮文件路径、URL、数字、引号字符串', '支持 ANSI 转义序列清理', '三种窗口样式：macOS / Linux / 无窗口', '复制 HTML 或下载 PNG 图片，方便分享'], usage: ['在左侧输入框粘贴终端输出数据', '从主题网格中选择喜欢的终端主题', '调整字号、窗口样式、行号等设置', '右侧实时预览美化效果', '点击「复制 HTML」或「下载图片」导出结果'] },
+      en: { title: 'Usage Guide', features: ['16 curated terminal themes: Dracula / Nord / Solarized / Gruvbox / Monokai / Catppuccin / Tokyo Night / One Dark / Cyberpunk / Matrix / Ayu Dark / Palenight / Horizon / Kanagawa / Everforest / Rose Pine', 'Auto-detect terminal patterns: shell prompts, commands, errors, warnings, success messages', 'Highlight file paths, URLs, numbers, and quoted strings', 'ANSI escape sequence stripping', 'Three window styles: macOS / Linux / Frameless', 'Copy HTML or download PNG image for sharing'], usage: ['Paste terminal output in the left panel', 'Select a theme from the theme grid', 'Adjust font size, window style, line numbers, etc.', 'Preview the beautified result in real-time on the right', 'Click "Copy HTML" or "Download Image" to export'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';
