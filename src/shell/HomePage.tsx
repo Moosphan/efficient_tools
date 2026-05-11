@@ -56,8 +56,8 @@ export function HomePage() {
           <div className="stat-label">{t('stats.tools')}</div>
         </div>
         <div className="stat-item">
-          <div className="stat-num">0</div>
-          <div className="stat-label">{t('stats.deps')}</div>
+          <div className="stat-num">{categories.filter((c) => c.id !== 'all').length}</div>
+          <div className="stat-label">{t('stats.categories')}</div>
         </div>
         <div className="stat-item">
           <div className="stat-num">100%</div>
