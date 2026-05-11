@@ -946,6 +946,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['16 curated terminal themes: Dracula / Nord / Solarized / Gruvbox / Monokai / Catppuccin / Tokyo Night / One Dark / Cyberpunk / Matrix / Ayu Dark / Palenight / Horizon / Kanagawa / Everforest / Rose Pine', 'Auto-detect terminal patterns: shell prompts, commands, errors, warnings, success messages', 'Highlight file paths, URLs, numbers, and quoted strings', 'ANSI escape sequence stripping', 'Three window styles: macOS / Linux / Frameless', 'Copy HTML or download PNG image for sharing'], usage: ['Paste terminal output in the left panel', 'Select a theme from the theme grid', 'Adjust font size, window style, line numbers, etc.', 'Preview the beautified result in real-time on the right', 'Click "Copy HTML" or "Download Image" to export'] },
     },
   },
+  // ── rss ──
+  rss: {
+    name: { zh: 'RSS 工具', en: 'RSS Toolkit' },
+    desc: { zh: 'RSS/Atom 阅读器、生成器和验证器', en: 'RSS/Atom feed reader, generator, and validator' },
+    ui: {
+      zh: { tab_reader: '阅读器', tab_generator: '生成器', tab_validator: '验证器', inputFeed: '输入 Feed', pasteRss: '粘贴 RSS/Atom XML…', items: '条目', copyMarkdown: '复制 Markdown', feedMeta: 'Feed 信息', feedTitle: '标题', feedLink: '链接', feedDesc: '描述', feedLang: '语言', feedAuthor: '作者', feedItems: '条目列表', addItem: '添加条目', itemTitle: '标题', itemLink: '链接', itemDesc: '描述', itemDate: '发布日期', itemAuthor: '作者', generateXml: '生成 XML', validationResult: '验证结果', allPassed: '全部通过' },
+      en: { tab_reader: 'Reader', tab_generator: 'Generator', tab_validator: 'Validator', inputFeed: 'Feed Input', pasteRss: 'Paste RSS/Atom XML…', items: 'items', copyMarkdown: 'Copy Markdown', feedMeta: 'Feed Metadata', feedTitle: 'Title', feedLink: 'Link', feedDesc: 'Description', feedLang: 'Language', feedAuthor: 'Author', feedItems: 'Items', addItem: 'Add Item', itemTitle: 'Title', itemLink: 'Link', itemDesc: 'Description', itemDate: 'Pub Date', itemAuthor: 'Author', generateXml: 'Generate XML', validationResult: 'Validation Result', allPassed: 'All checks passed' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['阅读器：粘贴 RSS 2.0 或 Atom XML，自动解析并展示 Feed 内容', '生成器：通过表单填写 Feed 信息和条目，一键生成 RSS 2.0 或 Atom XML', '验证器：检查 Feed 结构完整性，报告错误、警告和建议', '支持导出 Markdown 格式和下载 XML 文件', '纯前端运行，无需后端服务'], usage: ['阅读器：粘贴 Feed XML 到输入框，自动解析展示', '生成器：填写 Feed 标题、链接、描述等信息，添加条目后点击「生成 XML」', '验证器：粘贴 Feed XML，自动检查结构并显示验证结果', '点击「复制 Markdown」将 Feed 内容导出为 Markdown 格式'] },
+      en: { title: 'Usage Guide', features: ['Reader: paste RSS 2.0 or Atom XML to auto-parse and display feed content', 'Generator: fill in feed metadata and items via form, generate RSS 2.0 or Atom XML with one click', 'Validator: check feed structure integrity, report errors, warnings, and suggestions', 'Export as Markdown or download XML file', 'Runs entirely client-side'], usage: ['Reader: paste feed XML into the input area, auto-parsed and displayed', 'Generator: fill in feed title, link, description, add items, then click "Generate XML"', 'Validator: paste feed XML, auto-checks structure and shows validation results', 'Click "Copy Markdown" to export feed content as Markdown'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

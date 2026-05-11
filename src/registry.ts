@@ -694,6 +694,18 @@ export const tools: ToolMeta[] = [
     keywords: ['terminal', 'theme', '终端', '美化', '主题', 'shell', 'highlight', 'dracula', 'nord'],
     status: '可用',
   },
+  {
+    id: 'rss',
+    name: 'RSS 工具',
+    description: 'RSS/Atom 阅读器、生成器和验证器',
+    icon: 'RSS',
+    iconClass: 'icon-amber',
+    category: '开发',
+    path: '/rss',
+    component: () => import('./features/rss-tool'),
+    keywords: ['rss', 'atom', 'feed', 'xml', '阅读', '生成', '验证', '订阅'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
