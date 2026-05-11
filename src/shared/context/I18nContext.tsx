@@ -604,6 +604,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Supports Code128/Code39/EAN-13/EAN-8/UPC-A/ITF-14', 'Custom barcode and background colors', 'Toggle bottom text display', 'Export PNG (2x) and SVG vector formats'], usage: ['Select barcode format', 'Enter the value to encode', 'Adjust height and colors', 'Download PNG or SVG'] },
     },
   },
+  // ── imgBase64 ──
+  imgBase64: {
+    name: { zh: '图片 Base64', en: 'Image Base64' },
+    desc: { zh: '图片与 Base64 互转，支持拖拽上传和多种输出格式', en: 'Convert images to/from Base64 with drag-and-drop and multiple output formats' },
+    ui: {
+      zh: { uploadImage: '上传图片', dropzone: '拖拽图片到此处，或点击上传', orPaste: '或粘贴 Base64 字符串', textPlaceholder: '粘贴 Base64 字符串或 Data URI…', invalidBase64: '无效的 Base64 字符串', invalidImage: '无法解析为图片' },
+      en: { uploadImage: 'Upload Image', dropzone: 'Drag image here, or click to upload', orPaste: 'or paste Base64 string', textPlaceholder: 'Paste Base64 string or Data URI…', invalidBase64: 'Invalid Base64 string', invalidImage: 'Cannot parse as image' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['图片 → Base64：上传/拖拽/粘贴图片，自动生成 Data URI', 'Base64 → 图片：粘贴 Base64 或 Data URI 自动解析预览', '5 种输出格式：Data URI / 纯 Base64 / CSS / HTML / Markdown', '自动检测图片类型（PNG/JPEG/GIF/WebP）'], usage: ['上传图片或粘贴 Base64 字符串', '选择输出格式', '点击「复制」复制到剪贴板', '点击「下载」保存图片文件'] },
+      en: { title: 'Usage Guide', features: ['Image → Base64: upload/drag/paste image, auto-generate Data URI', 'Base64 → Image: paste Base64 or Data URI to auto-decode and preview', '5 output formats: Data URI / Pure Base64 / CSS / HTML / Markdown', 'Auto-detect image type (PNG/JPEG/GIF/WebP)'], usage: ['Upload an image or paste a Base64 string', 'Select output format', 'Click "Copy" to copy to clipboard', 'Click "Download" to save the image file'] },
+    },
+  },
   // ── favicon ──
   favicon: {
     name: { zh: 'Favicon 生成器', en: 'Favicon Generator' },
@@ -615,6 +628,19 @@ export const toolI18n: Record<string, {
     help: {
       zh: { title: '使用说明', features: ['支持 Emoji、文字、上传图片三种输入方式', '19 种标准尺寸覆盖所有平台（16px ~ 512px）', '方形/圆角/圆形三种形状', '一键下载全部尺寸 + 复制 HTML 引用代码'], usage: ['选择输入方式（Emoji/文字/图片）', '调整背景色、前景色、字号和形状', '勾选需要的输出尺寸', '下载 PNG 文件或复制 HTML 代码到项目中'] },
       en: { title: 'Usage Guide', features: ['Three input modes: Emoji, Text, or Image upload', '19 standard sizes covering all platforms (16px ~ 512px)', 'Square, rounded, and circle shapes', 'One-click batch download + HTML snippet copy'], usage: ['Choose input mode (Emoji/Text/Image)', 'Adjust background, foreground, font size, and shape', 'Select output sizes', 'Download PNGs or copy the HTML snippet into your project'] },
+    },
+  },
+  // ── addressGen ──
+  addressGen: {
+    name: { zh: '地址生成器', en: 'Address Generator' },
+    desc: { zh: '生成真实格式的各国/地区收货地址，含邮编、街道、城市', en: 'Generate realistic shipping addresses for 10 countries with postal codes, streets, and cities' },
+    ui: {
+      zh: { country: '国家/地区', count: '数量', generate: '生成地址', copyAll: '复制全部' },
+      en: { country: 'Country', count: 'Count', generate: 'Generate', copyAll: 'Copy All' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 10 个国家/地区：中国、美国、日本、英国、德国、韩国、法国、加拿大、澳大利亚、新加坡', '地址格式符合各国真实规范（邮编、省/州、城市、街道）', '姓名、电话、街道均使用真实数据池随机组合', '适合电商测试、表单填充、物流系统测试'], usage: ['选择国家/地区', '设置生成数量（1-20）', '点击「生成地址」', '点击「复制」复制单条或全部地址'] },
+      en: { title: 'Usage Guide', features: ['10 countries: China, US, Japan, UK, Germany, Korea, France, Canada, Australia, Singapore', 'Addresses follow real national formats (postal codes, states, cities, streets)', 'Names, phones, and streets use realistic data pools', 'Perfect for e-commerce testing, form filling, logistics testing'], usage: ['Select a country/region', 'Set the count (1-20)', 'Click "Generate"', 'Click "Copy" for single or "Copy All" for all addresses'] },
     },
   },
   // ── dns ──
