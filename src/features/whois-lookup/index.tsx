@@ -65,7 +65,7 @@ function parseRdap(data: RdapResult) {
   if (data.entities?.length) {
     for (const entity of data.entities) {
       const roles = entity.roles?.join(', ') || '';
-      const name = extractVcardName(entity.vcardArray);
+      const name = entity.vcardArray ? extractVcardName(entity.vcardArray) : '';
       if (name) result.push({ label: roles.charAt(0).toUpperCase() + roles.slice(1), value: name });
     }
   }
