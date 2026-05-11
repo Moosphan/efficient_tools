@@ -395,6 +395,18 @@ export const tools: ToolMeta[] = [
     status: '可用',
   },
   {
+    id: 'favicon',
+    name: 'Favicon 生成器',
+    description: '从文字/Emoji/图片生成多尺寸 Favicon，附带 HTML 引用代码',
+    icon: '🌐',
+    iconClass: 'icon-amber',
+    category: '开发调试',
+    path: '/favicon',
+    component: () => import('./features/favicon-generator'),
+    keywords: ['favicon', 'icon', 'pwa', 'apple-touch', '网站图标', '生成'],
+    status: '可用',
+  },
+  {
     id: 'barcode',
     name: '条形码生成器',
     description: '支持 Code128/EAN-13/UPC 等多种条码格式，可导出 PNG/SVG',

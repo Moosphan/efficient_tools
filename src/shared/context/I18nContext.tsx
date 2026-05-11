@@ -604,6 +604,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Supports Code128/Code39/EAN-13/EAN-8/UPC-A/ITF-14', 'Custom barcode and background colors', 'Toggle bottom text display', 'Export PNG (2x) and SVG vector formats'], usage: ['Select barcode format', 'Enter the value to encode', 'Adjust height and colors', 'Download PNG or SVG'] },
     },
   },
+  // ── favicon ──
+  favicon: {
+    name: { zh: 'Favicon 生成器', en: 'Favicon Generator' },
+    desc: { zh: '从文字/Emoji/图片生成多尺寸 Favicon，附带 HTML 引用代码', en: 'Generate multi-size favicons from text/emoji/image with HTML snippet' },
+    ui: {
+      zh: { content: '内容', contentPlaceholder: '输入 Emoji 或文字（如 ⚡ 🚀 A）', uploadImage: '上传图片', clearImage: '移除图片', fontSize: '字号', shape: '形状', square: '方形', rounded: '圆角', circle: '圆形', colors: '颜色', bg: '背景', fg: '前景', sizes: '输出尺寸', commonSizes: '常用', selectAll: '全选', downloadAll: '打包下载 ZIP', copyHtml: '复制 HTML', htmlSnippet: 'HTML 引用代码', imageScale: '图片缩放', imageRound: '圆角', imageOffset: '偏移' },
+      en: { content: 'Content', contentPlaceholder: 'Enter emoji or text (e.g. ⚡ 🚀 A)', uploadImage: 'Upload', clearImage: 'Remove', fontSize: 'Font Size', shape: 'Shape', square: 'Square', rounded: 'Rounded', circle: 'Circle', colors: 'Colors', bg: 'BG', fg: 'FG', sizes: 'Output Sizes', commonSizes: 'Common', selectAll: 'All', downloadAll: 'Download ZIP', copyHtml: 'Copy HTML', htmlSnippet: 'HTML Snippet', imageScale: 'Scale', imageRound: 'Round Corners', imageOffset: 'Offset' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 Emoji、文字、上传图片三种输入方式', '19 种标准尺寸覆盖所有平台（16px ~ 512px）', '方形/圆角/圆形三种形状', '一键下载全部尺寸 + 复制 HTML 引用代码'], usage: ['选择输入方式（Emoji/文字/图片）', '调整背景色、前景色、字号和形状', '勾选需要的输出尺寸', '下载 PNG 文件或复制 HTML 代码到项目中'] },
+      en: { title: 'Usage Guide', features: ['Three input modes: Emoji, Text, or Image upload', '19 standard sizes covering all platforms (16px ~ 512px)', 'Square, rounded, and circle shapes', 'One-click batch download + HTML snippet copy'], usage: ['Choose input mode (Emoji/Text/Image)', 'Adjust background, foreground, font size, and shape', 'Select output sizes', 'Download PNGs or copy the HTML snippet into your project'] },
+    },
+  },
   // ── dns ──
   dns: {
     name: { zh: 'DNS 查询', en: 'DNS Lookup' },
