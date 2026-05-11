@@ -5,12 +5,14 @@ import { useI18n, toolI18n } from '../shared/context/I18nContext';
 
 const catMap: Record<string, string> = {
   'all': 'cat.all',
-  '格式化/转换': 'cat.format',
-  '编码/解码': 'cat.codec',
-  '安全/加密': 'cat.security',
-  '文本处理': 'cat.text',
-  '开发调试': 'cat.debug',
-  '系统工具': 'cat.system',
+  '格式化': 'cat.格式化',
+  '编解码': 'cat.编解码',
+  '文本': 'cat.文本',
+  '图片': 'cat.图片',
+  '安全': 'cat.安全',
+  '网络': 'cat.网络',
+  '开发': 'cat.开发',
+  '其他': 'cat.其他',
 };
 
 export function HomePage() {
@@ -64,7 +66,12 @@ export function HomePage() {
       </div>
 
       <div className="search-bar">
-        <span className="search-icon">⌕</span>
+        <span className="search-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </span>
         <input
           type="text"
           placeholder={t('search.placeholder')}
@@ -119,12 +126,24 @@ function ToolCard({ tool }: { tool: typeof tools[number] }) {
   );
 }
 
+const CATEGORY_STYLES: Record<string, { bg: string; color: string; border: string }> = {
+  '格式化': { bg: 'var(--amber-bg)', color: 'var(--amber)', border: 'var(--amber)' },
+  '编解码': { bg: 'var(--green-bg)', color: 'var(--green)', border: 'var(--green)' },
+  '文本': { bg: 'var(--accent-bg)', color: 'var(--accent)', border: 'var(--accent)' },
+  '图片': { bg: 'var(--cyan-bg, rgba(6,182,212,0.1))', color: 'var(--cyan, #06b6d4)', border: 'var(--cyan, #06b6d4)' },
+  '安全': { bg: 'var(--red-bg)', color: 'var(--red)', border: 'var(--red)' },
+  '网络': { bg: 'var(--green-bg)', color: 'var(--green)', border: 'var(--green)' },
+  '开发': { bg: 'var(--violet-bg, rgba(139,92,246,0.1))', color: 'var(--violet, #8b5cf6)', border: 'var(--violet, #8b5cf6)' },
+  '其他': { bg: 'var(--surface-2)', color: 'var(--muted)', border: 'var(--border)' },
+};
+
 function ToolCardContent({ tool }: { tool: typeof tools[number] }) {
   const isAvailable = tool.status === '可用';
   const { lang, t } = useI18n();
   const i18n = toolI18n[tool.id];
   const name = i18n?.name[lang] || tool.name;
   const desc = i18n?.desc[lang] || tool.description;
+  const catStyle = CATEGORY_STYLES[tool.category] ?? CATEGORY_STYLES['其他'];
 
   return (
     <>
@@ -146,12 +165,12 @@ function ToolCardContent({ tool }: { tool: typeof tools[number] }) {
         <span
           className="flow-card-tag"
           style={{
-            background: isAvailable ? 'var(--green-bg)' : 'var(--surface-2)',
-            color: isAvailable ? 'var(--green)' : 'var(--muted)',
-            border: `1px solid ${isAvailable ? 'var(--green)' : 'var(--border)'}`,
+            background: catStyle.bg,
+            color: catStyle.color,
+            border: `1px solid ${catStyle.border}`,
           }}
         >
-          {isAvailable ? t('status.available') : t('status.developing')}
+          {t(catMap[tool.category] || tool.category)}
         </span>
         {isAvailable && <span className="flow-card-action">{t('card.open')}</span>}
       </div>

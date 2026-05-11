@@ -71,7 +71,7 @@ export default function CharReference() {
             value={inputChar}
             onChange={(e) => setInputChar(e.target.value)}
             placeholder={ui.lookupPlaceholder}
-            style={{ margin: '0 16px 12px', padding: '8px 12px', width: 'calc(100% - 32px)', boxSizing: 'border-box', fontFamily: 'var(--font-mono)', fontSize: 14, background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)', borderRadius: 6 }}
+            style={{ margin: '10px 16px 12px', padding: '8px 12px', width: 'calc(100% - 32px)', boxSizing: 'border-box', fontFamily: 'var(--font-mono)', fontSize: 14, background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)', borderRadius: 6 }}
           />
           {lookup.length > 0 && (
             <div style={{ padding: '0 16px 16px' }}>
@@ -95,7 +95,7 @@ export default function CharReference() {
               <button key={c.id} className={`panel-btn panel-btn-sm${catId === c.id ? ' accent' : ''}`} onClick={() => setCatId(c.id)}>{ui[c.labelKey] || c.labelKey}</button>
             ))}
           </div>
-          <div style={{ padding: '8px 16px' }}>
+          <div style={{ padding: '10px 16px' }}>
             <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={ui.searchPlaceholder} style={{ width: '100%', padding: '6px 10px', background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)', borderRadius: 4, fontSize: 12, boxSizing: 'border-box' }} />
           </div>
           <div style={{ padding: '0 16px 16px', maxHeight: 400, overflow: 'auto' }}>

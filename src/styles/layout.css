@@ -192,12 +192,15 @@
 
 .search-bar .search-icon {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--muted);
-  font-size: 16px;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 /* ── Category Filter ── */
