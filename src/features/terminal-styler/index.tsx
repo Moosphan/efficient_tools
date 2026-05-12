@@ -383,7 +383,7 @@ panic: runtime error: index out of range [5] with length 3`;
 
 // ── Export helpers ──
 
-function generateStyledHtml(lines: string[][], theme: TerminalTheme, fontSize: number, lineNum: boolean): string {
+function generateStyledHtml(lines: Token[][], theme: TerminalTheme, fontSize: number, lineNum: boolean): string {
   const tokenColor = (type: Token['type']): string => {
     switch (type) {
       case 'prompt': return theme.green;

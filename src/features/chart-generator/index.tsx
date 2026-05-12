@@ -42,7 +42,7 @@ const CHART_TYPES: { id: ChartType; labelKey: string; icon: string }[] = [
 
 interface ChartTheme {
   id: string;
-  name: string;
+  nameKey: string;
   colors: string[];
   bg: string;
   text: string;
@@ -51,7 +51,7 @@ interface ChartTheme {
   axis: string;
 }
 
-const THEMES: { id: string; nameKey: string; bg: string; text: string; subtext: string; grid: string; axis: string; colors: string[] }[] = [
+const THEMES: ChartTheme[] = [
   { id: 'material', nameKey: 'themeMaterial', bg: '#ffffff', text: '#1f2937', subtext: '#6b7280', grid: '#e5e7eb', axis: '#9ca3af', colors: ['#4F86F7', '#36CFC9', '#FAAD14', '#F5222D', '#722ED1', '#13C2C2', '#FA8C16', '#2F54EB'] },
   { id: 'vibrant', nameKey: 'themeVibrant', bg: '#ffffff', text: '#1f2937', subtext: '#6b7280', grid: '#e5e7eb', axis: '#9ca3af', colors: ['#FF4D4F', '#52C41A', '#1890FF', '#FAAD14', '#EB2F96', '#13C2C2', '#722ED1', '#FA541C'] },
   { id: 'pastel', nameKey: 'themePastel', bg: '#fdfdff', text: '#52525b', subtext: '#a1a1aa', grid: '#f0f0f5', axis: '#d4d4d8', colors: ['#93C5FD', '#86EFAC', '#FDE68A', '#FCA5A5', '#D8B4FE', '#A5F3FC', '#FBCFE8', '#FED7AA'] },
@@ -121,7 +121,7 @@ function buildOption(chartType: ChartType, table: string[][], theme: ChartTheme,
   // Legend
   const legendPosMap: Record<string, string> = { top: 'top', bottom: 'bottom', left: 'left', right: 'right' };
   const legend: echarts.LegendComponentOption | undefined = opts.legendPos !== 'none'
-    ? { show: true, [opts.legendPos === 'none' ? 'top' : opts.legendPos]: opts.showTitle ? 36 : 14, textStyle: { color: theme.text, fontSize: 12 }, itemGap: 14 }
+    ? { show: true, [opts.legendPos]: opts.showTitle ? 36 : 14, textStyle: { color: theme.text, fontSize: 12 }, itemGap: 14 }
     : { show: false };
 
   // Common tooltip
