@@ -959,6 +959,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Reader: paste RSS 2.0 or Atom XML to auto-parse and display feed content', 'Generator: fill in feed metadata and items via form, generate RSS 2.0 or Atom XML with one click', 'Validator: check feed structure integrity, report errors, warnings, and suggestions', 'Export as Markdown or download XML file', 'Runs entirely client-side'], usage: ['Reader: paste feed XML into the input area, auto-parsed and displayed', 'Generator: fill in feed title, link, description, add items, then click "Generate XML"', 'Validator: paste feed XML, auto-checks structure and shows validation results', 'Click "Copy Markdown" to export feed content as Markdown'] },
     },
   },
+  // ── chart ──
+  chart: {
+    name: { zh: '图表生成器', en: 'Chart Generator' },
+    desc: { zh: '支持 12 种图表类型和 8 种主题，数据表格输入，导出 PNG', en: '12 chart types, 8 themes, table data input, PNG export' },
+    ui: {
+      zh: { chartType: '图表类型', theme: '主题', dataInput: '数据输入', title: '标题', legend: '图例位置', gridLines: '网格线', animation: '动画效果', showValues: '显示数值', showPercent: '显示百分比', none: '无', addSeries: '添加系列', addRow: '添加行', csvPlaceholder: '粘贴 CSV/TSV 数据…\n第一行为表头，第一列为标签', downloadPng: '下载 PNG', bar: '柱状图', hbar: '水平柱状图', line: '折线图', area: '面积图', pie: '饼图', doughnut: '环形图', radar: '雷达图', polar: '极坐标图', funnel: '漏斗图', wordcloud: '词云', graph: '关系图', gantt: '甘特图', themeMaterial: '材质', themeVibrant: '活力', themePastel: '柔和', themeAurora: '极光', themeNord: '北欧', themeSunset: '日落', themeOcean: '海洋', themeNeon: '霓虹' },
+      en: { chartType: 'Chart Type', theme: 'Theme', dataInput: 'Data Input', title: 'Title', legend: 'Legend', gridLines: 'Grid Lines', animation: 'Animation', showValues: 'Show Values', showPercent: 'Show Percent', none: 'None', addSeries: 'Add Series', addRow: 'Add Row', csvPlaceholder: 'Paste CSV/TSV data…\nFirst row = headers, first column = labels', downloadPng: 'Download PNG', bar: 'Bar', hbar: 'H-Bar', line: 'Line', area: 'Area', pie: 'Pie', doughnut: 'Doughnut', radar: 'Radar', polar: 'Polar', funnel: 'Funnel', wordcloud: 'Word Cloud', graph: 'Graph', gantt: 'Gantt', themeMaterial: 'Material', themeVibrant: 'Vibrant', themePastel: 'Pastel', themeAurora: 'Aurora', themeNord: 'Nord', themeSunset: 'Sunset', themeOcean: 'Ocean', themeNeon: 'Neon' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['12 种图表类型：柱状图 / 水平柱状图 / 折线图 / 面积图 / 饼图 / 环形图 / 雷达图 / 极坐标图 / 漏斗图 / 词云 / 关系图 / 甘特图', '8 种配色主题：Material / Vibrant / Pastel / Aurora / Nord / Sunset / Ocean / Neon', '表格编辑数据，支持 CSV/TSV 粘贴导入', '自定义标题、图例位置、网格线、动画效果', '一键导出 PNG 图片（3x 高清）'], usage: ['选择图表类型，自动加载示例数据', '在数据表格中编辑标签和数值，或切换 CSV 模式粘贴数据', '选择配色主题，调整图表选项', '点击「下载 PNG」导出图表'] },
+      en: { title: 'Usage Guide', features: ['12 chart types: Bar / H-Bar / Line / Area / Pie / Doughnut / Radar / Polar / Funnel / Word Cloud / Graph / Gantt', '8 color themes: Material / Vibrant / Pastel / Aurora / Nord / Sunset / Ocean / Neon', 'Table-based data editing with CSV/TSV paste import', 'Customizable title, legend position, grid lines, animation', 'One-click PNG export (3x HD)'], usage: ['Select a chart type, sample data loads automatically', 'Edit labels and values in the data table, or switch to CSV mode to paste data', 'Choose a color theme and adjust chart options', 'Click "Download PNG" to export the chart'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

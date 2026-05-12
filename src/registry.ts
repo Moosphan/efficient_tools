@@ -706,6 +706,18 @@ export const tools: ToolMeta[] = [
     keywords: ['rss', 'atom', 'feed', 'xml', '阅读', '生成', '验证', '订阅'],
     status: '可用',
   },
+  {
+    id: 'chart',
+    name: '图表生成器',
+    description: '支持 12 种图表类型和 8 种主题，数据表格输入，导出 PNG',
+    icon: '📊',
+    iconClass: 'icon-amber',
+    category: '图片',
+    path: '/chart',
+    component: () => import('./features/chart-generator'),
+    keywords: ['chart', 'graph', '图表', '柱状图', '折线图', '饼图', '可视化', '数据'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
