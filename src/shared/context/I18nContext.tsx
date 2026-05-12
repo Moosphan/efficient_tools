@@ -481,14 +481,14 @@ export const toolI18n: Record<string, {
   // ── asciiArt ──
   asciiArt: {
     name: { zh: 'ASCII 艺术字', en: 'ASCII Art Text' },
-    desc: { zh: '文字转 ASCII Art，支持 6 种字体主题', en: 'Convert text to ASCII art with 6 font styles' },
+    desc: { zh: '文字转 ASCII Art，支持 8 种字体、8 种主题和图片导出', en: 'Convert text to ASCII art with 8 fonts, 8 themes, and image export' },
     ui: {
-      zh: { font: '字体', placeholder: '输入文字…（最多 20 字符）', supportedChars: '支持 A-Z、0-9 和常见符号' },
-      en: { font: 'Font', placeholder: 'Enter text… (max 20 chars)', supportedChars: 'Supports A-Z, 0-9, and common symbols' },
+      zh: { font: '字体', theme: '主题', placeholder: '输入文字…（最多 20 字符）', supportedChars: '支持 A-Z、0-9 和常见符号', downloadPng: '下载 PNG', font_standard: '标准', font_slant: '斜体', font_banner: '旗帜', font_small: '小型', font_big: '大型', font_block: '方块', font_double: '双线', font_shadow: '阴影', themeClassic: '经典', themeMatrix: '矩阵', themeAmber: '琥珀', themeOcean: '海洋', themeSolarized: '日晒', themeDracula: '德古拉', themeLight: '明亮', themeHacker: '黑客' },
+      en: { font: 'Font', theme: 'Theme', placeholder: 'Enter text… (max 20 chars)', supportedChars: 'Supports A-Z, 0-9, and common symbols', downloadPng: 'Download PNG', font_standard: 'Standard', font_slant: 'Slant', font_banner: 'Banner', font_small: 'Small', font_big: 'Big', font_block: 'Block', font_double: 'Double', font_shadow: 'Shadow', themeClassic: 'Classic', themeMatrix: 'Matrix', themeAmber: 'Amber', themeOcean: 'Ocean', themeSolarized: 'Solarized', themeDracula: 'Dracula', themeLight: 'Light', themeHacker: 'Hacker' },
     },
     help: {
-      zh: { title: '使用说明', features: ['6 种 ASCII 字体主题：Standard / Slant / Banner / Small / Big / Block', '支持 A-Z、0-9 和常见符号', '适合终端欢迎信息、CI/CD 注释、代码装饰', '一键复制结果'], usage: ['输入文字（最多 20 字符）', '选择字体主题', '实时预览 ASCII Art 效果', '点击「复制」复制到剪贴板'] },
-      en: { title: 'Usage Guide', features: ['6 ASCII font styles: Standard / Slant / Banner / Small / Big / Block', 'Supports A-Z, 0-9, and common symbols', 'Great for terminal banners, CI/CD comments, code decoration', 'One-click copy'], usage: ['Enter text (max 20 characters)', 'Choose a font style', 'Preview ASCII art in real-time', 'Click "Copy" to copy to clipboard'] },
+      zh: { title: '使用说明', features: ['8 种 ASCII 字体：标准 / 斜体 / 旗帜 / 小型 / 大型 / 方块 / 双线 / 阴影', '8 种主题配色：经典 / 矩阵 / 琥珀 / 海洋 / 日晒 / 德古拉 / 明亮 / 黑客', '支持 A-Z、0-9 和常见符号', '一键复制文本或下载 PNG 图片', '适合终端欢迎信息、CI/CD 注释、开源项目 Banner'], usage: ['输入文字（最多 20 字符）', '选择字体和主题配色', '实时预览 ASCII Art 效果', '点击「复制」复制文本，或「下载 PNG」导出图片'] },
+      en: { title: 'Usage Guide', features: ['8 ASCII fonts: Standard / Slant / Banner / Small / Big / Block / Double / Shadow', '8 theme colors: Classic / Matrix / Amber / Ocean / Solarized / Dracula / Light / Hacker', 'Supports A-Z, 0-9, and common symbols', 'Copy text or download PNG image', 'Perfect for terminal banners, CI/CD comments, open-source project banners'], usage: ['Enter text (max 20 characters)', 'Choose a font and color theme', 'Preview ASCII art in real-time', 'Click "Copy" for text or "Download PNG" for image export'] },
     },
   },
   // ── lorem ──

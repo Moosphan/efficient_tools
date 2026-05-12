@@ -1,9 +1,28 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
 import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
 import { HelpSection } from '../../shared/components/HelpSection';
 
-type FontName = 'standard' | 'slant' | 'banner' | 'small' | 'big' | 'block';
+type FontName = 'standard' | 'slant' | 'banner' | 'small' | 'big' | 'block' | 'double' | 'shadow';
+
+interface ArtTheme {
+  id: string;
+  nameKey: string;
+  bg: string;
+  fg: string;
+  accent: string;
+}
+
+const THEMES: ArtTheme[] = [
+  { id: 'classic', nameKey: 'themeClassic', bg: '#1e1e2e', fg: '#cdd6f4', accent: '#89b4fa' },
+  { id: 'matrix', nameKey: 'themeMatrix', bg: '#000000', fg: '#00ff41', accent: '#008f11' },
+  { id: 'amber', nameKey: 'themeAmber', bg: '#1a1000', fg: '#ffb000', accent: '#ff8c00' },
+  { id: 'ocean', nameKey: 'themeOcean', bg: '#0a1628', fg: '#7ec8e3', accent: '#3498db' },
+  { id: 'solarized', nameKey: 'themeSolarized', bg: '#002b36', fg: '#93a1a1', accent: '#268bd2' },
+  { id: 'dracula', nameKey: 'themeDracula', bg: '#282a36', fg: '#f8f8f2', accent: '#bd93f9' },
+  { id: 'light', nameKey: 'themeLight', bg: '#ffffff', fg: '#1f2937', accent: '#3b82f6' },
+  { id: 'hacker', nameKey: 'themeHacker', bg: '#0d0221', fg: '#00ff9f', accent: '#ff003c' },
+];
 
 const FONTS: Record<FontName, Record<string, string[]>> = {
   standard: {
@@ -113,7 +132,7 @@ const FONTS: Record<FontName, Record<string, string[]>> = {
     ' ': ['   ', '   ', '   ', '   ', '   ', '   '],
   },
   small: {
-    A: ['▄▀▀▀▄', '█▀▀▀█', '█   █', '█   █', '     ', '     '],
+    A: ['▄▀▀▀▄', '█▀▀▀█', '█   █', '     ', '     ', '     '],
     B: ['█▀▀▄ ', '█▀▀█ ', '█▄▄▀ ', '     ', '     ', '     '],
     C: ['▄▀▀▀ ', '█    ', '▀▄▄▄ ', '     ', '     ', '     '],
     D: ['█▀▀▄ ', '█  █ ', '█▄▄▀ ', '     ', '     ', '     '],
@@ -135,7 +154,7 @@ const FONTS: Record<FontName, Record<string, string[]>> = {
     T: ['▀▀█▀▀', '  █  ', '  █  ', '     ', '     ', '     '],
     U: ['█   █', '█   █', '▀▄▄▄▀', '     ', '     ', '     '],
     V: ['█   █', ' █ █ ', '  ▀  ', '     ', '     ', '     '],
-    W: ['█     █', '█ ▄ ▄ █', '▀▀▀▀▀▀▀', '       ', '       ', '       '],
+    W: ['█   █', '█ ▀ █', '█▄▄▄█', '     ', '     ', '     '],
     X: ['█  █', ' ▀▀ ', '█  █', '    ', '    ', '    '],
     Y: ['█ █', ' ▀ ', ' █ ', '   ', '   ', '   '],
     Z: ['▀▀▀█', ' ▄▀ ', '█▄▄▄', '    ', '    ', '    '],
@@ -199,23 +218,112 @@ const FONTS: Record<FontName, Record<string, string[]>> = {
     Z: ['▀▀▀▀▀█', '   ▄▀ ', ' ▄▀  ', '▀    ', '█▄▄▄▄▄', '      '],
     ' ': ['     ', '     ', '     ', '     ', '     ', '     '],
   },
+  double: {
+    A: [' ╔══╗ ', '╔╝  ╚╗', '║    ║', '║    ║', '╩    ╩', '      '],
+    B: ['╔═══╗ ', '║   ║ ', '╠═══╣ ', '║   ║ ', '╚═══╝ ', '      '],
+    C: [' ╔═══╗', '╔╝    ', '║     ', '║     ', '╚╗    ', ' ╚═══╝'],
+    D: ['╔═══╗ ', '║   ╚╗', '║    ║', '║   ╔╝', '╚═══╝ ', '      '],
+    E: ['╔════╗', '║     ', '╠═══╗ ', '║     ', '╚════╝', '      '],
+    F: ['╔════╗', '║     ', '╠═══╗ ', '║     ', '╩     ', '      '],
+    G: [' ╔═══╗', '╔╝    ', '║  ╔═╗', '║    ║', '╚╗  ╔╝', ' ╚══╝ '],
+    H: ['║    ║', '║    ║', '╠════╣', '║    ║', '╩    ╩', '      '],
+    I: ['╔════╗', '  ║   ', '  ║   ', '  ║   ', '╚════╝', '      '],
+    J: ['╔════╗', '    ║ ', '    ║ ', '║   ║ ', '╚╗ ╔╝ ', ' ╚═╝  '],
+    K: ['║   ╔╝', '║ ╔╝  ', '╠═╝   ', '║ ╚╗  ', '╩   ╚╗', '      '],
+    L: ['║     ', '║     ', '║     ', '║     ', '╚════╝', '      '],
+    M: ['║╲   ╱║', '║ ╲ ╱ ║', '║  ╳  ║', '║ ╱ ╲ ║', '╩╱   ╲╩', '       '],
+    N: ['║╲   ║', '║ ╲  ║', '║  ╲ ║', '║   ╲║', '╩    ╩', '      '],
+    O: [' ╔══╗ ', '╔╝  ╚╗', '║    ║', '╚╗  ╔╝', ' ╚══╝ ', '      '],
+    P: ['╔═══╗ ', '║   ║ ', '╠═══╝ ', '║     ', '╩     ', '      '],
+    Q: [' ╔══╗ ', '╔╝  ╚╗', '║    ║', '╚╗ ╔╝╲', ' ╚══╝ ', '      '],
+    R: ['╔═══╗ ', '║   ║ ', '╠═══╝ ', '║  ╚╗ ', '╩   ╚╗', '      '],
+    S: [' ╔═══╗', '╔╝    ', '╚═══╗ ', '    ╚╗', ' ╔══╝ ', '      '],
+    T: ['╔════╗', '  ║   ', '  ║   ', '  ║   ', '  ╩   ', '      '],
+    U: ['║    ║', '║    ║', '║    ║', '╚╗  ╔╝', ' ╚══╝ ', '      '],
+    V: ['║    ║', '║    ║', '╚╗  ╔╝', ' ╚╗╔╝ ', '  ╚╝  ', '      '],
+    W: ['║    ║', '║    ║', '║ ╳╳ ║', '╚╗╔╝╔╝', ' ╚╝╚╝ ', '      '],
+    X: ['║   ║', '╚╗ ╔╝', ' ╚═╝ ', ' ╔═╗ ', '╔╝ ╚╗', '     '],
+    Y: ['║   ║', '╚╗ ╔╝', ' ╚═╝ ', '  ║  ', '  ╩  ', '     '],
+    Z: ['╔════╗', '   ╔╝ ', '  ╔╝  ', ' ╔╝   ', '╚════╝', '      '],
+    ' ': ['      ', '      ', '      ', '      ', '      ', '      '],
+    '0': [' ╔══╗ ', '╔╝╠═╚╗', '║ ║  ║', '╚╗╠═╔╝', ' ╚══╝ ', '      '],
+    '1': ['  ╔═╗ ', '╔═╝ ║ ', '  ║  ', '  ║  ', '╚════╝', '      '],
+    '2': [' ╔══╗ ', '╔╝  ╚╗', '  ╔═╝ ', ' ╔╝   ', '╚════╝', '      '],
+    '3': ['╔═══╗ ', '    ║ ', ' ╔══╝ ', '    ║ ', '╚═══╝ ', '      '],
+    '4': ['║   ║', '║   ║', '╚═══╣', '    ║', '    ╩', '     '],
+    '5': ['╔════╗', '║     ', '╚═══╗ ', '    ╚╗', ' ╔══╝ ', '      '],
+    '6': [' ╔══╗ ', '╔╝    ', '╠═══╗ ', '║   ║ ', '╚═══╝ ', '      '],
+    '7': ['╔════╗', '    ╔╝', '   ╔╝ ', '  ║   ', '  ╩   ', '      '],
+    '8': [' ╔══╗ ', '╔╝  ╚╗', '╠════╣', '║    ║', '╚════╝', '      '],
+    '9': [' ╔══╗ ', '╔╝  ╚╗', '╚═══╣ ', '    ║ ', ' ╚══╝ ', '      '],
+    '!': ['  ║  ', '  ║  ', '  ║  ', '  ╩  ', '      ', '  ║  '],
+    '?': [' ╔══╗ ', '╔╝  ╚╗', '  ╔═╝ ', '  ║   ', '  ╩   ', '      '],
+    '.': ['      ', '      ', '      ', '      ', '  ║   ', '      '],
+    '-': ['      ', '      ', '══════', '      ', '      ', '      '],
+  },
+  shadow: {
+    A: [' ▄▀▀▀▄ ', '█▀▀▀▀█▒', '█    █▒', '█    █▒', '▀    ▀▒', ' ▀▀▀▀▒ '],
+    B: ['█▀▀▀▄▒ ', '█▀▀▀█▒ ', '█▄▄▄▀▒ ', '█    █▒', '█▄▄▄▀▒ ', ' ▀▀▀▀▒ '],
+    C: [' ▄▀▀▀▒ ', '█▒▒▒▒▒ ', '█▒     ', '█▒     ', '█▄▄▄▒▒ ', ' ▀▀▀▒▒ '],
+    D: ['█▀▀▀▄▒ ', '█    █▒', '█    █▒', '█    █▒', '█▄▄▄▀▒ ', ' ▀▀▀▒▒ '],
+    E: ['█▀▀▀▀▒ ', '█▒▒▒▒▒ ', '█▀▀▄▒▒ ', '█▒▒▒▒▒ ', '█▄▄▄▒▒ ', ' ▀▀▀▒▒ '],
+    F: ['█▀▀▀▀▒ ', '█▒▒▒▒▒ ', '█▀▀▄▒▒ ', '█▒     ', '█▒     ', ' ▀     '],
+    G: [' ▄▀▀▀▒ ', '█▒▒▒▒▒ ', '█▒ ▄▄▒▒', '█▒   █▒', '█▄▄▄▀▒ ', ' ▀▀▀▒▒ '],
+    H: ['█    █▒', '█    █▒', '█▀▀▀▀█▒', '█    █▒', '█    █▒', '▀    ▀▒'],
+    I: ['█▀▀▀▀▒ ', ' ▒█▒▒▒ ', ' ▒█▒▒▒ ', ' ▒█▒▒▒ ', '█▄▄▄▄▒ ', ' ▀▀▀▒▒ '],
+    J: ['▄▀▀▀▀▒ ', '▒▒▒▒█▒ ', '▒▒▒▒█▒ ', '█▒▒▒█▒ ', '█▄▄▀▒▒ ', ' ▀▀▒▒▒ '],
+    K: ['█   ▄▒ ', '█ ▄▒▒▒ ', '█▀▒▒▒▒ ', '█ ▀▄▒▒ ', '█   ▀▄▒', '▀    ▀▒'],
+    L: ['█▒     ', '█▒     ', '█▒     ', '█▒     ', '█▄▄▄▄▒ ', ' ▀▀▀▒▒ '],
+    M: ['█▄    ▄█▒', '█ ▀▄▀ █▒', '█  ▀  █▒', '█     █▒', '▀     ▀▒', ' ▀▀▀▀▀▒ '],
+    N: ['█▄   █▒', '█ ▀  █▒', '█  ▀ █▒', '█   ▀█▒', '▀    ▀▒', ' ▀▀▀▀▒ '],
+    O: [' ▄▀▀▀▒ ', '█    █▒', '█    █▒', '█    █▒', '█▄▄▄▀▒ ', ' ▀▀▀▒▒ '],
+    P: ['█▀▀▀▄▒ ', '█    █▒', '█▀▀▀▀▒ ', '█▒     ', '█▒     ', '▀      '],
+    Q: [' ▄▀▀▀▒ ', '█    █▒', '█  ▄ █▒', '█   ▀▒ ', ' ▀▀▀▀▒▒', '     ▒▒'],
+    R: ['█▀▀▀▄▒ ', '█    █▒', '█▀▀▀▀▒ ', '█ ▀▄▒▒ ', '█   ▀▄▒', '▀    ▀▒'],
+    S: [' ▄▀▀▀▒ ', '█▒▒▒▒▒ ', ' ▀▀▀▄▒ ', '▒▒▒▒▒█▒', '▄▄▄▄▀▒ ', ' ▀▀▀▒▒ '],
+    T: ['█▀▀▀▀█▒', ' ▒█▒▒▒ ', ' ▒█▒▒▒ ', ' ▒█▒▒▒ ', ' ▒█▒▒▒ ', '  ▀    '],
+    U: ['█    █▒', '█    █▒', '█    █▒', '█▄▄▄▀▒ ', ' ▀▀▀▒▒ ', '       '],
+    V: ['█    █▒', '█    █▒', '▀▄  ▄▒ ', ' ▀▄▀▒▒ ', '  ▀▒▒▒ ', '       '],
+    W: ['█     █▒', '█  ▄  █▒', '█ ▀▄▀ █▒', '▀▄▀ ▀▄▒ ', ' ▀   ▀▒ ', '        '],
+    X: ['█    █▒', ' ▀▄▀▒▒ ', '  ▀▒▒▒ ', ' ▄▀▄▒▒ ', '█    █▒', '▀    ▀▒'],
+    Y: ['█   █▒', ' ▀▄▀▒▒ ', '  ▀▒▒▒ ', '  █▒▒▒ ', '  █▒▒▒ ', '  ▀    '],
+    Z: ['█▀▀▀▀▒ ', '▒▒▒▄▀▒ ', ' ▄▀▒▒▒ ', '█▒▒▒▒▒ ', '█▄▄▄▄▒ ', ' ▀▀▀▒▒ '],
+    ' ': ['      ', '      ', '      ', '      ', '      ', '      '],
+  },
 };
 
-const FONT_LABELS: Record<FontName, string> = {
-  standard: 'Standard',
-  slant: 'Slant',
-  banner: 'Banner',
-  small: 'Small',
-  big: 'Big',
-  block: 'Block',
+// Normalize all glyph rows to the same width within a font
+function normalizeFont(font: Record<string, string[]>): Record<string, string[]> {
+  let maxWidth = 0;
+  for (const glyph of Object.values(font)) {
+    for (const row of glyph) {
+      if (row.length > maxWidth) maxWidth = row.length;
+    }
+  }
+  const result: Record<string, string[]> = {};
+  for (const [ch, glyph] of Object.entries(font)) {
+    result[ch] = glyph.map((row) => row.padEnd(maxWidth, ' '));
+  }
+  return result;
+}
+
+const NORMALIZED_FONTS: Record<FontName, Record<string, string[]>> = {
+  standard: normalizeFont(FONTS.standard),
+  slant: normalizeFont(FONTS.slant),
+  banner: normalizeFont(FONTS.banner),
+  small: normalizeFont(FONTS.small),
+  big: normalizeFont(FONTS.big),
+  block: normalizeFont(FONTS.block),
+  double: normalizeFont(FONTS.double),
+  shadow: normalizeFont(FONTS.shadow),
 };
 
 function renderAsciiArt(text: string, fontName: FontName): string {
-  const font = FONTS[fontName];
+  const font = NORMALIZED_FONTS[fontName];
   if (!font) return '';
   const upper = text.toUpperCase();
-  const lines: string[][] = [];
   const height = Object.values(font)[0]?.length ?? 0;
+  const lines: string[][] = [];
   for (let i = 0; i < height; i++) lines.push([]);
 
   for (const ch of upper) {
@@ -224,7 +332,38 @@ function renderAsciiArt(text: string, fontName: FontName): string {
       lines[i].push(glyph[i] ?? '');
     }
   }
-  return lines.map((parts) => parts.join(' ')).join('\n');
+  return lines.map((parts) => parts.join('')).join('\n');
+}
+
+// Render ASCII art to canvas for image export
+function renderToCanvas(text: string, fontName: FontName, theme: ArtTheme): HTMLCanvasElement | null {
+  const art = renderAsciiArt(text, fontName);
+  if (!art) return null;
+  const lines = art.split('\n');
+  const fontSize = 14;
+  const lineHeight = fontSize * 1.2;
+  const charWidth = fontSize * 0.6;
+  const padding = 24;
+
+  const canvas = document.createElement('canvas');
+  const maxLineLen = Math.max(...lines.map((l) => l.length));
+  canvas.width = (maxLineLen * charWidth + padding * 2) * 2;
+  canvas.height = (lines.length * lineHeight + padding * 2) * 2;
+  const ctx = canvas.getContext('2d')!;
+  ctx.scale(2, 2);
+
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.font = `${fontSize}px 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace`;
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = theme.fg;
+
+  lines.forEach((line, i) => {
+    ctx.fillText(line, padding, padding + i * lineHeight);
+  });
+
+  return canvas;
 }
 
 export default function AsciiArt() {
@@ -232,35 +371,75 @@ export default function AsciiArt() {
   const { name, desc, ui, help } = useToolI18n('asciiArt');
   const [input, setInput] = useState('');
   const [font, setFont] = useState<FontName>('standard');
+  const [themeId, setThemeId] = useState('classic');
+  const [copied, setCopied] = useState(false);
 
+  const theme = THEMES.find((t) => t.id === themeId) || THEMES[0];
   const output = input ? renderAsciiArt(input, font) : '';
-  const copy = () => { if (output) navigator.clipboard.writeText(output); };
+
+  const copy = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
+  };
+
+  const downloadPng = useCallback(() => {
+    if (!input) return;
+    const canvas = renderToCanvas(input, font, theme);
+    if (!canvas) return;
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ascii-art.png';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  }, [input, font, theme]);
 
   return (
-    <ToolShell title={name} description={desc}>
+    <ToolShell title={name} description={desc} headerRight={output ? <button className="btn" onClick={downloadPng}>{ui.downloadPng || 'Download PNG'}</button> : undefined}>
       <div className="tool-layout">
         <div className="tool-panel">
           <div className="panel-header">{t('common.settings')}</div>
-          <div className="uuid-config">
-            <div className="uuid-config-row">
-              <label>{ui.font}</label>
+          <div className="ascii-settings">
+            <div className="ascii-settings-row">
+              <label className="ascii-settings-label">{ui.font}</label>
               <div className="panel-actions" style={{ flexWrap: 'wrap' }}>
                 {(Object.keys(FONTS) as FontName[]).map((f) => (
-                  <button key={f} className={`panel-btn panel-btn-sm${font === f ? ' accent' : ''}`} onClick={() => setFont(f)}>{FONT_LABELS[f]}</button>
+                  <button key={f} className={`panel-btn panel-btn-sm${font === f ? ' accent' : ''}`} onClick={() => setFont(f)}>{ui[`font_${f}`] || f}</button>
                 ))}
               </div>
             </div>
-          </div>
-          <div style={{ padding: '0 16px 16px' }}>
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={ui.placeholder}
-              maxLength={20}
-              style={{ width: '100%', padding: '10px 12px', fontFamily: 'var(--font-mono)', fontSize: 16, background: 'var(--surface)', color: 'var(--fg)', border: '1px solid var(--border)', borderRadius: 6, boxSizing: 'border-box' }}
-            />
-            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{ui.supportedChars}</div>
+            <div className="ascii-settings-row">
+              <label className="ascii-settings-label">{ui.theme || 'Theme'}</label>
+              <div className="ascii-theme-grid">
+                {THEMES.map((th) => (
+                  <button
+                    key={th.id}
+                    className={`ascii-theme-btn${themeId === th.id ? ' ascii-theme-active' : ''}`}
+                    onClick={() => setThemeId(th.id)}
+                    style={{ background: th.bg, color: th.fg, borderColor: themeId === th.id ? th.accent : 'var(--border)' }}
+                  >
+                    <span className="ascii-theme-preview" style={{ color: th.fg }}>Aa</span>
+                    <span className="ascii-theme-name">{ui[th.nameKey] || th.id}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="ascii-settings-row">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={ui.placeholder}
+                maxLength={20}
+                className="input-field"
+                style={{ fontFamily: 'var(--font-mono)', fontSize: 16 }}
+              />
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{ui.supportedChars}</div>
+            </div>
           </div>
         </div>
         <div className="tool-panel">
@@ -268,13 +447,15 @@ export default function AsciiArt() {
             {t('common.output')}
             {output && (
               <div className="panel-actions">
-                <button className="panel-btn" onClick={copy}>{t('common.copy')}</button>
+                <button className="panel-btn" onClick={copy}>{copied ? t('common.copied') : t('common.copy')}</button>
               </div>
             )}
           </div>
-          <pre style={{ padding: 16, margin: 0, fontFamily: 'var(--font-mono)', fontSize: 11, lineHeight: 1.2, color: output ? 'var(--fg)' : 'var(--muted)', overflow: 'auto', whiteSpace: 'pre' }}>
-            {output || t('common.waiting')}
-          </pre>
+          <div className="ascii-output" style={{ background: theme.bg }}>
+            <pre style={{ padding: 20, margin: 0, fontFamily: "'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace", fontSize: 14, lineHeight: 1.2, color: output ? theme.fg : 'var(--muted)', overflow: 'auto', whiteSpace: 'pre' }}>
+              {output || t('common.waiting')}
+            </pre>
+          </div>
         </div>
       </div>
       {help && <HelpSection title={help.title} features={help.features} usage={help.usage} params={help.params} />}
