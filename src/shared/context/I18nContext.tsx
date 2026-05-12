@@ -972,6 +972,84 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['12 chart types: Bar / H-Bar / Line / Area / Pie / Doughnut / Radar / Polar / Funnel / Word Cloud / Graph / Gantt', '8 color themes: Material / Vibrant / Pastel / Aurora / Nord / Sunset / Ocean / Neon', 'Table-based data editing with CSV/TSV paste import', 'Customizable title, legend position, grid lines, animation', 'One-click PNG export (3x HD)'], usage: ['Select a chart type, sample data loads automatically', 'Edit labels and values in the data table, or switch to CSV mode to paste data', 'Choose a color theme and adjust chart options', 'Click "Download PNG" to export the chart'] },
     },
   },
+  // ── slug ──
+  slug: {
+    name: { zh: '文本转 Slug', en: 'Text to Slug' },
+    desc: { zh: '将文本转换为 URL 友好的 slug 格式，支持多种分隔符和大小写选项', en: 'Convert text to URL-friendly slug with separator and case options' },
+    ui: {
+      zh: { placeholder: '输入要转换的文本…', separator: '分隔符', case: '大小写', case_lower: '小写', case_upper: '大写', case_title: '首字母大写', maxLength: '最大长度', trim: '去除首尾分隔符', removeStop: '去除停用词', variants: '变体', lowercase: '全小写', uppercase: '全大写', titleCase: '首字母大写', noStopWords: '去除停用词' },
+      en: { placeholder: 'Enter text to convert…', separator: 'Separator', case: 'Case', case_lower: 'Lower', case_upper: 'Upper', case_title: 'Title', maxLength: 'Max Length', trim: 'Trim', removeStop: 'Remove Stop Words', variants: 'Variants', lowercase: 'Lowercase', uppercase: 'Uppercase', titleCase: 'Title Case', noStopWords: 'No Stop Words' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持连字符、下划线、点号三种分隔符', '小写、大写、首字母大写三种大小写模式', '可选去除英文停用词（a, the, and 等）', '自定义最大长度，智能截断', '同时展示多种变体供选择'], usage: ['输入要转换的文本', '选择分隔符和大小写模式', '可选设置最大长度、去除停用词', '点击变体快速复制不同格式'] },
+      en: { title: 'Usage Guide', features: ['Supports hyphen, underscore, dot separators', 'Lower, upper, title case modes', 'Optional English stop word removal', 'Custom max length with smart truncation', 'Shows multiple variants at once'], usage: ['Enter text to convert', 'Choose separator and case mode', 'Optionally set max length, remove stop words', 'Click variants to copy different formats'] },
+    },
+  },
+  // ── mime ──
+  mime: {
+    name: { zh: 'MIME Type 查询', en: 'MIME Type Lookup' },
+    desc: { zh: '查询常见 MIME 类型及其文件扩展名', en: 'Look up common MIME types and file extensions' },
+    ui: {
+      zh: { placeholder: '搜索 MIME 类型、扩展名…', extension: '扩展名', category: '分类', all: '全部', types: '种类型' },
+      en: { placeholder: 'Search MIME type, extension…', extension: 'Extension', category: 'Category', all: 'All', types: 'types' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['收录 50+ 常见 MIME 类型', '按分类筛选：Text / Image / Audio / Video / Font / Data / Archive 等', '支持按类型名、扩展名、分类搜索', '点击行复制 MIME Type'], usage: ['输入关键词搜索', '点击分类标签筛选', '点击结果行复制 MIME Type'] },
+      en: { title: 'Usage Guide', features: ['50+ common MIME types', 'Filter by category: Text / Image / Audio / Video / Font / Data / Archive', 'Search by type name, extension, or category', 'Click row to copy MIME Type'], usage: ['Type to search', 'Click category tags to filter', 'Click result row to copy MIME Type'] },
+    },
+  },
+  // ── httpStatus ──
+  httpStatus: {
+    name: { zh: 'HTTP 状态码', en: 'HTTP Status Codes' },
+    desc: { zh: 'HTTP 状态码速查，含中英文说明和 RFC 引用', en: 'HTTP status code reference with bilingual descriptions and RFC links' },
+    ui: {
+      zh: { placeholder: '搜索状态码、描述…', all: '全部' },
+      en: { placeholder: 'Search status code, description…', all: 'All' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['涵盖 1xx-5xx 常用状态码', '中英文描述切换', '按类别筛选：1xx / 2xx / 3xx / 4xx / 5xx', '显示 RFC 规范引用', '点击卡片复制状态码'], usage: ['输入状态码或描述搜索', '点击分类标签筛选', '点击卡片复制状态码到剪贴板'] },
+      en: { title: 'Usage Guide', features: ['Covers 1xx-5xx common status codes', 'Bilingual descriptions (zh/en)', 'Filter by category: 1xx / 2xx / 3xx / 4xx / 5xx', 'Shows RFC spec references', 'Click card to copy status code'], usage: ['Search by code or description', 'Click category tags to filter', 'Click card to copy status code'] },
+    },
+  },
+  // ── ua ──
+  ua: {
+    name: { zh: 'UA 解析器', en: 'User Agent Parser' },
+    desc: { zh: '解析 User-Agent 字符串，识别浏览器、操作系统和设备类型', en: 'Parse User-Agent strings to identify browser, OS, and device type' },
+    ui: {
+      zh: { placeholder: '粘贴 User-Agent 字符串…', browser: '浏览器', os: '操作系统', device: '设备类型', engine: '渲染引擎', isMobile: '移动设备', isBot: '爬虫/Bot' },
+      en: { placeholder: 'Paste User-Agent string…', browser: 'Browser', os: 'OS', device: 'Device', engine: 'Engine', isMobile: 'Mobile', isBot: 'Bot' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['识别主流浏览器：Chrome / Firefox / Safari / Edge / Opera 等', '识别操作系统：Windows / macOS / iOS / Android / Linux', '识别设备类型：Desktop / Mobile / Tablet / Bot', '识别渲染引擎：WebKit / Gecko / Blink / Trident', '内置常用 UA 示例'], usage: ['粘贴 User-Agent 字符串', '自动解析并展示浏览器、系统、设备等信息'] },
+      en: { title: 'Usage Guide', features: ['Detects Chrome / Firefox / Safari / Edge / Opera and more', 'Detects Windows / macOS / iOS / Android / Linux', 'Detects device type: Desktop / Mobile / Tablet / Bot', 'Detects engine: WebKit / Gecko / Blink / Trident', 'Built-in common UA examples'], usage: ['Paste a User-Agent string', 'Auto-parses and displays browser, OS, device info'] },
+    },
+  },
+  // ── watermark ──
+  watermark: {
+    name: { zh: '图片水印', en: 'Image Watermark' },
+    desc: { zh: '为图片添加文字水印，支持位置、透明度、旋转和平铺', en: 'Add text watermarks to images with position, opacity, rotation, and tiling' },
+    ui: {
+      zh: { text: '水印文字', textPlaceholder: '输入水印文字…', fontSize: '字号', opacity: '透明度', rotation: '旋转角度', color: '颜色', position: '位置', download: '下载图片', dropHint: '拖拽图片到此处', selectFile: '选择图片' },
+      en: { text: 'Watermark Text', textPlaceholder: 'Enter watermark text…', fontSize: 'Font Size', opacity: 'Opacity', rotation: 'Rotation', color: 'Color', position: 'Position', download: 'Download', dropHint: 'Drag & drop image here', selectFile: 'Select Image' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['拖拽或选择图片上传', '自定义水印文字、字号、颜色', '调整透明度和旋转角度', '支持 6 种位置：左上 / 右上 / 居中 / 左下 / 右下 / 平铺', '纯前端处理，图片不上传服务器'], usage: ['拖拽图片或点击选择文件', '输入水印文字，调整样式参数', '选择水印位置（含平铺模式）', '预览效果后点击「下载图片」'] },
+      en: { title: 'Usage Guide', features: ['Drag & drop or select image', 'Customize text, font size, color', 'Adjust opacity and rotation', '6 positions: top-left / top-right / center / bottom-left / bottom-right / tile', 'Client-side processing, no upload'], usage: ['Drag image or click to select', 'Enter watermark text, adjust style', 'Choose position (including tile mode)', 'Preview and click "Download"'] },
+    },
+  },
+  // ── privacy ──
+  privacy: {
+    name: { zh: '隐私协议生成器', en: 'Privacy Policy Generator' },
+    desc: { zh: '一键生成 APP 隐私政策和服务条款，覆盖主流应用市场审核要求', en: 'Generate APP privacy policy and terms of service for major app store compliance' },
+    ui: {
+      zh: { tab_privacy: '隐私政策', tab_terms: '服务条款', tab_checklist: '合规检查', basicInfo: '基本信息', appName: '应用名称', appNamePlaceholder: '我的应用', companyName: '公司/开发者名称', companyNamePlaceholder: 'XX科技有限公司', contactEmail: '联系邮箱', contactAddress: '联系地址', website: '官方网站', effectiveDate: '生效日期', lastUpdatedDate: '最后更新日期', jurisdiction: '适用法律', dataCollection: '数据收集', thirdParty: '第三方服务', targetMarket: '目标市场', storePlatform: '应用商店', complianceScore: '合规评分', required: '必需', advancedSettings: '高级设置', dataRetention: '数据保留期限', retentionPlaceholder: '如：账号注销后 15 个工作日内删除', dpoContact: '个人信息保护负责人', dpoPlaceholder: '邮箱或电话', hasSubscription: '包含订阅/内购服务', hasAccountSystem: '包含用户账号系统', storageType: '数据存储方式', storageLocal: '纯本地存储', storageCloud: '云端/服务器存储', storageBoth: '混合存储（本地 + 云端）', d_clipboard: '剪贴板', d_adId: '广告标识符 (IDFA/GAID)', formatMarkdown: 'Markdown', formatHTML: 'HTML', downloadHTML: '下载 HTML', preview: '预览', fixAll: '一键修复全部', fixItem: '一键修复', suggestion: '修改建议', references: '参考资源', mustFix: '必须修复', recommended: '建议优化', manualAction: '需手动处理', notApplicable: '不适用', viewRef: '查看参考', refChina: '中国法规', refApple: 'Apple 审核', refGoogle: 'Google Play', refEU: '欧盟/美国', d_personal: '个人信息', d_location: '位置信息', d_deviceId: '设备标识', d_contacts: '通讯录', d_photos: '相册/存储', d_camera: '相机', d_microphone: '麦克风', d_health: '健康数据', d_financial: '财务信息', d_browsing: '浏览记录', d_cookies: 'Cookie', t_analytics: '数据分析', t_ads: '广告', t_payment: '支付', t_social: '社交登录', t_cloud: '云存储', t_push: '推送通知', m_china: '中国大陆', m_eu: '欧盟 (GDPR)', m_us: '美国', m_children: '面向儿童', s_appstore: 'Apple App Store', s_googleplay: 'Google Play', s_huawei: '华为应用市场', s_xiaomi: '小米应用商店', s_oppo: 'OPPO 软件商店', s_vivo: 'vivo 应用商店' },
+      en: { tab_privacy: 'Privacy Policy', tab_terms: 'Terms of Service', tab_checklist: 'Compliance', basicInfo: 'Basic Info', appName: 'App Name', appNamePlaceholder: 'My App', companyName: 'Company/Developer', companyNamePlaceholder: 'Example Inc.', contactEmail: 'Contact Email', contactAddress: 'Contact Address', website: 'Website', effectiveDate: 'Effective Date', lastUpdatedDate: 'Last Updated Date', jurisdiction: 'Jurisdiction', dataCollection: 'Data Collection', thirdParty: 'Third-Party Services', targetMarket: 'Target Market', storePlatform: 'Store Platform', complianceScore: 'Compliance Score', required: 'Required', advancedSettings: 'Advanced', dataRetention: 'Data Retention Period', retentionPlaceholder: 'e.g., Within 15 business days after account deletion', dpoContact: 'Data Protection Officer', dpoPlaceholder: 'Email or phone', hasSubscription: 'Has subscription / IAP', hasAccountSystem: 'Has user account system', storageType: 'Data Storage', storageLocal: 'Local only', storageCloud: 'Cloud / Server', storageBoth: 'Hybrid (local + cloud)', d_clipboard: 'Clipboard', d_adId: 'Advertising ID (IDFA/GAID)', formatMarkdown: 'Markdown', formatHTML: 'HTML', downloadHTML: 'Download HTML', preview: 'Preview', fixAll: 'Fix All', fixItem: 'Fix', suggestion: 'Suggestion', references: 'References', mustFix: 'Must Fix', recommended: 'Recommended', manualAction: 'Manual Action', notApplicable: 'N/A', viewRef: 'View', refChina: 'China Laws', refApple: 'Apple Review', refGoogle: 'Google Play', refEU: 'EU / US', d_personal: 'Personal Info', d_location: 'Location', d_deviceId: 'Device ID', d_contacts: 'Contacts', d_photos: 'Photos/Storage', d_camera: 'Camera', d_microphone: 'Microphone', d_health: 'Health Data', d_financial: 'Financial', d_browsing: 'Browsing', d_cookies: 'Cookies', t_analytics: 'Analytics', t_ads: 'Advertising', t_payment: 'Payment', t_social: 'Social Login', t_cloud: 'Cloud Storage', t_push: 'Push Notifications', m_china: 'China', m_eu: 'EU (GDPR)', m_us: 'United States', m_children: 'Children', s_appstore: 'Apple App Store', s_googleplay: 'Google Play', s_huawei: 'Huawei AppGallery', s_xiaomi: 'Xiaomi GetApps', s_oppo: 'OPPO Store', s_vivo: 'vivo Store' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['一键生成符合主流应用市场审核要求的隐私政策', '一键生成服务条款文档（含订阅/内购条款）', '内置合规检查清单，覆盖 Apple App Store / Google Play / 中国应用市场 / GDPR / COPPA', '支持中英文双语输出', '支持导出 Markdown 和 HTML 文件', '覆盖数据收集、第三方服务、目标市场等关键配置', '符合中国《个人信息保护法》和 PIPL 要求'], usage: ['填写应用基本信息（名称、公司、联系方式等）', '勾选应用收集的数据类型', '勾选使用的第三方服务', '选择目标市场和应用商店', '切换到隐私政策或服务条款标签页查看生成结果', '切换到合规检查标签页查看审核要点', '选择输出格式（Markdown/HTML），点击下载'] },
+      en: { title: 'Usage Guide', features: ['One-click privacy policy generation for major app stores', 'One-click terms of service with subscription/IAP clauses', 'Built-in compliance checklist for Apple App Store / Google Play / Chinese stores / GDPR / COPPA', 'Bilingual output (Chinese/English)', 'Markdown & HTML export', 'Covers data collection, third-party services, target markets', 'PIPL (China) compliant'], usage: ['Fill in basic app info (name, company, contact)', 'Check data types your app collects', 'Check third-party services you use', 'Select target markets and app stores', 'Switch to Privacy Policy or Terms tab to preview', 'Switch to Compliance tab to review requirements', 'Choose format (Markdown/HTML), click download'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';
