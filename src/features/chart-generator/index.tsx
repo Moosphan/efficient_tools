@@ -235,6 +235,8 @@ function buildOption(chartType: ChartType, table: string[][], theme: ChartTheme,
       radar: {
         indicator,
         shape: 'polygon',
+        center: ['50%', opts.showTitle ? '62%' : '55%'],
+        radius: '65%',
         axisName: { color: theme.text, fontSize: 12 },
         splitArea: { areaStyle: { color: [theme.bg, theme.bg] } },
         splitLine: { lineStyle: { color: theme.grid } },
