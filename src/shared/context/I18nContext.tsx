@@ -1050,6 +1050,32 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['One-click privacy policy generation for major app stores', 'One-click terms of service with subscription/IAP clauses', 'Built-in compliance checklist for Apple App Store / Google Play / Chinese stores / GDPR / COPPA', 'Bilingual output (Chinese/English)', 'Markdown & HTML export', 'Covers data collection, third-party services, target markets', 'PIPL (China) compliant'], usage: ['Fill in basic app info (name, company, contact)', 'Check data types your app collects', 'Check third-party services you use', 'Select target markets and app stores', 'Switch to Privacy Policy or Terms tab to preview', 'Switch to Compliance tab to review requirements', 'Choose format (Markdown/HTML), click download'] },
     },
   },
+  // ── license ──
+  license: {
+    name: { zh: '开源许可证生成器', en: 'Open Source License Generator' },
+    desc: { zh: '一键生成开源许可证文件，支持 MIT、Apache、GPL 等 10 种常见协议，含适用场景和真实案例', en: 'Generate open source license files with 10 common licenses, usage scenarios and real-world examples' },
+    ui: {
+      zh: { selectLicense: '选择许可证', authorName: '作者/组织名称', authorPlaceholder: '你的名字或组织名', year: '年份', licenseText: '许可证文本', licenseInfo: '许可证信息', downloadLicense: '下载 LICENSE', permissions: '允许', limitations: '限制', conditions: '条件', bestFor: '适用场景', examples: '使用该协议的项目' },
+      en: { selectLicense: 'Select License', authorName: 'Author / Organization', authorPlaceholder: 'Your name or org', year: 'Year', licenseText: 'License Text', licenseInfo: 'License Info', downloadLicense: 'Download LICENSE', permissions: 'Permissions', limitations: 'Limitations', conditions: 'Conditions', bestFor: 'Best For', examples: 'Projects Using This License' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 MIT、Apache 2.0、GPL 3.0、LGPL 3.0、BSD 2-Clause、BSD 3-Clause、MPL 2.0、AGPL 3.0、ISC、Unlicense 共 10 种协议', '每种协议包含权限、限制、条件、适用场景和真实项目案例', '自动替换作者名称和年份', '支持复制和下载为 LICENSE 文件', '帮助开发者选择最适合自己项目的开源协议'], usage: ['选择一种开源许可证', '填写作者/组织名称和年份', '查看许可证信息了解协议特点', '切换到许可证文本标签页查看生成结果', '点击「下载 LICENSE」导出文件'] },
+      en: { title: 'Usage Guide', features: ['Supports 10 licenses: MIT, Apache 2.0, GPL 3.0, LGPL 3.0, BSD 2-Clause, BSD 3-Clause, MPL 2.0, AGPL 3.0, ISC, Unlicense', 'Each license includes permissions, limitations, conditions, use cases, and real project examples', 'Auto-replaces author name and year', 'Copy and download as LICENSE file', 'Helps developers choose the right license for their project'], usage: ['Select an open source license', 'Fill in author/organization name and year', 'View license info to understand the terms', 'Switch to License Text tab to preview', 'Click "Download LICENSE" to export'] },
+    },
+  },
+  // ── spinWheel ──
+  spinWheel: {
+    name: { zh: '随机转盘', en: 'Spin the Wheel' },
+    desc: { zh: '炫酷随机转盘，支持自定义主题和选项，帮你做随机决策', en: 'Stylish spinning wheel with custom themes and options for random decisions' },
+    ui: {
+      zh: { theme: '主题', spinDuration: '旋转时长', segments: '选项', edit: '编辑', done: '完成', addSegment: '添加选项', remove: '删除', customColor: '自定义颜色', clickToSpin: '点击转盘开始', result: '结果', spinAgain: '再来一次' },
+      en: { theme: 'Theme', spinDuration: 'Duration', segments: 'Segments', edit: 'Edit', done: 'Done', addSegment: 'Add Segment', remove: 'Remove', customColor: 'Custom Color', clickToSpin: 'Click to Spin', result: 'Result', spinAgain: 'Spin Again' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['6 种炫酷主题：霓虹、日落、海洋、森林、糖果、极简', '支持 2-12 个自定义选项', '可自定义每个选项的颜色', '可调节旋转时长（2-8 秒）', 'Canvas 高性能渲染，流畅动画'], usage: ['选择一个主题风格', '点击编辑按钮自定义选项内容和颜色', '调节旋转时长', '点击转盘或中心按钮开始旋转', '等待结果展示'] },
+      en: { title: 'Usage Guide', features: ['6 stunning themes: Neon, Sunset, Ocean, Forest, Candy, Minimal', 'Support 2-12 custom segments', 'Custom color per segment', 'Adjustable spin duration (2-8 seconds)', 'Canvas high-performance rendering'], usage: ['Choose a theme', 'Click Edit to customize segments and colors', 'Adjust spin duration', 'Click the wheel to spin', 'Wait for the result'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

@@ -790,6 +790,30 @@ export const tools: ToolMeta[] = [
     keywords: ['privacy', 'policy', 'terms', '隐私', '协议', '服务条款', '审核', 'app store'],
     status: '可用',
   },
+  {
+    id: 'license',
+    name: '开源许可证生成器',
+    description: '一键生成开源许可证文件，支持 MIT、Apache、GPL 等 10 种常见协议',
+    icon: '⚖️',
+    iconClass: 'icon-cyan',
+    category: '开发',
+    path: '/license',
+    component: () => import('./features/license-generator'),
+    keywords: ['license', 'mit', 'apache', 'gpl', '开源', '许可证', '协议', 'open source'],
+    status: '可用',
+  },
+  {
+    id: 'spinWheel',
+    name: '随机转盘',
+    description: '炫酷随机转盘，支持自定义主题和选项，帮你做随机决策',
+    icon: '🎡',
+    iconClass: 'icon-amber',
+    category: '其他',
+    path: '/spin-wheel',
+    component: () => import('./features/spin-wheel'),
+    keywords: ['spin', 'wheel', 'random', '转盘', '随机', '决策', '抽奖'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
