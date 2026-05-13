@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { ToolShell } from '../../shell/ToolShell';
 import { useI18n, useToolI18n } from '../../shared/context/I18nContext';
+import { HelpSection } from '../../shared/components/HelpSection';
 import { useTOTP } from './hooks/useTOTP';
 import { useImport } from './hooks/useImport';
 import { formatCode } from './utils/format';
@@ -15,21 +16,74 @@ export default function TotpTool() {
   const [currentEntry, setCurrentEntry] = useState<TotpEntry | null>(null);
   const [secretInput, setSecretInput] = useState('');
   const [inputError, setInputError] = useState('');
-  const { parseInput } = useImport();
+  const [scanning, setScanning] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { parseInput, parseQrImage } = useImport();
+
+  const addEntry = useCallback((entry: TotpEntry) => {
+    setEntries((prev) => [entry, ...prev]);
+    setCurrentEntry(entry);
+    setSecretInput('');
+    setInputError('');
+  }, []);
 
   const handleGenerate = () => {
     const raw = secretInput.trim();
     if (!raw) return;
     setInputError('');
     try {
-      const entry = parseInput(raw);
-      setEntries((prev) => [entry, ...prev]);
-      setCurrentEntry(entry);
-      setSecretInput('');
+      addEntry(parseInput(raw));
     } catch (err) {
       setInputError(err instanceof Error ? err.message : 'Invalid input');
     }
   };
+
+  const handleQrFile = useCallback(async (file: File) => {
+    setScanning(true);
+    setInputError('');
+    try {
+      const decoded = await parseQrImage(file);
+      const entry = parseInput(decoded);
+      addEntry(entry);
+    } catch (err) {
+      setInputError(err instanceof Error ? err.message : 'Failed to decode QR code');
+    } finally {
+      setScanning(false);
+    }
+  }, [parseQrImage, parseInput, addEntry]);
+
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleQrFile(file);
+    e.target.value = '';
+  }, [handleQrFile]);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) handleQrFile(file);
+  }, [handleQrFile]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => setDragOver(false), []);
+
+  const handlePaste = useCallback((e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) handleQrFile(file);
+        break;
+      }
+    }
+  }, [handleQrFile]);
 
   return (
     <ToolShell title={name} description={desc}>
@@ -38,17 +92,52 @@ export default function TotpTool() {
           <div className="panel-header">
             {ui.secretKey || 'Secret'}
           </div>
+
+          {/* Text input */}
           <div className="totp-input-row">
             <input
               type="text"
               value={secretInput}
               onChange={(e) => { setSecretInput(e.target.value); if (inputError) setInputError(''); }}
               onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+              onPaste={handlePaste}
               placeholder={ui.placeholder || 'JBSWY3DPEHPK3PXP or otpauth://totp/...'}
               className="totp-input"
             />
-            <button className="panel-btn accent" onClick={handleGenerate}>{t('common.generate')}</button>
+            <button className="panel-btn accent" onClick={handleGenerate} disabled={scanning}>{t('common.generate')}</button>
           </div>
+
+          {/* Divider */}
+          <div className="totp-divider">
+            <span>{ui.orText || 'OR'}</span>
+          </div>
+
+          {/* QR import: drag-drop zone */}
+          <div
+            className={`totp-qr-zone${dragOver ? ' totp-qr-zone-active' : ''}${scanning ? ' totp-qr-scanning' : ''}`}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileInput}
+              style={{ display: 'none' }}
+            />
+            {scanning ? (
+              <span className="totp-qr-text">{ui.scanning || 'Scanning QR code...'}</span>
+            ) : (
+              <>
+                <span className="totp-qr-icon">📷</span>
+                <span className="totp-qr-text">{ui.importQr || 'Import from QR code image'}</span>
+                <span className="totp-qr-hint">{ui.qrHint || 'Drop image, click to select, or paste (Ctrl+V)'}</span>
+              </>
+            )}
+          </div>
+
           {inputError && <div className="error-msg">{inputError}</div>}
           {currentEntry && <TotpDisplay entry={currentEntry} ui={ui} />}
           {entries.length > 1 && (
@@ -128,6 +217,22 @@ export default function TotpTool() {
           </div>
         </div>
       </div>
+      {help && (
+        <HelpSection title={ui.conceptTitle || 'Concepts'}>
+          <div className="tool-help-card totp-explain">
+            <h4>{ui.whatIs2fa || 'What is 2FA?'}</h4>
+            <p>{ui.whatIs2faDesc || 'Two-Factor Authentication (2FA) adds a second layer of security beyond your password. Even if someone steals your password, they cannot access your account without the time-based verification code.'}</p>
+            <h4>{ui.howItWorks || 'How TOTP Works'}</h4>
+            <ol className="totp-explain-steps">
+              <li><strong>{ui.howStep1 || 'Shared Secret'}</strong> — {ui.howStep1Desc || 'When you enable 2FA, the service generates a unique secret key shared between you and the server.'}</li>
+              <li><strong>{ui.howStep2 || 'Time-Based Code'}</strong> — {ui.howStep2Desc || 'Both your device and the server independently compute a 6-digit code using the secret key + current time (RFC 6238).'}</li>
+              <li><strong>{ui.howStep3 || '30-Second Window'}</strong> — {ui.howStep3Desc || 'The code changes every 30 seconds. Both sides must agree on the current time (UTC).'}</li>
+              <li><strong>{ui.howStep4 || 'Verification'}</strong> — {ui.howStep4Desc || 'You enter the code shown on your device. The server computes its own code and compares — if they match, access is granted.'}</li>
+            </ol>
+            <p className="totp-explain-note">{ui.securityNote || 'Your secret key never leaves your browser. All computation happens locally using the Web Crypto API.'}</p>
+          </div>
+        </HelpSection>
+      )}
     </ToolShell>
   );
 }

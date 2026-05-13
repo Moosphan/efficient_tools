@@ -1,106 +1,94 @@
 <p align="center">
-  <h1 align="center">⚡ Efficient Tools</h1>
-  <p align="center">面向开发者的一站式效率工具集合</p>
+  <br/>
+  <img src="./public/favicon.svg" width="64" alt="logo" />
+  <h1 align="center">Efficient Tools</h1>
+  <p align="center">A privacy-first, open-source developer toolkit that runs entirely in your browser.</p>
   <p align="center">
-    <img src="https://img.shields.io/badge/工具数-53+-blue?style=flat-square" alt="tools" />
-    <img src="https://img.shields.io/badge/外部依赖-0-brightgreen?style=flat-square" alt="deps" />
-    <img src="https://img.shields.io/badge/数据-纯本地-ff69b4?style=flat-square" alt="privacy" />
-    <img src="https://img.shields.io/badge/协议-CC--BY--NC--SA--4.0-orange?style=flat-square" alt="license" />
+    <img src="https://img.shields.io/badge/tools-60+-blue?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTkgMTJsMyAzIDMtMyIvPjxwYXRoIGQ9Im0xMiA2LTMgMy0zLTMiLz48L3N2Zz4=" />
+    <img src="https://img.shields.io/badge/privacy-local%20only-22c55e?style=flat-square" />
+    <img src="https://img.shields.io/badge/ads-none-22c55e?style=flat-square" />
+    <img src="https://img.shields.io/badge/license-CC--BY--NC--SA--4.0-orange?style=flat-square" />
+    <img src="https://img.shields.io/badge/i18n-zh%20%7C%20en-blue?style=flat-square" />
+  </p>
+  <p align="center">
+    <a href="./README.zh.md">中文文档</a>
   </p>
 </p>
 
-> **所有工具纯浏览器运行，数据不出设备。** 一站式汇集日常开发中最常用的编解码、格式化、文本处理、安全加密、网络调试等工具，零广告、响应式、中英双语。
->
-> **[English](./README.en.md)**
+<br/>
 
----
+**All data processing happens locally in your browser. Nothing is sent to any server.** 60+ tools for encoding, formatting, text processing, security, networking, and more — zero ads, zero tracking, fully responsive, bilingual (Chinese / English).
 
-## 核心特性
+## Highlights
 
-- **🛡️ 隐私优先** — 所有数据处理在浏览器本地完成，不上传任何输入至服务器
-- **🚫 零广告零追踪** — 干净极简界面，专注工具本身
-- **🌍 中英双语** — 自动检测时区选择语言，一键切换，全部工具页面完整适配
-- **📱 响应式设计** — 完美适配桌面端和移动端
-- **⚡ 轻量秒开** — 纯前端构建，无后端依赖，首次加载即开即用
-- **🔓 开源透明** — 代码完全开源，欢迎社区贡献
+- **Privacy-first** — every tool runs client-side; your data never leaves the device
+- **Zero ads, zero trackers** — clean UI focused on productivity
+- **60+ tools** — encoding, formatting, text, security, network, dev utilities, image, generators
+- **Bilingual** — full Chinese and English support, auto-detected by timezone
+- **Responsive** — works on desktop and mobile
+- **Lightweight** — pure frontend, no backend, code-split per tool
 
----
-
-## 工具总览
-
-| 分类 | 数量 | 包含工具 |
-|------|------|---------|
-| 编码/解码 | 7 | Base64/Base32、URL、Unicode、Hex、HTML Entity、二维码、条形码 |
-| 格式化/转换 | 14 | JSON、YAML、TOML、XML、SQL、GraphQL、JSON Schema、CSV、时间戳、进制、单位等 |
-| 文本处理 | 11 | 正则验证器、Diff 对比、Markdown、文本编辑工具箱、文本统计、Emoji、Lorem 等 |
-| 安全/加密 | 7 | JWT、2FA、密码生成器、Hash、HMAC、X.509、文本加解密 |
-| 开发调试 | 14 | UUID、Cron、日志分析、Token 计数、TS 类型生成、Mock API、DNS/WHOIS/IP 查询等 |
-| 系统工具 | 1 | ADB 自动化 |
-
----
-
-## 快速开始
+## Quick Start
 
 ```bash
 git clone https://github.com/moosphon/efficient-tools.git
 cd efficient-tools
 npm install
-npm run dev          # 启动开发服务器
-npm run build        # 构建生产版本
+npm run dev
 ```
 
----
+## Tools
 
-## 项目结构
+| Category | Tools |
+|----------|-------|
+| **Encoding / Decoding** | Base64, URL, Unicode, Hex, HTML Entity, QR Code, Barcode |
+| **Formatting** | JSON, YAML, TOML, XML, SQL, GraphQL, JSON Schema, CSV |
+| **Text** | Regex Tester, Text Diff, Markdown Preview, Text Toolkit, Emoji, Lorem, ASCII Art |
+| **Security** | JWT Decoder, 2FA (TOTP), Password Generator, Hash, HMAC, X.509, Cipher |
+| **Developer** | UUID, Cron Parser, Log Analyzer, Token Counter, TypeScript Type Gen, Mock API, Color, DNS, WHOIS, IP |
+| **Generators** | Privacy Policy, Open Source License, Spin Wheel, Chart, RSS |
+| **Image** | QR Code, Barcode, Favicon, Watermark |
+| **Network** | HTTP Status, MIME Lookup, UA Parser, DNS Lookup, WHOIS, IP Geolocation |
+| **Other** | World Clock, Travel Planner, Unit Converter, ADB |
+
+## Architecture
 
 ```
 src/
-├── features/              # 53 个工具（每个工具独立目录）
+├── features/              # One directory per tool (lazy-loaded)
 ├── shared/
-│   ├── context/           # I18nContext — 中英双语国际化
-│   └── components/        # HelpSection 等共享组件
-├── shell/                 # Layout、HomePage、ToolShell
-├── styles/                # 全局样式
-├── registry.ts            # 工具注册表
-└── App.tsx                # 路由入口
+│   ├── context/           # I18nContext — bilingual i18n system
+│   ├── components/        # Shared UI components
+│   └── hooks/             # Shared hooks
+├── shell/                 # Layout, HomePage, ToolShell
+├── styles/                # Global CSS (OKLch color system)
+├── registry.ts            # Tool registry (auto-generates routes)
+└── App.tsx                # Router entry (HashRouter)
 ```
 
----
+Each tool is a self-contained module under `src/features/` with its own `index.tsx`. Tools are registered in `registry.ts` and automatically get a route via lazy import.
 
-## 国际化
+## Tech Stack
 
-所有 53 个工具页面均支持中英文完整切换：
+- **React 19** + **TypeScript** + **Vite**
+- **React Router DOM 7** (HashRouter)
+- **Pure CSS** with OKLch color system — no Tailwind, no CSS-in-JS
+- Zero backend dependencies
 
-- 首次访问自动根据浏览器时区选择语言
-- 导航栏一键切换中/英文
-- 标题、按钮、占位符、帮助说明、参数说明全部双语
-- Cron 表达式、时间戳等工具会根据语言切换输出格式
+## Contributing
 
----
+1. Fork the repo
+2. Create a branch: `git checkout -b feat/my-tool`
+3. Add your tool under `src/features/your-tool/`
+4. Follow the existing pattern:
+   - Wrap with `ToolShell`
+   - Use `useI18n` / `useToolI18n` for i18n
+   - Add `HelpSection` with features and usage
+   - Register in `src/registry.ts`
+   - Add translations in `src/shared/context/I18nContext.tsx`
+   - Add styles in `src/styles/components.css`
+5. Submit a PR
 
-## 路线图
+## License
 
-- [ ] 工具组合 — 串联多个工具（如 Base64 解码 → JSON 格式化 → JSONPath 查询）
-- [ ] PWA 离线支持 — 完全离线可用
-- [ ] 暗色/亮色主题切换
-- [ ] 收藏夹 — 常用工具快速访问
-- [ ] 更多工具需求分析 → [TOOLS_ANALYSIS.md](./TOOLS_ANALYSIS.md)
-
----
-
-## 贡献
-
-欢迎贡献新工具或改进现有功能。
-
-1. Fork 本项目
-2. 创建功能分支：`git checkout -b feat/my-tool`
-3. 提交更改：`git commit -m 'feat: add my-tool'`
-4. 推送并创建 Pull Request
-
-> 新增工具请遵循现有目录结构，确保集成 i18n（中英双语）和 HelpSection 帮助说明。
-
----
-
-## 许可证
-
-[CC BY-NC-SA 4.0](./LICENSE) — 署名-非商业性使用-相同方式共享
+[CC BY-NC-SA 4.0](./LICENSE)
