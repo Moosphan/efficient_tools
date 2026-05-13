@@ -1089,6 +1089,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Draws characters from Four Books, Five Classics, Tang poetry, Song lyrics', 'References historical figures\' naming traditions', 'Each name includes source attribution and meaning explanation', '4 styles: Elegant, Grand, Poetic, Classic', 'Customizable surname and gender preference'], usage: ['Enter a surname (default: 张)', 'Select gender preference', 'Choose a name style', 'Set the number of names to generate', 'Click "Generate Names" to see results'] },
     },
   },
+  // ── currency ──
+  currency: {
+    name: { zh: '货币汇率换算', en: 'Currency Converter' },
+    desc: { zh: '实时汇率查询与货币换算，覆盖全球主要货币，支持发票标准写法', en: 'Real-time exchange rates for major global currencies with invoice-ready names' },
+    ui: {
+      zh: { amount: '金额', from: '从', to: '到', swap: '互换', loading: '加载汇率中...', lastUpdate: '数据更新时间', nextUpdate: '下次更新', refresh: '刷新', popularRates: '全部汇率', searchCurrency: '搜索货币（代码/中文名）...', noResults: '无匹配结果', formalName: '正式写法 (Invoice)' },
+      en: { amount: 'Amount', from: 'From', to: 'To', swap: 'Swap', loading: 'Loading rates...', lastUpdate: 'Last Updated', nextUpdate: 'Next Update', refresh: 'Refresh', popularRates: 'All Rates', searchCurrency: 'Search by code or name...', noResults: 'No results', formalName: 'Formal Name (Invoice)' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持全球 30 种主要货币实时换算', '数据来自欧洲央行 (ECB)，每 30 分钟自动刷新', '热门货币快捷选择，支持搜索', '显示正向和反向汇率', '提供发票/单据标准货币写法'], usage: ['输入金额', '选择源货币和目标货币', '查看实时换算结果', '点击热门汇率表可快速切换目标货币', '查看发票标准写法用于单据填写'] },
+      en: { title: 'Usage Guide', features: ['Real-time conversion for 30 major global currencies', 'Data from ECB, auto-refreshes every 30 minutes', 'Quick-select popular currencies with search', 'Shows both forward and reverse rates', 'Invoice-ready formal currency names'], usage: ['Enter amount', 'Select source and target currencies', 'View real-time conversion result', 'Click popular rates table to quick-switch target', 'Use invoice format for official documents'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

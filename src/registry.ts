@@ -826,6 +826,18 @@ export const tools: ToolMeta[] = [
     keywords: ['name', 'generator', '起名', '取名', '四书五经', '诗词', '古典', '文化'],
     status: '可用',
   },
+  {
+    id: 'currency',
+    name: '货币汇率换算',
+    description: '实时汇率查询与货币换算，支持 166 种货币，每 30 分钟自动刷新',
+    icon: '💱',
+    iconClass: 'icon-green',
+    category: '其他',
+    path: '/currency',
+    component: () => import('./features/currency-converter'),
+    keywords: ['currency', 'exchange', 'rate', '货币', '汇率', '换算', '美元', '欧元', '人民币'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
