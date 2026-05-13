@@ -4625,6 +4625,185 @@ a.rss-item-title:hover {
   }
 }
 
+/* ── Name Generator ── */
+
+.ng-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 16px;
+  min-height: 500px;
+}
+
+.ng-config {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ng-section {
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.ng-section + .ng-section {
+  margin-top: 8px;
+}
+
+.ng-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.ng-btn-group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ng-generate-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ng-sources {
+  margin-top: 8px;
+}
+
+.ng-source-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ng-source-tag {
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* Results */
+
+.ng-results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  max-height: 75vh;
+}
+
+.ng-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 300px;
+  color: var(--muted);
+}
+
+.ng-empty-icon {
+  font-size: 48px;
+  opacity: 0.4;
+}
+
+.ng-empty-text {
+  font-size: 14px;
+}
+
+.ng-card {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s;
+}
+
+.ng-card:hover {
+  border-color: var(--accent);
+}
+
+.ng-card-name {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--fg);
+  text-align: center;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  font-family: var(--font-sans);
+}
+
+.ng-card-chars {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.ng-char-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+}
+
+.ng-card-explain {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--fg);
+}
+
+.ng-card-explain p {
+  margin: 0 0 6px;
+}
+
+.ng-card-explain p:empty {
+  display: none;
+}
+
+.ng-card-figure {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .ng-layout {
+    grid-template-columns: 1fr;
+  }
+  .ng-config {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ng-config .ng-section {
+    flex: 1;
+    min-width: 140px;
+  }
+  .ng-generate-btn {
+    min-width: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .ua-fields {
     grid-template-columns: 1fr;

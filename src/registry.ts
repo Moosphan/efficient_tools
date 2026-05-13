@@ -814,6 +814,18 @@ export const tools: ToolMeta[] = [
     keywords: ['spin', 'wheel', 'random', '转盘', '随机', '决策', '抽奖'],
     status: '可用',
   },
+  {
+    id: 'nameGen',
+    name: '起名神器',
+    description: '基于四书五经、诗词典故和历史人物字号，智能生成有文化内涵的名字',
+    icon: '📜',
+    iconClass: 'icon-amber',
+    category: '其他',
+    path: '/name-generator',
+    component: () => import('./features/name-generator'),
+    keywords: ['name', 'generator', '起名', '取名', '四书五经', '诗词', '古典', '文化'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [

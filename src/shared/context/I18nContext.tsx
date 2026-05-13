@@ -1076,6 +1076,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['6 stunning themes: Neon, Sunset, Ocean, Forest, Candy, Minimal', 'Support 2-12 custom segments', 'Custom color per segment', 'Adjustable spin duration (2-8 seconds)', 'Canvas high-performance rendering'], usage: ['Choose a theme', 'Click Edit to customize segments and colors', 'Adjust spin duration', 'Click the wheel to spin', 'Wait for the result'] },
     },
   },
+  // ── nameGen ──
+  nameGen: {
+    name: { zh: '起名神器', en: 'Chinese Name Generator' },
+    desc: { zh: '基于四书五经、诗词典故和历史人物字号，智能生成有文化内涵的名字', en: 'Generate culturally rich Chinese names from classical literature, poetry, and historical figures' },
+    ui: {
+      zh: { surname: '姓氏', surnamePlaceholder: '如：张、李、王', gender: '性别', style: '风格', count: '生成数量', nameLen: '名字字数', generate: '生成名字', sources: '典籍来源', emptyHint: '设置参数后点击「生成名字」', refFigure: '历史人物' },
+      en: { surname: 'Surname', surnamePlaceholder: 'e.g. 张, 李, 王', gender: 'Gender', style: 'Style', count: 'Count', nameLen: 'Given Name Length', generate: 'Generate Names', sources: 'Source Texts', emptyHint: 'Configure options and click Generate', refFigure: 'Historical Figure' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['从四书五经、唐诗宋词中取字', '参考历史人物字号命名传统', '每个名字附带典故出处和寓意解释', '支持文雅、大气、诗意、古朴四种风格', '可指定姓氏和性别偏好'], usage: ['输入姓氏（默认为"张"）', '选择性别偏好', '选择名字风格', '设置生成数量', '点击「生成名字」查看结果'] },
+      en: { title: 'Usage Guide', features: ['Draws characters from Four Books, Five Classics, Tang poetry, Song lyrics', 'References historical figures\' naming traditions', 'Each name includes source attribution and meaning explanation', '4 styles: Elegant, Grand, Poetic, Classic', 'Customizable surname and gender preference'], usage: ['Enter a surname (default: 张)', 'Select gender preference', 'Choose a name style', 'Set the number of names to generate', 'Click "Generate Names" to see results'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';
