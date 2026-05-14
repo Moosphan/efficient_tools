@@ -850,6 +850,18 @@ export const tools: ToolMeta[] = [
     keywords: ['disease', 'outbreak', 'who', '传染病', '疫情', '追踪', '预防', 'covid', '流感'],
     status: '可用',
   },
+  {
+    id: 'websiteScreenshot',
+    name: '网站截屏',
+    description: '输入 URL 生成网页截图，支持主题背景和设备框架',
+    icon: '📸',
+    iconClass: 'icon-cyan',
+    category: '图片',
+    path: '/website-screenshot',
+    component: () => import('./features/website-screenshot'),
+    keywords: ['screenshot', 'website', 'url', '截屏', '截图', '网页', 'capture', 'screen'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [

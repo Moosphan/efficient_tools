@@ -1115,6 +1115,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Real-time WHO Disease Outbreak News', 'COVID-19 global statistics', 'WHO latest health news', '6 disease encyclopedia entries (symptoms + prevention)', 'Preparation checklist with checkboxes', 'Data cached for 30 minutes'], usage: ['Check WHO outbreak news for latest developments', 'Click "View Info" on outbreak items for disease details', 'Select a disease from the encyclopedia', 'Expand preparation checklist and check off items', 'Click refresh for latest data'] },
     },
   },
+  // ── website screenshot ──
+  websiteScreenshot: {
+    name: { zh: '网站截屏', en: 'Website Screenshot' },
+    desc: { zh: '输入 URL 生成网页截图，支持多设备尺寸、主题背景和设备框架', en: 'Generate website screenshots with multiple device sizes, themed backgrounds and device frames' },
+    ui: {
+      zh: { url: '网址', urlPlaceholder: '输入网站 URL...', capture: '截取', capturing: '截取中...', device: '设备', screenshotType: '截图类型', viewport: '视口', fullpage: '全页', frame: '设备框架', background: '背景', style: '样式', padding: '内边距', borderRadius: '圆角', shadow: '阴影', export: '导出', quality: '质量', download: '下载', emptyText: '输入网址并点击截取，生成网页截图' },
+      en: { url: 'URL', urlPlaceholder: 'Enter website URL...', capture: 'Capture', capturing: 'Capturing...', device: 'Device', screenshotType: 'Screenshot Type', viewport: 'Viewport', fullpage: 'Full Page', frame: 'Frame', background: 'Background', style: 'Style', padding: 'Padding', borderRadius: 'Border Radius', shadow: 'Shadow', export: 'Export', quality: 'Quality', download: 'Download', emptyText: 'Enter a URL and click Capture to generate a screenshot' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持桌面/平板/手机三种设备尺寸', '全页截图或视口截图', '5 种设备框架：MacBook、iPhone、iPad、浏览器、无', '6 种背景样式：渐变、模糊背景', '可调节内边距、圆角、阴影', '支持 PNG/JPEG 导出，JPEG 可调质量'], usage: ['输入网站 URL', '选择设备尺寸和截图类型', '选择设备框架和背景样式', '调整样式参数', '点击截取按钮生成截图', '点击下载按钮导出图片'] },
+      en: { title: 'Usage Guide', features: ['Support desktop/tablet/mobile device sizes', 'Full page or viewport screenshot', '5 frame styles: MacBook, iPhone, iPad, browser, none', '6 background styles: gradients, blur background', 'Adjustable padding, border radius, shadow', 'PNG/JPEG export with adjustable quality'], usage: ['Enter website URL', 'Select device size and screenshot type', 'Choose frame and background styles', 'Adjust style parameters', 'Click Capture to generate screenshot', 'Click Download to export image'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';
