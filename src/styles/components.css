@@ -5274,3 +5274,541 @@ a.rss-item-title:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Disease Tracker ── */
+
+.dt-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 16px;
+  min-height: 500px;
+}
+
+.dt-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dt-right {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* COVID stats bar */
+
+.dt-covid-bar {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.dt-covid-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.dt-covid-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.dt-covid-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.dt-covid-val {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--fg);
+}
+
+.dt-val-red { color: oklch(0.6 0.2 25); }
+.dt-val-green { color: oklch(0.65 0.18 145); }
+.dt-val-amber { color: oklch(0.7 0.15 80); }
+
+.dt-covid-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.dt-covid-updated {
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+}
+
+/* Sections */
+
+.dt-section {
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.dt-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+/* News list */
+
+.dt-news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dt-news-item {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.12s;
+}
+
+.dt-news-item:hover {
+  border-color: var(--accent);
+}
+
+.dt-news-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.dt-news-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 4px;
+  background: var(--bg);
+  border-radius: 3px;
+}
+
+.dt-news-ago {
+  margin-left: auto;
+}
+
+.dt-news-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  text-decoration: none;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.dt-news-title:hover {
+  color: var(--accent);
+}
+
+.dt-news-desc {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.dt-news-info-btn {
+  margin-top: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: oklch(0.55 0.14 260 / 0.06);
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.dt-news-info-btn:hover {
+  background: oklch(0.55 0.14 260 / 0.12);
+}
+
+/* Severity badge */
+
+.dt-severity {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 5px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.dt-severity-high {
+  color: oklch(0.6 0.2 25);
+  background: oklch(0.6 0.2 25 / 0.1);
+}
+
+.dt-severity-medium {
+  color: oklch(0.7 0.15 80);
+  background: oklch(0.7 0.15 80 / 0.1);
+}
+
+.dt-severity-low {
+  color: oklch(0.65 0.18 145);
+  background: oklch(0.65 0.18 145 / 0.1);
+}
+
+/* Summary extracted from WHO report */
+
+.dt-summary {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dt-summary-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.dt-summary-icon {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.dt-summary-label {
+  font-weight: 600;
+  color: var(--muted);
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.dt-summary-val {
+  color: var(--fg);
+}
+
+.dt-summary-val strong {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.dt-summary-sep {
+  color: var(--muted);
+  margin: 0 2px;
+}
+
+.dt-spread-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.dt-spread-tag {
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 10px;
+  background: oklch(0.95 0.02 250);
+  color: oklch(0.4 0.08 250);
+  border: 1px solid oklch(0.85 0.04 250);
+}
+
+.dt-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.dt-alert-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.dt-alert-text {
+  color: var(--text);
+}
+
+.dt-alert-safe {
+  background: oklch(0.95 0.05 145);
+  border: 1px solid oklch(0.85 0.08 145);
+}
+
+.dt-alert-watch {
+  background: oklch(0.95 0.05 80);
+  border: 1px solid oklch(0.85 0.08 80);
+}
+
+.dt-alert-warning {
+  background: oklch(0.93 0.06 50);
+  border: 1px solid oklch(0.82 0.1 50);
+}
+
+.dt-alert-danger {
+  background: oklch(0.93 0.06 25);
+  border: 1px solid oklch(0.8 0.12 25);
+}
+
+.dt-loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dt-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Disease encyclopedia */
+
+.dt-disease-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dt-disease-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.dt-disease-btn:hover {
+  border-color: var(--accent);
+}
+
+.dt-disease-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.dt-disease-detail {
+  animation: dt-fade-in 0.2s ease;
+}
+
+@keyframes dt-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dt-disease-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 6px;
+}
+
+.dt-disease-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.dt-disease-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 10px 0 6px;
+}
+
+.dt-disease-list {
+  padding-left: 16px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dt-disease-list li {
+  font-size: 12px;
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.dt-list-green li::marker {
+  color: oklch(0.65 0.18 145);
+}
+
+/* Preparation checklist */
+
+.dt-checklist-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dt-checklist-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  font-family: var(--font-mono);
+}
+
+.dt-checklist {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dt-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.dt-check-item:hover {
+  background: oklch(0.55 0.14 260 / 0.04);
+}
+
+.dt-check-done {
+  opacity: 0.5;
+}
+
+.dt-check-done .dt-check-text {
+  text-decoration: line-through;
+}
+
+.dt-check-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.dt-check-cat {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.dt-check-text {
+  font-size: 12px;
+  color: var(--fg);
+  line-height: 1.4;
+}
+
+.dt-help-section .tool-help {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.dt-help-section .tool-help h3 {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.dt-help-section .tool-help-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.dt-help-section .tool-help-card {
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.dt-help-section .tool-help-card h4 {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.dt-help-section .tool-help-card li {
+  font-size: 11px;
+  padding-left: 20px;
+  line-height: 1.5;
+}
+
+.dt-help-section .tool-help-steps li {
+  padding-left: 24px;
+}
+
+.dt-help-section .tool-help-steps li::before {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  top: 3px;
+}
+
+@media (max-width: 900px) {
+  .dt-layout {
+    grid-template-columns: 1fr;
+  }
+  .dt-left, .dt-right {
+    max-height: none;
+  }
+  .dt-covid-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -838,6 +838,18 @@ export const tools: ToolMeta[] = [
     keywords: ['currency', 'exchange', 'rate', '货币', '汇率', '换算', '美元', '欧元', '人民币'],
     status: '可用',
   },
+  {
+    id: 'disease',
+    name: '传染病追踪',
+    description: '实时追踪全球传染病疫情动态，来源 WHO 官方数据，含预防指南和物资准备清单',
+    icon: '🦠',
+    iconClass: 'icon-red',
+    category: '其他',
+    path: '/disease',
+    component: () => import('./features/disease-tracker'),
+    keywords: ['disease', 'outbreak', 'who', '传染病', '疫情', '追踪', '预防', 'covid', '流感'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
