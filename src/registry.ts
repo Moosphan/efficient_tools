@@ -862,6 +862,18 @@ export const tools: ToolMeta[] = [
     keywords: ['screenshot', 'website', 'url', '截屏', '截图', '网页', 'capture', 'screen'],
     status: '可用',
   },
+  {
+    id: 'curlConverter',
+    name: 'cURL 转代码',
+    description: '将 cURL 命令转换为各语言代码，支持 10 种编程语言',
+    icon: '$_',
+    iconClass: 'icon-green',
+    category: '开发',
+    path: '/curl-converter',
+    component: () => import('./features/curl-converter'),
+    keywords: ['curl', 'converter', 'code', '转换', '代码', 'fetch', 'requests', 'http', 'api'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [

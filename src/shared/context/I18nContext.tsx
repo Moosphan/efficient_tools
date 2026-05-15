@@ -704,12 +704,12 @@ export const toolI18n: Record<string, {
     name: { zh: '色板生成器', en: 'Color Palette Generator' },
     desc: { zh: '基于色彩和谐理论生成调色板，支持互补/类似/三色/单色等模式', en: 'Generate color palettes using harmony rules: complementary, analogous, triadic, and more' },
     ui: {
-      zh: { baseColor: '基础色', random: '随机', harmony: '和谐模式', shades: '明暗梯度', preview: '预览', sampleText: '示例文本', gradient: '渐变预览', complementary: '互补色', analogous: '类似色', triadic: '三色组', splitComplementary: '分裂互补', tetradic: '四色组', monochromatic: '单色系' },
-      en: { baseColor: 'Base Color', random: 'Random', harmony: 'Harmony', shades: 'Tints & Shades', preview: 'Preview', sampleText: 'Sample Text', gradient: 'Gradient Preview', complementary: 'Complementary', analogous: 'Analogous', triadic: 'Triadic', splitComplementary: 'Split', tetradic: 'Tetradic', monochromatic: 'Mono' },
+      zh: { baseColor: '基础色', random: '随机', harmony: '和谐模式', shades: '明暗梯度', preview: '预览', sampleText: '示例文本', gradient: '渐变预览', complementary: '互补色', analogous: '类似色', triadic: '三色组', splitComplementary: '分裂互补', tetradic: '四色组', monochromatic: '单色系', trending: '🔥 流行配色 2024-2025' },
+      en: { baseColor: 'Base Color', random: 'Random', harmony: 'Harmony', shades: 'Tints & Shades', preview: 'Preview', sampleText: 'Sample Text', gradient: 'Gradient Preview', complementary: 'Complementary', analogous: 'Analogous', triadic: 'Triadic', splitComplementary: 'Split', tetradic: 'Tetradic', monochromatic: 'Mono', trending: '🔥 Trending Palettes 2024-2025' },
     },
     help: {
-      zh: { title: '使用说明', features: ['6 种色彩和谐模式：互补/类似/三色/分裂互补/四色/单色', '自动生成明暗梯度（9 级）', '实时文字预览和渐变预览', '一键复制色值，导出 CSS 变量'], usage: ['选择或输入基础颜色', '选择和谐模式查看配色方案', '点击色块复制色值', '查看明暗梯度和渐变效果'] },
-      en: { title: 'Usage Guide', features: ['6 harmony modes: Complementary/Analogous/Triadic/Split/Tetradic/Mono', 'Auto-generate tints and shades (9 levels)', 'Live text preview and gradient preview', 'One-click copy, export as CSS variables'], usage: ['Select or enter a base color', 'Choose a harmony mode to view the palette', 'Click a color swatch to copy its value', 'View tints/shades and gradient preview'] },
+      zh: { title: '使用说明', features: ['6 种色彩和谐模式：互补/类似/三色/分裂互补/四色/单色', '自动生成明暗梯度（9 级）', '内置 2024-2025 流行配色方案', '实时文字预览和渐变预览', '一键复制色值，导出 CSS 变量'], usage: ['展开「流行配色」查看年度色、莫兰迪色等', '点击流行配色可直接应用为基础色', '选择和谐模式查看配色方案', '点击色块复制色值', '查看明暗梯度和渐变效果'] },
+      en: { title: 'Usage Guide', features: ['6 harmony modes: Complementary/Analogous/Triadic/Split/Tetradic/Mono', 'Auto-generate tints and shades (9 levels)', 'Built-in 2024-2025 trending palettes', 'Live text preview and gradient preview', 'One-click copy, export as CSS variables'], usage: ['Expand "Trending Palettes" for annual colors, Morandi, etc.', 'Click trending colors to apply as base', 'Choose a harmony mode to view the palette', 'Click a color swatch to copy its value', 'View tints/shades and gradient preview'] },
     },
   },
   // ── textCipher ──
@@ -1126,6 +1126,19 @@ export const toolI18n: Record<string, {
     help: {
       zh: { title: '使用说明', features: ['支持桌面/平板/手机三种设备尺寸', '全页截图或视口截图', '5 种设备框架：MacBook、iPhone、iPad、浏览器、无', '6 种背景样式：渐变、模糊背景', '可调节内边距、圆角、阴影', '支持 PNG/JPEG 导出，JPEG 可调质量'], usage: ['输入网站 URL', '选择设备尺寸和截图类型', '选择设备框架和背景样式', '调整样式参数', '点击截取按钮生成截图', '点击下载按钮导出图片'] },
       en: { title: 'Usage Guide', features: ['Support desktop/tablet/mobile device sizes', 'Full page or viewport screenshot', '5 frame styles: MacBook, iPhone, iPad, browser, none', '6 background styles: gradients, blur background', 'Adjustable padding, border radius, shadow', 'PNG/JPEG export with adjustable quality'], usage: ['Enter website URL', 'Select device size and screenshot type', 'Choose frame and background styles', 'Adjust style parameters', 'Click Capture to generate screenshot', 'Click Download to export image'] },
+    },
+  },
+  // ── curl converter ──
+  curlConverter: {
+    name: { zh: 'cURL 转代码', en: 'cURL Converter' },
+    desc: { zh: '将 cURL 命令转换为各语言代码，支持 10 种编程语言', en: 'Convert cURL commands to code in 10 programming languages' },
+    ui: {
+      zh: { placeholder: '粘贴 cURL 命令到此处...\n\n点击「示例」按钮查看效果', example: '示例', clear: '清空', copy: '复制', noOutput: '转换后的代码将显示在这里...' },
+      en: { placeholder: 'Paste cURL command here...\n\nClick "Example" to see the result', example: 'Example', clear: 'Clear', copy: 'Copy', noOutput: 'Converted code will appear here...' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 10 种编程语言：JavaScript、Python、Go、Java、PHP、C#、Ruby、Swift、Kotlin、Rust', '自动解析 cURL 命令参数', '提取请求方法、URL、Headers、Body、Cookies、认证信息', '内置 cURL 参数速查手册', '一键复制转换后的代码'], usage: ['从浏览器开发者工具复制 cURL 命令', '粘贴到输入框', '选择目标编程语言', '查看并复制转换后的代码', '展开下方速查手册查看 cURL 参数说明'] },
+      en: { title: 'Usage Guide', features: ['Support 10 languages: JavaScript, Python, Go, Java, PHP, C#, Ruby, Swift, Kotlin, Rust', 'Auto-parse cURL command parameters', 'Extract method, URL, headers, body, cookies, auth', 'Built-in cURL parameter quick reference', 'One-click copy converted code'], usage: ['Copy cURL command from browser dev tools', 'Paste into input box', 'Select target programming language', 'View and copy converted code', 'Expand reference below for cURL parameter docs'] },
     },
   },
 };
