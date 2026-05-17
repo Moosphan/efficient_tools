@@ -1141,6 +1141,19 @@ export const toolI18n: Record<string, {
       en: { title: 'Usage Guide', features: ['Support 10 languages: JavaScript, Python, Go, Java, PHP, C#, Ruby, Swift, Kotlin, Rust', 'Auto-parse cURL command parameters', 'Extract method, URL, headers, body, cookies, auth', 'Built-in cURL parameter quick reference', 'One-click copy converted code'], usage: ['Copy cURL command from browser dev tools', 'Paste into input box', 'Select target programming language', 'View and copy converted code', 'Expand reference below for cURL parameter docs'] },
     },
   },
+  // ── json to model ──
+  jsonToModel: {
+    name: { zh: 'JSON 转实体类', en: 'JSON to Model' },
+    desc: { zh: '将 JSON 转换为各语言实体类，支持嵌套对象和数组', en: 'Convert JSON to model classes in various languages with nested objects and arrays' },
+    ui: {
+      zh: { placeholder: '粘贴 JSON 数据...\n\n支持嵌套对象和数组', example: '示例', clear: '清空', copy: '复制', rootName: '根类名', noOutput: '生成的代码将显示在这里...' },
+      en: { placeholder: 'Paste JSON data...\n\nSupports nested objects and arrays', example: 'Example', clear: 'Clear', copy: 'Copy', rootName: 'Root Name', noOutput: 'Generated code will appear here...' },
+    },
+    help: {
+      zh: { title: '使用说明', features: ['支持 10 种语言：Java、Kotlin、Dart、Rust、Go、Swift、C#、Python、TypeScript、PHP', '自动识别嵌套对象并生成子类', '支持数组类型识别', 'Java 生成 Getter/Setter', 'Dart 生成 fromJson/toJson', 'Rust 生成 serde 注解', 'Go 生成 json tag'], usage: ['粘贴 JSON 数据', '输入根类名（默认 RootObject）', '选择目标语言', '复制生成的代码'] },
+      en: { title: 'Usage Guide', features: ['Support 10 languages: Java, Kotlin, Dart, Rust, Go, Swift, C#, Python, TypeScript, PHP', 'Auto-detect nested objects and generate subclasses', 'Support array type detection', 'Java: Generate Getter/Setter', 'Dart: Generate fromJson/toJson', 'Rust: Generate serde annotations', 'Go: Generate json tags'], usage: ['Paste JSON data', 'Enter root class name (default: RootObject)', 'Select target language', 'Copy generated code'] },
+    },
+  },
 };
 
 const STORAGE_KEY = '2fa_lang';

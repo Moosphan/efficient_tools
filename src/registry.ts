@@ -874,6 +874,18 @@ export const tools: ToolMeta[] = [
     keywords: ['curl', 'converter', 'code', '转换', '代码', 'fetch', 'requests', 'http', 'api'],
     status: '可用',
   },
+  {
+    id: 'jsonToModel',
+    name: 'JSON 转实体类',
+    description: '将 JSON 转换为各语言实体类，支持嵌套对象和数组',
+    icon: '{ }',
+    iconClass: 'icon-violet',
+    category: '开发',
+    path: '/json-to-model',
+    component: () => import('./features/json-to-model'),
+    keywords: ['json', 'model', 'class', 'entity', '实体', '转换', 'java', 'kotlin', 'dart', 'rust', 'go'],
+    status: '可用',
+  },
 ];
 
 export const categories: { id: string; label: string }[] = [
