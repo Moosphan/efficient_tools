@@ -445,6 +445,7 @@
 
 textarea.tool-textarea {
   width: 100%;
+  flex: 1;
   border: none;
   outline: none;
   resize: vertical;
@@ -456,6 +457,7 @@ textarea.tool-textarea {
   color: var(--fg);
   min-height: 300px;
   tab-size: 2;
+  overflow: auto;
 }
 
 textarea.tool-textarea::placeholder { color: var(--muted); }

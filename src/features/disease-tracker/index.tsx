@@ -47,6 +47,56 @@ interface WhoNewsItem {
   categories: string[];
 }
 
+interface DiseaseDetail {
+  name: string;
+  desc: string;
+  symptoms: string[];
+  prevention: string[];
+}
+
+type DiseaseKey =
+  | 'covid'
+  | 'avian_flu'
+  | 'influenza'
+  | 'measles'
+  | 'mpox'
+  | 'ebola'
+  | 'dengue'
+  | 'chikungunya'
+  | 'yellow_fever'
+  | 'cholera'
+  | 'hantavirus';
+
+interface DiseaseEntry {
+  zh: DiseaseDetail;
+  en: DiseaseDetail;
+}
+
+interface WhoDonApiItem {
+  Title: string;
+  PublicationDate: string;
+  ItemDefaultUrl: string;
+  DonId: string;
+  Overview?: string;
+  Assessment?: string;
+}
+
+interface WhoDonApiResponse {
+  value?: WhoDonApiItem[];
+}
+
+interface WhoRssApiItem {
+  title: string;
+  pubDate: string;
+  link: string;
+  description?: string;
+  categories?: string[];
+}
+
+interface WhoRssApiResponse {
+  items?: WhoRssApiItem[];
+}
+
 // ── Constants ──
 
 const WHO_DON_API = 'https://www.who.int/api/news/diseaseoutbreaknews?$orderby=PublicationDate%20desc&$top=15&$select=Title,PublicationDate,ItemDefaultUrl,DonId,Overview,Assessment';
@@ -57,32 +107,66 @@ const CACHE_TTL = 30 * 60 * 1000; // 30 min
 
 // ── Disease Knowledge Base ──
 
-const DISEASES: Record<string, { zh: { name: string; desc: string; symptoms: string[]; prevention: string[] }; en: { name: string; desc: string; symptoms: string[]; prevention: string[] } }> = {
+const DISEASES: Record<DiseaseKey, DiseaseEntry> = {
   covid: {
     zh: { name: 'COVID-19 (新型冠状病毒)', desc: '由 SARS-CoV-2 引起的呼吸道传染病，可通过飞沫和气溶胶传播。', symptoms: ['发热、干咳、乏力', '嗅觉/味觉减退', '咽痛、鼻塞、腹泻', '重症可出现呼吸困难'], prevention: ['接种疫苗及加强针', '在密闭公共场所佩戴口罩', '勤洗手，避免触摸面部', '保持室内通风', '出现症状及时就医并自我隔离'] },
     en: { name: 'COVID-19', desc: 'Respiratory illness caused by SARS-CoV-2, transmitted via droplets and aerosols.', symptoms: ['Fever, dry cough, fatigue', 'Loss of smell/taste', 'Sore throat, nasal congestion', 'Severe: difficulty breathing'], prevention: ['Get vaccinated and boosted', 'Wear masks in enclosed public spaces', 'Wash hands frequently, avoid touching face', 'Keep indoor spaces ventilated', 'Seek medical care and isolate if symptomatic'] },
+  },
+  avian_flu: {
+    zh: { name: '禽流感 (Avian Influenza)', desc: '由甲型流感病毒引起的动物传染病，偶可感染人类，病死率较高。', symptoms: ['高热 (39°C 以上)', '咳嗽、呼吸困难', '肌肉酸痛、头痛', '重症可发展为肺炎、多器官衰竭'], prevention: ['避免接触活禽和野生鸟类', '禽肉蛋类彻底煮熟', '出现流感症状及时就医并告知接触史', '从事禽类工作者做好个人防护'] },
+    en: { name: 'Avian Influenza', desc: 'Animal influenza caused by type A viruses, occasionally infects humans with high fatality rate.', symptoms: ['High fever (39°C+)', 'Cough, difficulty breathing', 'Muscle aches, headache', 'Severe: pneumonia, multi-organ failure'], prevention: ['Avoid contact with live poultry and wild birds', 'Cook poultry and eggs thoroughly', 'Seek medical care promptly with exposure history', 'PPE for poultry workers'] },
   },
   influenza: {
     zh: { name: '流感 (Influenza)', desc: '由流感病毒引起的急性呼吸道传染病，秋冬季高发，变异性强。', symptoms: ['突发高热 (38°C 以上)', '全身肌肉酸痛、头痛', '咳嗽、咽痛、流涕', '乏力、食欲减退'], prevention: ['每年接种流感疫苗', '勤洗手，注意呼吸道卫生', '避免去人群密集场所', '增强体质，保证睡眠'] },
     en: { name: 'Influenza (Flu)', desc: 'Acute respiratory illness caused by influenza viruses, peaks in autumn/winter, highly variable.', symptoms: ['Sudden high fever (38°C+)', 'Muscle aches, headache', 'Cough, sore throat, runny nose', 'Fatigue, loss of appetite'], prevention: ['Get annual flu vaccine', 'Wash hands, practice respiratory hygiene', 'Avoid crowded places during peak season', 'Maintain healthy lifestyle and sleep'] },
   },
   measles: {
-    zh: { name: '麻疹 (Measles)', desc: '由麻疹病毒引起的高度传染性疾病，通过飞沫传播，传染性极强。', symptoms: ['高热、咳嗽、流涕', '眼结膜充血', '口腔柯氏斑', '全身红色斑丘疹'], prevention: ['接种麻疹疫苗 (MMR)', '避免与患者密切接触', '保持室内通风', '患者需隔离至出疹后 5 天'] },
-    en: { name: 'Measles', desc: 'Highly contagious viral disease transmitted via droplets. Extremely infectious.', symptoms: ['High fever, cough, runny nose', 'Conjunctivitis (red eyes)', 'Koplik spots in mouth', 'Widespread red maculopapular rash'], prevention: ['Get MMR vaccine', 'Avoid close contact with infected persons', 'Keep indoor spaces ventilated', 'Isolate patients until 5 days after rash onset'] },
-  },
-  avian_flu: {
-    zh: { name: '禽流感 (Avian Influenza)', desc: '由甲型流感病毒引起的动物传染病，偶可感染人类，病死率较高。', symptoms: ['高热 (39°C 以上)', '咳嗽、呼吸困难', '肌肉酸痛、头痛', '重症可发展为肺炎、多器官衰竭'], prevention: ['避免接触活禽和野生鸟类', '禽肉蛋类彻底煮熟', '出现流感症状及时就医并告知接触史', '从事禽类工作者做好个人防护'] },
-    en: { name: 'Avian Influenza', desc: 'Animal influenza caused by type A viruses, occasionally infects humans with high fatality rate.', symptoms: ['High fever (39°C+)', 'Cough, difficulty breathing', 'Muscle aches, headache', 'Severe: pneumonia, multi-organ failure'], prevention: ['Avoid contact with live poultry and wild birds', 'Cook poultry and eggs thoroughly', 'Seek medical care promptly with exposure history', 'PPE for poultry workers'] },
-  },
-  hantavirus: {
-    zh: { name: '汉坦病毒 (Hantavirus)', desc: '由啮齿动物传播的病毒，可引起汉坦病毒肺综合征或肾综合征出血热。', symptoms: ['发热、肌肉疼痛', '头痛、呕吐、腹泻', '肺综合征：呼吸困难', '肾综合征：少尿、出血'], prevention: ['防鼠灭鼠，封堵鼠洞', '清理鼠类排泄物时戴口罩手套', '食物妥善保存，避免鼠类接触', '野外露营注意防鼠'] },
-    en: { name: 'Hantavirus', desc: 'Virus transmitted by rodents, causes Hantavirus Pulmonary Syndrome or Hemorrhagic Fever with Renal Syndrome.', symptoms: ['Fever, muscle pain', 'Headache, vomiting, diarrhea', 'Pulmonary: difficulty breathing', 'Renal: oliguria, bleeding'], prevention: ['Rodent control, seal holes and gaps', 'Wear mask/gloves when cleaning rodent droppings', 'Store food properly away from rodents', 'Take precautions when camping outdoors'] },
+    zh: { name: '麻疹 (Measles)', desc: '由麻疹病毒引起的高度传染性疾病，可通过空气和飞沫传播，未接种人群暴发风险高。', symptoms: ['高热、咳嗽、流涕', '眼结膜充血', '口腔柯氏斑', '全身红色斑丘疹'], prevention: ['接种两剂麻疹疫苗 (MMR)', '避免与患者密切接触', '保持室内通风', '患者需隔离至出疹后 5 天'] },
+    en: { name: 'Measles', desc: 'Highly contagious airborne viral disease with elevated outbreak risk in under-vaccinated groups.', symptoms: ['High fever, cough, runny nose', 'Conjunctivitis (red eyes)', 'Koplik spots in mouth', 'Widespread red maculopapular rash'], prevention: ['Get two doses of MMR vaccine', 'Avoid close contact with infected persons', 'Keep indoor spaces ventilated', 'Isolate patients until 5 days after rash onset'] },
   },
   mpox: {
     zh: { name: '猴痘 (Mpox)', desc: '由猴痘病毒引起的传染病，通过密切接触传播，可引起皮疹和淋巴结肿大。', symptoms: ['发热、头痛、肌肉酸痛', '淋巴结肿大', '皮疹：斑疹→丘疹→水疱→脓疱→结痂', '皮疹多见于面部、四肢'], prevention: ['避免与确诊患者密切接触', '接触动物时做好防护', '接种天花疫苗可提供交叉保护', '出现皮疹及时就医'] },
     en: { name: 'Mpox', desc: 'Disease caused by monkeypox virus, spreads through close contact, causes rash and lymphadenopathy.', symptoms: ['Fever, headache, muscle aches', 'Swollen lymph nodes', 'Rash: macules → papules → vesicles → pustules → scabs', 'Rash mainly on face and limbs'], prevention: ['Avoid close contact with confirmed cases', 'Take precautions when handling animals', 'Smallpox vaccine provides cross-protection', 'Seek medical care if rash develops'] },
   },
+  ebola: {
+    zh: { name: '埃博拉 (Ebola)', desc: 'WHO 于 2026 年 5 月通报刚果（金）和乌干达出现 Bundibugyo 型埃博拉疫情，属高致死性出血热，可经血液和体液接触传播。', symptoms: ['发热、极度乏力、肌肉痛', '头痛、咽痛', '呕吐、腹泻、腹痛', '重症可出现出血和多器官功能受损'], prevention: ['避免接触患者血液、体液及污染物', '医护和照护者严格做好手卫生与防护', '避免不安全丧葬接触', '出现疑似症状后立即隔离并就医'] },
+    en: { name: 'Ebola', desc: 'WHO reported Bundibugyo-virus Ebola outbreaks in DRC and Uganda in May 2026. It is a severe viral hemorrhagic disease spread through direct contact with blood and body fluids.', symptoms: ['Fever, intense weakness, muscle pain', 'Headache, sore throat', 'Vomiting, diarrhea, abdominal pain', 'Severe: bleeding and multi-organ involvement'], prevention: ['Avoid contact with blood, body fluids, and contaminated materials', 'Use strict hand hygiene and PPE when caring for patients', 'Avoid unsafe burial practices', 'Isolate promptly and seek urgent medical care if suspected'] },
+  },
+  dengue: {
+    zh: { name: '登革热 (Dengue)', desc: '由伊蚊传播的病毒性疾病。WHO 报告显示 2024 年全球报告病例约 1460 万，热带和亚热带城市地区风险持续上升。', symptoms: ['高热 (可达 40°C)', '剧烈头痛、眼眶痛', '肌肉和关节痛', '恶心、呕吐、皮疹'], prevention: ['白天也要防蚊，减少叮咬', '清除积水，降低蚊虫孳生', '使用蚊帐、驱蚊剂和长袖衣物', '出现腹痛、出血等警示症状及时就医'] },
+    en: { name: 'Dengue', desc: 'Mosquito-borne viral disease. WHO reported about 14.6 million dengue cases globally in 2024, with growing risk across tropical and subtropical urban areas.', symptoms: ['High fever (up to 40°C)', 'Severe headache and pain behind the eyes', 'Muscle and joint pain', 'Nausea, vomiting, rash'], prevention: ['Avoid mosquito bites, including during daytime', 'Remove standing water to reduce breeding', 'Use repellents, bed nets, and long sleeves', 'Seek care promptly for warning signs such as abdominal pain or bleeding'] },
+  },
+  chikungunya: {
+    zh: { name: '基孔肯雅热 (Chikungunya)', desc: 'WHO 在 2025 年指出多国基孔肯雅热反弹，主要由伊蚊传播，常见剧烈关节痛。', symptoms: ['突发高热', '明显关节痛或关节肿胀', '头痛、肌肉痛', '恶心、疲劳、皮疹'], prevention: ['做好日间防蚊', '清除积水和蚊虫孳生地', '外出穿长袖长裤并用驱蚊剂', '高热伴关节痛时尽快评估，排除登革热等疾病'] },
+    en: { name: 'Chikungunya', desc: 'WHO reported a 2025 resurgence across multiple countries. It is transmitted mainly by Aedes mosquitoes and is notable for severe joint pain.', symptoms: ['Sudden high fever', 'Severe joint pain or swelling', 'Headache, muscle pain', 'Nausea, fatigue, rash'], prevention: ['Prevent mosquito bites during the day', 'Clear standing water and breeding sites', 'Wear long sleeves and use repellents', 'Seek evaluation for fever with joint pain and rule out dengue or similar infections'] },
+  },
+  yellow_fever: {
+    zh: { name: '黄热病 (Yellow Fever)', desc: '由蚊媒传播、可通过疫苗预防。WHO 在 2025 年通报美洲病例明显增加，存在向城市传播扩大的风险。', symptoms: ['发热、头痛、背痛', '食欲差、恶心或呕吐', '部分患者进入黄疸和出血的重症期', '重症可累及肝肾功能'], prevention: ['前往风险地区前接种黄热病疫苗', '做好蚊媒防护', '野外或林区作业时加强个人防护', '出现黄疸、黑尿或出血时立即就医'] },
+    en: { name: 'Yellow Fever', desc: 'Mosquito-borne and vaccine-preventable. WHO reported a marked increase in cases in the Americas during 2025, with concern about spread into urban settings.', symptoms: ['Fever, headache, back pain', 'Poor appetite, nausea or vomiting', 'Some patients progress to jaundice and bleeding', 'Severe disease can involve liver and kidney failure'], prevention: ['Get yellow fever vaccination before travel to risk areas', 'Use mosquito protection measures', 'Strengthen personal protection in forested work areas', 'Seek urgent care for jaundice, dark urine, or bleeding'] },
+  },
+  cholera: {
+    zh: { name: '霍乱 (Cholera)', desc: '由霍乱弧菌引起的急性腹泻性传染病。WHO 2025 年多国通报显示病例和死亡仍处高位，与安全饮水和卫生条件不足密切相关。', symptoms: ['突发大量水样腹泻', '呕吐', '严重脱水、口渴、乏力', '重症可迅速休克甚至死亡'], prevention: ['饮用安全水，注意食品卫生', '勤洗手，改善厕所和排污条件', '腹泻后尽快补液，必要时使用口服补液盐', '在流行地区按建议接种口服霍乱疫苗'] },
+    en: { name: 'Cholera', desc: 'Acute diarrhoeal disease caused by Vibrio cholerae. WHO reported sustained multi-country surges in 2025, closely tied to unsafe water, sanitation, and hygiene gaps.', symptoms: ['Sudden profuse watery diarrhoea', 'Vomiting', 'Severe dehydration, thirst, weakness', 'Severe cases can rapidly progress to shock and death'], prevention: ['Use safe drinking water and food hygiene', 'Wash hands and improve sanitation', 'Rehydrate quickly and use oral rehydration salts when needed', 'Use oral cholera vaccine in risk settings when advised'] },
+  },
+  hantavirus: {
+    zh: { name: '汉坦病毒 (Hantavirus)', desc: '由啮齿动物传播的病毒，可引起汉坦病毒肺综合征或肾综合征出血热。', symptoms: ['发热、肌肉疼痛', '头痛、呕吐、腹泻', '肺综合征：呼吸困难', '肾综合征：少尿、出血'], prevention: ['防鼠灭鼠，封堵鼠洞', '清理鼠类排泄物时戴口罩手套', '食物妥善保存，避免鼠类接触', '野外露营注意防鼠'] },
+    en: { name: 'Hantavirus', desc: 'Virus transmitted by rodents, causes Hantavirus Pulmonary Syndrome or Hemorrhagic Fever with Renal Syndrome.', symptoms: ['Fever, muscle pain', 'Headache, vomiting, diarrhea', 'Pulmonary: difficulty breathing', 'Renal: oliguria, bleeding'], prevention: ['Rodent control, seal holes and gaps', 'Wear mask/gloves when cleaning rodent droppings', 'Store food properly away from rodents', 'Take precautions when camping outdoors'] },
+  },
 };
+
+const DISEASE_DETECTION_RULES: Array<{ key: DiseaseKey; keywords: string[] }> = [
+  { key: 'ebola', keywords: ['ebola', 'bundibugyo'] },
+  { key: 'avian_flu', keywords: ['avian influenza', 'bird flu', 'h5n1', 'h5n5', 'h7n', 'h9n'] },
+  { key: 'yellow_fever', keywords: ['yellow fever'] },
+  { key: 'chikungunya', keywords: ['chikungunya'] },
+  { key: 'dengue', keywords: ['dengue'] },
+  { key: 'cholera', keywords: ['cholera', 'acute watery diarrhoea', 'acute watery diarrhea', 'awd'] },
+  { key: 'measles', keywords: ['measles'] },
+  { key: 'mpox', keywords: ['mpox', 'monkeypox'] },
+  { key: 'hantavirus', keywords: ['hantavirus'] },
+  { key: 'covid', keywords: ['covid', 'sars-cov'] },
+  { key: 'influenza', keywords: ['seasonal influenza', 'influenza', 'flu'] },
+];
 
 // ── Helpers ──
 
@@ -104,6 +188,10 @@ function formatNumber(n: number): string {
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+}
+
+function getShortDiseaseName(name: string): string {
+  return name.split('(')[0].trim();
 }
 
 function parseNumber(text: string): number | null {
@@ -212,20 +300,13 @@ function parseOutbreakSummary(overview: string, assessment: string, title: strin
     low: ['contained', 'controlled', 'declining', 'decreasing trend', 'no new cases', 'resolved', 'under control', 'isolated cases', 'single case', 'eliminated', 'eradicated'],
   };
 
-  let severity: 'low' | 'medium' | 'high' = 'medium';
-  let spread = '';
+  const [severity, spread]: [OutbreakSummary['severity'], string] =
+    spreadIndicators.high.some(k => lowerText.includes(k))
+      ? ['high', '快速扩散 / 持续升级']
+      : spreadIndicators.low.some(k => lowerText.includes(k))
+        ? ['low', '已控制 / 趋势下降']
+        : ['medium', '持续传播中'];
   const spreadDetails: string[] = [];
-
-  if (spreadIndicators.high.some(k => lowerText.includes(k))) {
-    severity = 'high';
-    spread = '快速扩散 / 持续升级';
-  } else if (spreadIndicators.low.some(k => lowerText.includes(k))) {
-    severity = 'low';
-    spread = '已控制 / 趋势下降';
-  } else {
-    severity = 'medium';
-    spread = '持续传播中';
-  }
 
   // Collect spread details
   if (lowerText.includes('human-to-human')) spreadDetails.push('人传人');
@@ -237,26 +318,18 @@ function parseOutbreakSummary(overview: string, assessment: string, title: strin
   if (lowerText.includes('new variant') || lowerText.includes('mutation')) spreadDetails.push('变异株');
 
   // Determine alert level based on multiple factors
-  let alertLevel: 'safe' | 'watch' | 'warning' | 'danger' = 'safe';
-  let alertMessage = '';
-
   const caseNum = parseInt(cases) || 0;
   const deathNum = parseInt(deaths) || 0;
   const rate = fatalityRate ? parseFloat(fatalityRate) : 0;
-
-  if (severity === 'high' && (caseNum > 1000 || rate > 5)) {
-    alertLevel = 'danger';
-    alertMessage = '高风险：疫情快速扩散，建议密切关注并做好防护准备';
-  } else if (severity === 'high' || rate > 2 || caseNum > 500) {
-    alertLevel = 'warning';
-    alertMessage = '中高风险：疫情有扩散趋势，建议关注动态并储备基本防疫物资';
-  } else if (severity === 'medium' || caseNum > 100) {
-    alertLevel = 'watch';
-    alertMessage = '关注中：疫情持续，建议保持基本防护意识';
-  } else {
-    alertLevel = 'safe';
-    alertMessage = '低风险：疫情可控，保持日常卫生习惯即可';
-  }
+  const [alertLevel, baseAlertMessage]: [OutbreakSummary['alertLevel'], string] =
+    severity === 'high' && (caseNum > 1000 || rate > 5)
+      ? ['danger', '高风险：疫情快速扩散，建议密切关注并做好防护准备']
+      : severity === 'high' || rate > 2 || caseNum > 500
+        ? ['warning', '中高风险：疫情有扩散趋势，建议关注动态并储备基本防疫物资']
+        : severity === 'medium' || caseNum > 100
+          ? ['watch', '关注中：疫情持续，建议保持基本防护意识']
+          : ['safe', '低风险：疫情可控，保持日常卫生习惯即可'];
+  let alertMessage = baseAlertMessage;
 
   // Add context to alert message
   if (spreadDetails.includes('人传人') && alertLevel !== 'danger') {
@@ -297,14 +370,14 @@ function setCache<T>(key: string, data: T) {
 // ── Main Component ──
 
 export default function DiseaseTracker() {
-  const { lang, t } = useI18n();
+  const { lang } = useI18n();
   const { name: toolName, desc, ui, help } = useToolI18n('disease');
   const [outbreaks, setOutbreaks] = useState<DonEntry[]>([]);
   const [covid, setCovid] = useState<CovidGlobal | null>(null);
   const [whoNews, setWhoNews] = useState<WhoNewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedDisease, setSelectedDisease] = useState<string | null>(null);
+  const [selectedDisease, setSelectedDisease] = useState<DiseaseKey | null>(null);
   const [showChecklist, setShowChecklist] = useState(false);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const abortRef = useRef<AbortController | null>(null);
@@ -324,8 +397,8 @@ export default function DiseaseTracker() {
       } else {
         const res = await fetch(WHO_DON_API, { signal: ctrl.signal });
         if (res.ok) {
-          const data = await res.json();
-          const items: DonEntry[] = (data.value || []).map((v: any) => {
+          const data: WhoDonApiResponse = await res.json();
+          const items: DonEntry[] = (data.value || []).map((v) => {
             const entry: DonEntry = {
               Title: v.Title,
               PublicationDate: v.PublicationDate,
@@ -366,8 +439,8 @@ export default function DiseaseTracker() {
       } else {
         const res = await fetch(WHO_RSS_API, { signal: ctrl.signal });
         if (res.ok) {
-          const data = await res.json();
-          const items: WhoNewsItem[] = (data.items || []).slice(0, 10).map((v: any) => ({
+          const data: WhoRssApiResponse = await res.json();
+          const items: WhoNewsItem[] = (data.items || []).slice(0, 10).map((v) => ({
             title: v.title,
             pubDate: v.pubDate,
             link: v.link,
@@ -421,14 +494,9 @@ export default function DiseaseTracker() {
   const checkedCount = PREP_CHECKLIST.filter((c) => checked[c.id]).length;
 
   // Detect disease keywords in outbreak titles
-  const detectDisease = (title: string): string | null => {
-    const t = title.toLowerCase();
-    if (t.includes('covid') || t.includes('sars-cov')) return 'covid';
-    if (t.includes('influenza') || t.includes('flu') || t.includes('h5n') || t.includes('h7n') || t.includes('h9n')) return t.includes('avian') || t.includes('h5n') || t.includes('h7n') || t.includes('h9n') ? 'avian_flu' : 'influenza';
-    if (t.includes('measles')) return 'measles';
-    if (t.includes('hantavirus')) return 'hantavirus';
-    if (t.includes('mpox') || t.includes('monkeypox')) return 'mpox';
-    return null;
+  const detectDisease = (title: string): DiseaseKey | null => {
+    const lowerTitle = title.toLowerCase();
+    return DISEASE_DETECTION_RULES.find(({ keywords }) => keywords.some((keyword) => lowerTitle.includes(keyword)))?.key || null;
   };
 
   return (
@@ -487,8 +555,12 @@ export default function DiseaseTracker() {
                         <span className="dt-news-ago">{timeAgo(item.PublicationDate, lang)}</span>
                         {s && (
                           <span className={`dt-severity dt-severity-${s.severity}`}>
-                            {s.severity === 'high' ? '🔴' : s.severity === 'medium' ? '🟡' : '🟢'}
-                            {s.severity === 'high' ? (lang === 'zh' ? '高风险' : 'High') : s.severity === 'medium' ? (lang === 'zh' ? '中风险' : 'Medium') : (lang === 'zh' ? '低风险' : 'Low')}
+                            <span className="dt-severity-dot" aria-hidden="true">
+                              {s.severity === 'high' ? '🔴' : s.severity === 'medium' ? '🟡' : '🟢'}
+                            </span>
+                            <span className="dt-severity-text">
+                              {s.severity === 'high' ? (lang === 'zh' ? '高风险' : 'High') : s.severity === 'medium' ? (lang === 'zh' ? '中风险' : 'Medium') : (lang === 'zh' ? '低风险' : 'Low')}
+                            </span>
                           </span>
                         )}
                       </div>
@@ -501,6 +573,13 @@ export default function DiseaseTracker() {
                         {item.Title}
                         <span className="priv-ref-ext">↗</span>
                       </a>
+                      {dk && (
+                        <div className="dt-disease-tags">
+                          <button type="button" className="dt-disease-tag" onClick={() => setSelectedDisease(dk)}>
+                            {ui.typeTag || 'Type'}: {getShortDiseaseName(DISEASES[dk][lang].name)}
+                          </button>
+                        </div>
+                      )}
                       {s && (
                         <div className="dt-summary">
                           {s.locations.length > 0 && (
@@ -536,18 +615,13 @@ export default function DiseaseTracker() {
                           )}
                           {s.alertMessage && (
                             <div className={`dt-alert dt-alert-${s.alertLevel}`}>
-                              <span className="dt-alert-icon">
+                              <span className="dt-alert-icon" aria-hidden="true">
                                 {s.alertLevel === 'danger' ? '🚨' : s.alertLevel === 'warning' ? '⚠️' : s.alertLevel === 'watch' ? '👁️' : '✅'}
                               </span>
                               <span className="dt-alert-text">{s.alertMessage}</span>
                             </div>
                           )}
                         </div>
-                      )}
-                      {dk && (
-                        <button className="dt-news-info-btn" onClick={() => setSelectedDisease(dk)}>
-                          {ui.viewInfo || 'View Info'}: {DISEASES[dk]?.[lang]?.name}
-                        </button>
                       )}
                     </div>
                   );
@@ -592,9 +666,9 @@ export default function DiseaseTracker() {
                 <button
                   key={key}
                   className={`dt-disease-btn${selectedDisease === key ? ' dt-disease-active' : ''}`}
-                  onClick={() => setSelectedDisease(selectedDisease === key ? null : key)}
+                  onClick={() => setSelectedDisease(selectedDisease === key ? null : key as DiseaseKey)}
                 >
-                  {d[lang].name.split('(')[0].trim()}
+                  {getShortDiseaseName(d[lang].name)}
                 </button>
               ))}
             </div>

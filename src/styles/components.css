@@ -5456,13 +5456,30 @@ a.rss-item-title:hover {
 /* Severity badge */
 
 .dt-severity {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 1px 5px;
-  border-radius: 3px;
+  min-height: 22px;
+  padding: 4px 8px;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 6px;
+  line-height: 1.1;
+  vertical-align: middle;
+}
+
+.dt-severity-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 11px;
+}
+
+.dt-severity-text {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1.1;
 }
 
 .dt-severity-high {
@@ -5490,6 +5507,31 @@ a.rss-item-title:hover {
   display: flex;
   flex-direction: column;
   gap: 3px;
+}
+
+.dt-disease-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.dt-disease-tag {
+  padding: 3px 9px;
+  border: 1px solid oklch(0.78 0.08 35);
+  border-radius: 999px;
+  background: oklch(0.97 0.03 35);
+  color: oklch(0.43 0.12 28);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.dt-disease-tag:hover {
+  transform: translateY(-1px);
+  background: oklch(0.94 0.05 35);
+  border-color: oklch(0.72 0.1 28);
 }
 
 .dt-summary-row {
@@ -5546,8 +5588,8 @@ a.rss-item-title:hover {
 
 .dt-alert {
   display: flex;
-  align-items: flex-start;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   padding: 8px 10px;
   margin-top: 8px;
   border-radius: var(--radius);
@@ -5556,11 +5598,17 @@ a.rss-item-title:hover {
 }
 
 .dt-alert-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   font-size: 14px;
+  line-height: 1;
 }
 
 .dt-alert-text {
+  display: inline-flex;
+  align-items: center;
   color: var(--text);
 }
 
